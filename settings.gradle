@@ -1,1 +1,1 @@
-include ':samples', ':joker'
+include ':samples', ':joker', ':adapter-segmentadapter', ':adapter-recyclerview'
