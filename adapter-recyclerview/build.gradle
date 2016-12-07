@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply from: 'https://raw.githubusercontent.com/abooc/debug/master/library/maven.gradle'
 
 android {
     compileSdkVersion 25
