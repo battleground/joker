@@ -1,1 +1,6 @@
-include ':samples', ':joker', ':adapter-segmentadapter', ':adapter-recyclerview'
+include ':samples'
+include ':joker'
+include  ':adapter-segmentadapter'
+include ':adapter-recyclerview'
+include  ':joker-tab'
+//include  ':publiclibrary'
