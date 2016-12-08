@@ -15,9 +15,26 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven { url "http://192.168.1.111:8081/repository/maven-public/" }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    ANDROID_COMPILE_SDK_VERSION = 25
+    ANDROID_BUILD_TOOLS_VERSION = "25.0.0"
+
+    ANDROID_MIN_SDK_VERSION = 14
+    ANDROID_TARGET_SDK_VERSION = 25
+
+    ANDROID_VERSION_CODE = 90;
+    ANDROID_VERSION_NAME = "1.7";
+
+    // Google support
+    supportPackageVersion = "25.0.0"
+    // glide
+    glidePackageVersion = "3.7.0"
 }
