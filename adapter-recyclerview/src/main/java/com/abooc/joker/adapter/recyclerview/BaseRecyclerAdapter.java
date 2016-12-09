@@ -36,6 +36,16 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerViewAdapter<T> {
         notifyDataSetChanged();
     }
 
+    public void add(List<T> list) {
+        getCollection().addAll(list);
+        notifyDataSetChanged();
+    }
+
+    public void addFirst(T t) {
+        getCollection().add(0, t);
+        notifyDataSetChanged();
+    }
+
     public void addFirst(List<T> list) {
         getCollection().addAll(0, list);
         notifyDataSetChanged();
