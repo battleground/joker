@@ -14,24 +14,18 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
 
         <activity android:name="com.abooc.joker.FmBlankActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity android:name=".MessageViewActivity"
             android:label="MessageView - 实例">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
