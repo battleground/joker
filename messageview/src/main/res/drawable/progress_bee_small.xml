@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@mipmap/ic_loading_bee_small_1" android:duration="40"></item>
+    <item android:drawable="@mipmap/ic_loading_bee_small_2" android:duration="40"></item>
+    <item android:drawable="@mipmap/ic_loading_bee_small_3" android:duration="40"></item>
+    <item android:drawable="@mipmap/ic_loading_bee_small_4" android:duration="40"></item>
+    <item android:drawable="@mipmap/ic_loading_bee_small_5" android:duration="40"></item>
+    <item android:drawable="@mipmap/ic_loading_bee_small_6" android:duration="40"></item>
+</animation-list>

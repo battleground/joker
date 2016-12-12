@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 通用圆形进度条 -->
+    <style name="progress_round_normal" parent="@android:style/Widget.ProgressBar">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_rounded_normal</item>
+        <item name="android:indeterminateDuration">1200</item>
+        <item name="android:indeterminate">true</item>
+    </style>
+
+    <!-- 黄色小蜜蜂 -->
+    <style name="progress_bee" parent="@android:style/Widget.ProgressBar">
+        <item name="android:layout_width">58dp</item>
+        <item name="android:layout_height">58dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_bee</item>
+        <item name="android:indeterminateDuration">1200</item>
+        <item name="android:indeterminate">true</item>
+    </style>
+
+    <!-- 灰色小蜜蜂 -->
+    <style name="progress_bee_small" parent="@android:style/Widget.ProgressBar">
+        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_bee_small</item>
+        <item name="android:indeterminateDuration">1200</item>
+        <item name="android:indeterminate">true</item>
+    </style>
+</resources>

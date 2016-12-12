@@ -10,23 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.abooc.joker.R;
 import com.abooc.joker.adapter.recyclerview.RecyclerViewAdapter;
 import com.abooc.joker.adapter.recyclerview.ViewHolder;
+import com.abooc.joker.samples.R;
 
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class RecyclerViewFragment extends Fragment {
-
-    @InjectView(R.id.RecyclerView)
-    RecyclerView mRecyclerView;
 
     public RecyclerViewFragment() {
     }
@@ -40,9 +31,7 @@ public class RecyclerViewFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        ButterKnife.inject(view);
-
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
+        RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.RecyclerView);
 
         String[] a = {"abc", "abc", "abc", "abc", "abc", "abc", "abc", "abc", "abc", "abc", "abc", "abc"};
         List<String> stringList = Arrays.asList(a);

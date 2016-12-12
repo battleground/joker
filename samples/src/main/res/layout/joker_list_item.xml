@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <TextView
-        android:id="@+id/TITLE"
+        android:id="@+id/TEXT1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
@@ -17,11 +17,20 @@
         android:minWidth="80dp" />
 
     <TextView
-        android:id="@+id/CONTEXT"
+        android:id="@+id/TEXT2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="2dp"
         android:background="@color/joker_list_item_text"
         android:minWidth="200dp" />
+
+    <TextView
+        android:id="@+id/TEXT3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_margin="2dp"
+        android:background="@color/joker_list_item_text"
+        android:minWidth="30dp" />
 
 </LinearLayout>

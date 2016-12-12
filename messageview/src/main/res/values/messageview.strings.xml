@@ -1,0 +1,4 @@
+<resources>
+    <string name="joker_app_name">joker-messageview</string>
+    <string name="joker_load_success">joker-加载成功！</string>
+</resources>
