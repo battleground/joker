@@ -10,7 +10,7 @@ import com.abooc.joker.adapter.recyclerview.ViewHolder.OnRecyclerItemClickListen
 /**
  * 单选列表
  * @author zhangjunpu
- * @date 15/8/10
+ *  15/8/10
  */
 public abstract class SingleChoiceRecyclerAdapter<T> extends BaseRecyclerAdapter<T> implements OnRecyclerItemClickListener {
 

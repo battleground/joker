@@ -13,7 +13,9 @@ import android.view.ViewParent;
  * RecyclerView统一使用的ViewHolder
  */
 public abstract class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
+    /**
+     * 负责Item点击事件
+     */
     public interface OnRecyclerItemClickListener {
         /**
          * @param recyclerView RecyclerView
@@ -23,12 +25,15 @@ public abstract class ViewHolder extends RecyclerView.ViewHolder implements View
         void onItemClick(RecyclerView recyclerView, View itemView, int position);
     }
 
+    /**
+     * 负责Item中子View点击事件
+     */
     public interface OnRecyclerItemChildClickListener {
         /**
          * @param recyclerView RecyclerView
-         * @param itemView  元素根布局
-         * @param clickView 响应点击事件的View
-         * @param position  the adapter position that the given child view corresponds to.
+         * @param itemView     元素根布局
+         * @param clickView    响应点击事件的View
+         * @param position     the adapter position that the given child view corresponds to.
          */
         void onItemChildClick(RecyclerView recyclerView, View itemView, View clickView, int position);
     }

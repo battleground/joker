@@ -11,8 +11,9 @@ import java.util.List;
 
 /**
  * 多选列表
+ *
  * @author zhangjunpu
- * @date 15/8/10
+ *  15/8/10
  */
 public abstract class MultipleChoiceRecyclerAdapter<T> extends BaseRecyclerAdapter<T> implements OnRecyclerItemClickListener {
 
@@ -33,6 +34,9 @@ public abstract class MultipleChoiceRecyclerAdapter<T> extends BaseRecyclerAdapt
 
     /**
      * 判断是否存在
+     *
+     * @param object 对象
+     * @return true or false
      */
     protected boolean exist(T object) {
         return mCheckedDatas.contains(object);
@@ -51,6 +55,8 @@ public abstract class MultipleChoiceRecyclerAdapter<T> extends BaseRecyclerAdapt
 
     /**
      * 获取已选择的数量
+     *
+     * @return int size
      */
     public int getCheckedCount() {
         return mCheckedDatas.size();
@@ -58,6 +64,8 @@ public abstract class MultipleChoiceRecyclerAdapter<T> extends BaseRecyclerAdapt
 
     /**
      * 选择或取消选择全部
+     *
+     * @param flag flag
      */
     public void checkedAll(boolean flag) {
         clearCheckedDatas();
