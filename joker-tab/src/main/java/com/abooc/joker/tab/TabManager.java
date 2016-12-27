@@ -7,12 +7,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
-import com.abooc.util.Debug;
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class TabManager {
+    static final String TAG = TabManager.class.getSimpleName();
 
     public Fragment prev;
     public Fragment content;
@@ -44,7 +44,7 @@ public class TabManager {
         Fragment byTag = mFragmentManager.findFragmentByTag(tab.name);
 
         if (byTag == null) {
-            Debug.anchor(tab.name);
+            Logger.out(tab.name);
             FragmentTransaction transaction = mFragmentManager.beginTransaction();
             Fragment fragment = Fragment.instantiate(mContext, tab.fragment.getName());
             transaction.add(containerViewId, fragment, tab.name)
@@ -65,12 +65,16 @@ public class TabManager {
         return this;
     }
 
+    public TabManager addAll(Collection<Tab> tabs) {
+        tabs.addAll(tabs);
+        return this;
+    }
+
     public void switchTo(Fragment from, Fragment to) {
         if (from != to) {
             String message = (from == null ? "NULL" : from.getClass().getSimpleName())
                     + " --> " + to.getClass().getSimpleName();
-            Log.e("Debug", message);
-            Debug.anchor(message);
+            Logger.out(message);
             prev = from;
             content = to;
             FragmentTransaction transaction = mFragmentManager.beginTransaction();
@@ -103,7 +107,7 @@ public class TabManager {
                     }
                     mFragmentManager.beginTransaction()
                             .show(content).commit();
-                    Log.d("Debug", content.getClass().getSimpleName());
+                    Logger.out(content.getClass().getSimpleName());
 
                     if (iOnSwitchListener != null) {
                         iOnSwitchListener.onSwitched(null, content);
@@ -112,10 +116,10 @@ public class TabManager {
                 }
                 return false;
             } else {
-                Log.e("Debug", "fragments.size = 0");
+                Log.e(TAG, "fragments.size = 0");
             }
         } else {
-            Log.e("Debug", "backStackImmediate = " + backStackImmediate);
+            Log.e(TAG, "backStackImmediate = " + backStackImmediate);
         }
         return backStackImmediate;
     }
