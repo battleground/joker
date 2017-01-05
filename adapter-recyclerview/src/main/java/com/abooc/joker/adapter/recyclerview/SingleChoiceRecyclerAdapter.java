@@ -4,15 +4,12 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.abooc.joker.adapter.recyclerview.ViewHolder.OnRecyclerItemClickListener;
-
-
 /**
  * 单选列表
  * @author zhangjunpu
  *  15/8/10
  */
-public abstract class SingleChoiceRecyclerAdapter<T> extends BaseRecyclerAdapter<T> implements OnRecyclerItemClickListener {
+public abstract class SingleChoiceRecyclerAdapter<T> extends BaseRecyclerAdapter<T> implements ViewHolder.OnRecyclerItemClickListener {
 
     protected int mCheckedPosition = -1;
 

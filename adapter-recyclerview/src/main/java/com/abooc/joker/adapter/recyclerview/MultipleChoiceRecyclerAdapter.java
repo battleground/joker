@@ -4,8 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.abooc.joker.adapter.recyclerview.ViewHolder.OnRecyclerItemClickListener;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +13,7 @@ import java.util.List;
  * @author zhangjunpu
  *  15/8/10
  */
-public abstract class MultipleChoiceRecyclerAdapter<T> extends BaseRecyclerAdapter<T> implements OnRecyclerItemClickListener {
+public abstract class MultipleChoiceRecyclerAdapter<T> extends BaseRecyclerAdapter<T> implements ViewHolder.OnRecyclerItemClickListener {
 
     protected List<T> mCheckedDatas = new ArrayList<T>();
 

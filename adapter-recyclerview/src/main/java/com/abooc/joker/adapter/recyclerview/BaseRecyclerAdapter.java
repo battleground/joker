@@ -3,9 +3,6 @@ package com.abooc.joker.adapter.recyclerview;
 
 import android.content.Context;
 
-import com.abooc.joker.adapter.recyclerview.ViewHolder.OnRecyclerItemChildClickListener;
-import com.abooc.joker.adapter.recyclerview.ViewHolder.OnRecyclerItemClickListener;
-
 import java.util.List;
 
 /**
@@ -15,18 +12,18 @@ import java.util.List;
 public abstract class BaseRecyclerAdapter<T> extends RecyclerViewAdapter<T> {
 
     protected Context mContext;
-    public OnRecyclerItemClickListener mListener;
-    public OnRecyclerItemChildClickListener mChildListener;
+    public ViewHolder.OnRecyclerItemClickListener mListener;
+    public ViewHolder.OnRecyclerItemChildClickListener mChildListener;
 
     public BaseRecyclerAdapter(Context context) {
         this.mContext = context;
     }
 
-    public void setOnRecyclerItemClickListener(OnRecyclerItemClickListener listener) {
+    public void setOnRecyclerItemClickListener(ViewHolder.OnRecyclerItemClickListener listener) {
         this.mListener = listener;
     }
 
-    public void setOnRecyclerItemChildClickListener(OnRecyclerItemChildClickListener listener) {
+    public void setOnRecyclerItemChildClickListener(ViewHolder.OnRecyclerItemChildClickListener listener) {
         this.mChildListener = listener;
     }
 
