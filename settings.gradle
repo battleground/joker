@@ -4,5 +4,6 @@
 //include ':joker'
 //include ':adapter-segmentadapter'
 //include ':adapter-recyclerview'
-include ':joker-tab', ':joker-tab-samples'
+include ':emoji'
+//include ':joker-tab', ':joker-tab-samples'
 //include  ':publiclibrary'
