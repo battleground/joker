@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.abooc.emoji.ChatActivity" />
+            android:name="com.abooc.emoji.ChatActivity"
+            android:label="聊天记录" />
     </application>
 
 </manifest>
