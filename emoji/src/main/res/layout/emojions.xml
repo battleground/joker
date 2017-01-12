@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/emojicons"
+    android:layout_width="match_parent"
+    android:layout_height="257dp"
+    android:background="#EEE"
+    android:visibility="visible">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/list_selector_background"
+            android:clickable="true"
+            android:onClick="onEmojiSmileEvent"
+            android:padding="4dp"
+            android:src="@drawable/ic_emoji_smile" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/list_selector_background"
+            android:clickable="true"
+            android:onClick="onEmojiAndroidEvent"
+            android:padding="4dp"
+            android:src="@drawable/ic_emoji_android" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/list_selector_background"
+            android:clickable="true"
+            android:onClick="onEmojiSmileEvent"
+            android:padding="4dp"
+            android:src="@drawable/ic_emoji_smile" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/list_selector_background"
+            android:clickable="true"
+            android:onClick="onEmojiSmileEvent"
+            android:padding="4dp"
+            android:src="@drawable/ic_emoji_smile" />
+    </LinearLayout>
+
+</FrameLayout>

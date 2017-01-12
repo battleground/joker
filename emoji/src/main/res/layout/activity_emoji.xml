@@ -39,14 +39,6 @@
         android:layout_margin="12dp"
         android:hint="消息..." />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:enabled="false"
-        android:hint="消息原数据："
-        android:textSize="10sp" />
-
     <EditText
         android:id="@+id/inputBarHint"
         android:layout_width="match_parent"
@@ -55,7 +47,8 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:enabled="false"
-        android:hint="消息..." />
+        android:hint="数据源..."
+        android:textSize="10sp" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -82,17 +75,5 @@
         android:padding="12dp"
         android:text="发送 >"
         android:textSize="18sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ListView
-            android:id="@+id/message_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
 
 </LinearLayout>

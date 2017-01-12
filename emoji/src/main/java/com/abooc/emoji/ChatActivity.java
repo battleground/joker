@@ -1,96 +1,215 @@
 package com.abooc.emoji;
 
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.view.LayoutInflater;
+import android.text.style.ImageSpan;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.abooc.plugin.about.AboutActivity;
+import com.abooc.util.Debug;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChatActivity extends AppCompatActivity {
 
 
-    public static void launch(Context context) {
-        Intent intent = new Intent(context, ChatActivity.class);
-        context.startActivity(intent);
+    public static String testMessage = "这是一条[微笑]的表情、[安卓][安卓]2个表情。";
+    public static String pattern = "\\[[^\\[\\[]+\\]";
+
+    enum Emojicon {
+        微笑(R.drawable.ic_emoji_smile),
+        安卓(R.drawable.ic_emoji_android);
+
+        int value;
+
+        Emojicon(int value) {
+            this.value = value;
+        }
+
+        public String code() {
+            return "[" + name() + "]";
+        }
+    }
+
+    View emojicons;
+    EditText inputBarHint;
+    TextView messageText;
+
+    InputBarView mInputBarView;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_chat);
+        emojicons = findViewById(R.id.emojicons);
+        inputBarHint = (EditText) findViewById(R.id.inputBarHint);
+        messageText = (TextView) findViewById(R.id.message);
+
+        Emoji.build(getResources());
+
+        inputBarHint.setText(testMessage);
+        SpannableStringBuilder buildMessage = buildMessage(this, testMessage);
+        messageText.setText(buildMessage);
+
+        View inputBar = findViewById(R.id.inputBarView);
+        mInputBarView = new InputBarView(inputBar);
+        mInputBarView.setText(buildMessage);
+        mInputBarView.setOnClickEvent(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.inputBar_show_emojicon:
+                        onShowEmojiEvent(v);
+                        break;
+                    case R.id.inputBar_show_keyboard:
+                        onShowKeyboardEvent(v);
+                        break;
+                }
+            }
+        });
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        setContentView(R.layout.activity_chat);
-
-        Data.buildMessages();
-
-        ListView mListView = (ListView) findViewById(R.id.message_list);
-        mListView.setAdapter(new MessageAdapter(this, R.layout.message_item, R.id.message, Data.mMessageBuilder.list));
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_emoji, menu);
+        return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        super.onBackPressed();
+        switch (item.getItemId()) {
+            case R.id.menu_histories:
+                HistoryActivity.launch(this);
+                break;
+            case R.id.menu_about:
+                AboutActivity.launch(this);
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
-    class MessageAdapter extends ArrayAdapter<Message> {
-        int resource;
+    public void onHideKeyboardEvent(View view) {
+        Keyboard.hideKeyboard(this);
+    }
 
-        public MessageAdapter(Context context, int resource, int textViewResourceId, List<Message> objects) {
-            super(context, resource, textViewResourceId, objects);
-            this.resource = resource;
+
+    public void onShowEmojiEvent(View view) {
+        Debug.anchor();
+        mInputBarView.showKeyboard();
+        Keyboard.hideKeyboard(this);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                emojicons.setVisibility(View.VISIBLE);
+            }
+        }, 300);
+    }
+
+    public void onShowKeyboardEvent(View view) {
+        Debug.anchor();
+        mInputBarView.showEmojicon();
+        Keyboard.showKeyboard(this);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                emojicons.setVisibility(View.GONE);
+            }
+        }, 100);
+    }
+
+    public void onSendEvent(View view) {
+        inputBarHint.setText(null);
+        String toString = mInputBarView.getText().toString();
+        inputBarHint.setHint(toString);
+        mInputBarView.setText(null);
+
+        SpannableStringBuilder builder = buildMessage(this, toString);
+        messageText.setText(builder);
+
+    }
+
+    static SpannableStringBuilder buildMessage(Context context, String message) {
+        Debug.anchor(message);
+        SpannableStringBuilder spannableString = new SpannableStringBuilder(message);
+
+        HashMap<int[], String> indexMap = findIndex(message);
+        Iterator<int[]> iterator = indexMap.keySet().iterator();
+
+        for (int i = 0; i < indexMap.size(); i++) {
+            int[] indexes = iterator.next();
+            String emoji = indexMap.get(indexes);
+            Bitmap bitmap = findBitmap(emoji, Emoji.emotionsBitmap);
+            ImageSpan imageSpan = new ImageSpan(context, bitmap);
+            spannableString.setSpan(imageSpan, indexes[0], indexes[1], Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         }
 
-        @NonNull
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(resource, parent, false);
-                holder = new ViewHolder(getContext(), convertView);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
+        return spannableString;
+    }
 
-            Message item = getItem(position);
-            holder.attachData(item);
+    public void onEmojiSmileEvent(View view) {
+        buildEmoji(Emojicon.微笑);
+    }
 
-            return convertView;
+    public void onEmojiAndroidEvent(View view) {
+        buildEmoji(Emojicon.安卓);
+    }
+
+    void buildEmoji(Emojicon emojicon) {
+        String code = emojicon.code();
+
+        int selectionStart = mInputBarView.getSelectionStart();
+        int selectionEnd = mInputBarView.getSelectionEnd();
+
+        if (selectionEnd > selectionStart) {
+            inputBarHint.getText().replace(selectionStart, selectionEnd, code);
+        } else {
+            inputBarHint.getText().insert(selectionStart, code);
         }
 
-        class ViewHolder {
-            Context mContext;
-            TextView mTextView;
-            TextView mOriginText;
+        Bitmap bitmap = findBitmap(code, Emoji.emotionsBitmap);
+        ImageSpan imageSpan = new ImageSpan(this, bitmap);
+        SpannableStringBuilder spannableString = new SpannableStringBuilder(code);
+        spannableString.setSpan(imageSpan, 0, code.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
 
-            ViewHolder(Context context, View view) {
-                mContext = context;
-                mTextView = (TextView) view.findViewById(R.id.message);
-                mOriginText = (TextView) view.findViewById(R.id.inputBarHint);
-            }
-
-            void attachData(Message message) {
-                if (!message.hasBuild()) {
-                    SpannableStringBuilder builder = EmojiActivity.buildMessage(mContext, message.message);
-                    message.spannableMessage = builder;
-                }
-
-                mTextView.setText(message.spannableMessage);
-                mOriginText.setText("数据源：" + message.message);
-            }
+        if (selectionEnd > selectionStart) {
+            mInputBarView.getText().replace(selectionStart, selectionEnd, spannableString);
+        } else {
+            mInputBarView.getText().insert(selectionStart, spannableString);
         }
     }
+
+    static Bitmap findBitmap(String emoji, Map<String, Bitmap> bitmapMap) {
+        Bitmap bitmap = bitmapMap.get(emoji);
+        return bitmap;
+    }
+
+    public static HashMap<int[], String> findIndex(String message) {
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(message);
+
+        HashMap<int[], String> map = new HashMap<>();
+        while (m.find()) {
+            map.put(new int[]{m.start(), m.end()}, m.group(0));
+            System.out.println("From map: " + m.group(0) + ", [" + m.start() + " - " + m.end() + "]");
+        }
+        System.out.println("\n");
+        return map;
+    }
 }
+

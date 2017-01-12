@@ -19,8 +19,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.abooc.emoji.ChatActivity"
+            android:name="com.abooc.emoji.HistoryActivity"
             android:label="聊天记录" />
+        <activity
+            android:name="com.abooc.emoji.ChatActivity"
+            android:label="聊天">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

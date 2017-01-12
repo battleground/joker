@@ -76,7 +76,7 @@ public class EmojiActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_histories:
-                ChatActivity.launch(this);
+                HistoryActivity.launch(this);
                 break;
             case R.id.menu_about:
                 AboutActivity.launch(this);
@@ -127,6 +127,7 @@ public class EmojiActivity extends AppCompatActivity {
 
         int selectionStart = inputBar.getSelectionStart();
         int selectionEnd = inputBar.getSelectionEnd();
+        Debug.anchor("selectionStart:" + selectionStart + ", selectionEnd:" + selectionEnd);
 
         if (selectionEnd > selectionStart) {
             inputBarHint.getText().replace(selectionStart, selectionEnd, code);
