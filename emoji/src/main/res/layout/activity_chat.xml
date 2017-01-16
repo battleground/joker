@@ -26,6 +26,7 @@
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:enabled="false"
+            android:focusable="false"
             android:hint="消息..."
             android:textSize="12sp" />
 
@@ -59,16 +60,26 @@
             android:layout_weight="1"
             android:background="#CCC" />
 
-        <include layout="@layout/inputbar" />
-
-        <FrameLayout
+        <TextView
+            android:id="@+id/inputBar_virtual"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#CCC" />
-
-        <include
-            layout="@layout/emojions"
-            android:visibility="gone" />
+            android:layout_height="32dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/edit_input_background"
+            android:gravity="center_vertical"
+            android:hint="输入消息..."
+            android:paddingLeft="4dp"
+            android:singleLine="true"
+            android:textSize="11sp" />
 
     </LinearLayout>
+
+    <include
+        layout="@layout/chat_inputview"
+        android:visibility="gone" />
+
 </FrameLayout>

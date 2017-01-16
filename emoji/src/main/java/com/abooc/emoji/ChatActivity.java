@@ -10,6 +10,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -49,13 +50,20 @@ public class ChatActivity extends AppCompatActivity {
     TextView messageHistory;
 
     InputBarView mInputBarView;
+    View chat_inputview;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_chat);
+        chat_inputview = findViewById(R.id.chat_inputview);
+        chat_inputview.setVisibility(View.GONE);
+
+
         emojicons = findViewById(R.id.emojicons);
+        emojicons.setVisibility(View.GONE);
+
         inputBarHint = (EditText) findViewById(R.id.inputBarHint);
         messageHistory = (TextView) findViewById(R.id.message_history);
 
@@ -64,6 +72,18 @@ public class ChatActivity extends AppCompatActivity {
         inputBarHint.setText(testMessage);
         SpannableStringBuilder buildMessage = buildMessage(this, testMessage);
         messageHistory.setText(buildMessage);
+
+        View inputBar_virtual = findViewById(R.id.inputBar_virtual);
+        inputBar_virtual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chat_inputview.setVisibility(View.VISIBLE);
+                chat_inputview.findViewById(R.id.inputBar).requestFocus();
+                onShowKeyboardEvent(v);
+
+            }
+        });
+
 
         View inputBar = findViewById(R.id.inputBarView);
         mInputBarView = new InputBarView(inputBar);
@@ -100,6 +120,15 @@ public class ChatActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (Keyboard.hideKeyboard(this)) {
+            chat_inputview.setVisibility(View.GONE);
+            return true;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     public void onHideKeyboardEvent(View view) {

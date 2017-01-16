@@ -14,16 +14,17 @@ public class Keyboard {
     /**
      * 隐藏软键盘
      */
-    public static void hideKeyboard(Context context) {
+    public static boolean hideKeyboard(Context context) {
         Activity activity = (Activity) context;
         if (activity != null) {
             InputMethodManager imm = (InputMethodManager) activity
                     .getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm.isActive() && activity.getCurrentFocus() != null) {
-                imm.hideSoftInputFromWindow(activity.getCurrentFocus()
+                return imm.hideSoftInputFromWindow(activity.getCurrentFocus()
                         .getWindowToken(), 0);
             }
         }
+        return false;
     }
 
     /**
