@@ -46,7 +46,7 @@ public class ChatActivity extends AppCompatActivity {
 
     View emojicons;
     EditText inputBarHint;
-    TextView messageText;
+    TextView messageHistory;
 
     InputBarView mInputBarView;
 
@@ -57,17 +57,16 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         emojicons = findViewById(R.id.emojicons);
         inputBarHint = (EditText) findViewById(R.id.inputBarHint);
-        messageText = (TextView) findViewById(R.id.message);
+        messageHistory = (TextView) findViewById(R.id.message_history);
 
         Emoji.build(getResources());
 
         inputBarHint.setText(testMessage);
         SpannableStringBuilder buildMessage = buildMessage(this, testMessage);
-        messageText.setText(buildMessage);
+        messageHistory.setText(buildMessage);
 
         View inputBar = findViewById(R.id.inputBarView);
         mInputBarView = new InputBarView(inputBar);
-        mInputBarView.setText(buildMessage);
         mInputBarView.setOnClickEvent(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,7 +139,7 @@ public class ChatActivity extends AppCompatActivity {
         mInputBarView.setText(null);
 
         SpannableStringBuilder builder = buildMessage(this, toString);
-        messageText.setText(builder);
+        messageHistory.setText(builder);
 
     }
 

@@ -38,11 +38,18 @@
     <EditText
         android:id="@+id/inputBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:paddingLeft="4dp"
         android:layout_weight="1"
-        android:ellipsize="end"
+        android:gravity="center_vertical"
         android:hint="输入消息..."
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:textSize="11sp"
+        android:background="@drawable/edit_input_background"/>
 
     <FrameLayout
         android:layout_width="0.5dp"
