@@ -12,7 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.abooc.plugin.about.AboutActivity;
@@ -24,7 +27,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
 
     public static String testMessage = "这是一条[微笑]的表情、[安卓][安卓]2个表情。";
@@ -52,14 +55,18 @@ public class ChatActivity extends AppCompatActivity {
     InputBarView mInputBarView;
     View chat_inputview;
 
+    View inputWidget;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_chat);
-        chat_inputview = findViewById(R.id.chat_inputview);
-        chat_inputview.setVisibility(View.GONE);
+        inputWidget = findViewById(R.id.inputWidget);
+        inputWidget.setVisibility(View.GONE);
 
+
+        chat_inputview = findViewById(R.id.chat_inputview);
 
         emojicons = findViewById(R.id.emojicons);
         emojicons.setVisibility(View.GONE);
@@ -77,7 +84,7 @@ public class ChatActivity extends AppCompatActivity {
         inputBar_virtual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chat_inputview.setVisibility(View.VISIBLE);
+                inputWidget.setVisibility(View.VISIBLE);
                 chat_inputview.findViewById(R.id.inputBar).requestFocus();
                 onShowKeyboardEvent(v);
 
@@ -100,6 +107,23 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
+
+        String[] strings = {
+                "第一项", "第一项", "第一项", "第一项", "第一项",
+                "第2项", "第2项", "第2项", "第2项", "第2项",
+                "第3项", "第3项", "第3项", "第3项", "第3项",
+                "第4项", "第4项", "第4项", "第4项", "第4项"
+        };
+
+
+        ListView iListView = (ListView) findViewById(R.id.ListView);
+        iListView.setOnItemClickListener(this);
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, strings);
+        iListView.setAdapter(adapter);
+
+
     }
 
     @Override
@@ -124,15 +148,21 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (Keyboard.hideKeyboard(this)) {
-            chat_inputview.setVisibility(View.GONE);
-            return true;
-        }
+//        if (Keyboard.hideKeyboard(this)) {
+//            chat_inputview.setVisibility(View.GONE);
+//            return true;
+//        }
         return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Debug.anchor("点击 " + position);
     }
 
     public void onHideKeyboardEvent(View view) {
         Keyboard.hideKeyboard(this);
+        inputWidget.setVisibility(View.GONE);
     }
 
 
@@ -145,7 +175,7 @@ public class ChatActivity extends AppCompatActivity {
             public void run() {
                 emojicons.setVisibility(View.VISIBLE);
             }
-        }, 300);
+        }, 100);
     }
 
     public void onShowKeyboardEvent(View view) {
