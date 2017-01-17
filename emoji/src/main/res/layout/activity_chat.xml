@@ -98,7 +98,7 @@
 
 
     <FrameLayout
-        android:id="@+id/inputWidget"
+        android:id="@+id/ChatWidget"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#30000000"
@@ -106,7 +106,7 @@
         android:onClick="onHideKeyboardEvent"
         android:visibility="visible">
 
-        <include layout="@layout/chat_inputview" />
+        <include layout="@layout/chat_input_and_emojions" />
     </FrameLayout>
 
 </FrameLayout>

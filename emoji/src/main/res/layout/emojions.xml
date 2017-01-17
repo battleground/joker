@@ -7,47 +7,17 @@
     android:orientation="vertical"
     android:visibility="visible">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/ChildTabContent"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:orientation="horizontal">
+        android:layout_height="160dp" />
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:drawable/list_selector_background"
-            android:clickable="true"
-            android:onClick="onEmojiSmileEvent"
-            android:padding="6dp"
-            android:src="@drawable/ic_emoji_smile" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:drawable/list_selector_background"
-            android:clickable="true"
-            android:onClick="onEmojiAndroidEvent"
-            android:padding="6dp"
-            android:src="@drawable/ic_emoji_android" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:drawable/list_selector_background"
-            android:clickable="true"
-            android:onClick="onEmojiSmileEvent"
-            android:padding="6dp"
-            android:src="@drawable/ic_emoji_smile" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:drawable/list_selector_background"
-            android:clickable="true"
-            android:onClick="onEmojiSmileEvent"
-            android:padding="6dp"
-            android:src="@drawable/ic_emoji_smile" />
-    </LinearLayout>
+    <FrameLayout
+        android:layout_width="100dp"
+        android:layout_height="5dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="4dp"
+        android:background="#AAA" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -61,11 +31,11 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/emojicons_menu_emojicon"
             android:layout_width="60dp"
             android:layout_height="40dp"
             android:background="@android:drawable/list_selector_background"
             android:clickable="true"
-            android:onClick="onEmojiSmileEvent"
             android:padding="6dp"
             android:src="@drawable/ic_emoji_smile" />
 
@@ -77,11 +47,11 @@
             android:background="#CCC" />
 
         <ImageView
+            android:id="@+id/emojicons_menu_gifts"
             android:layout_width="60dp"
             android:layout_height="40dp"
             android:background="@android:drawable/list_selector_background"
             android:clickable="true"
-            android:onClick="onEmojiSmileEvent"
             android:padding="6dp"
             android:src="@drawable/ic_live_gift" />
 
@@ -93,11 +63,11 @@
             android:background="#CCC" />
 
         <ImageView
+            android:id="@+id/emojicons_menu_gifts2"
             android:layout_width="60dp"
             android:layout_height="40dp"
             android:background="@android:drawable/list_selector_background"
             android:clickable="true"
-            android:onClick="onEmojiSmileEvent"
             android:padding="6dp"
             android:src="@drawable/ic_live_gift" />
 
@@ -110,12 +80,12 @@
             android:background="#CCC" />
 
         <TextView
+            android:id="@+id/emojicons_menu_add"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:background="@android:drawable/list_selector_background"
             android:clickable="true"
             android:gravity="center"
-            android:onClick="onEmojiSmileEvent"
             android:padding="6dp"
             android:text="添加表情" />
 

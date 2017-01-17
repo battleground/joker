@@ -68,7 +68,7 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
         mAnimationOut = AnimationUtils.loadAnimation(this, R.anim.slide_out_down);
 
         setContentView(R.layout.activity_chat);
-        inputWidget = findViewById(R.id.inputWidget);
+        inputWidget = findViewById(R.id.ChatWidget);
         inputWidget.setVisibility(View.GONE);
 
 
@@ -155,7 +155,7 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
 //        if (Keyboard.hideKeyboard(this)) {
-//            chat_inputview.setVisibility(View.GONE);
+//            chat_input_and_emojions.setVisibility(View.GONE);
 //            return true;
 //        }
         return super.dispatchTouchEvent(ev);
