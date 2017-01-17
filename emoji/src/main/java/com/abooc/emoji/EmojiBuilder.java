@@ -24,22 +24,10 @@ public class EmojiBuilder {
 
 
     /**
-     * 匹配图片
-     *
-     * @param emoji
-     * @param bitmapMap
-     * @return
-     */
-    public static Bitmap findBitmap(String emoji, Map<String, Bitmap> bitmapMap) {
-        Bitmap bitmap = bitmapMap.get(emoji);
-        return bitmap;
-    }
-
-    /**
      * @param message 源文本，即目标字符串，如：瞧[惊讶]，这是一条带表情符的消息[微笑]！
      * @return 返回将表情符转为图片显示的内容。
      */
-    public static CharSequence toEmojiString(Context ctx, String message, Map<String, Bitmap> emojiMap) {
+    public static CharSequence toEmojiCharSequence(Context ctx, String message, Map<String, Bitmap> emojiMap) {
         Debug.anchor(message);
         SpannableStringBuilder spannableString = new SpannableStringBuilder(message);
 
@@ -64,35 +52,35 @@ public class EmojiBuilder {
     }
 
 
-    public static CharSequence toEmoji(Context ctx, String emojiChars, Map<String, Bitmap> emojiMap) {
-        SpannableStringBuilder spannableString = new SpannableStringBuilder(emojiChars);
-        Bitmap bitmap = emojiMap.get(emojiChars);
+    public static CharSequence toEmojiChar(Context ctx, String emojiCode, Map<String, Bitmap> emojiMap) {
+        SpannableStringBuilder spannableString = new SpannableStringBuilder(emojiCode);
+        Bitmap bitmap = emojiMap.get(emojiCode);
         ImageSpan imageSpan = new ImageSpan(ctx, bitmap);
-        spannableString.setSpan(imageSpan, 0, emojiChars.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(imageSpan, 0, emojiCode.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         return spannableString;
     }
 
 
-    public static String writeEmoji(String emojiChars, EditText inputEditText) {
+    public static String writeEmoji(String emojiCode, EditText inputEditText) {
         int selectionStart = inputEditText.getSelectionStart();
         int selectionEnd = inputEditText.getSelectionEnd();
         Debug.anchor("selectionStart:" + selectionStart + ", selectionEnd:" + selectionEnd);
 
         if (selectionEnd > selectionStart) {
-            inputEditText.getText().replace(selectionStart, selectionEnd, emojiChars);
+            inputEditText.getText().replace(selectionStart, selectionEnd, emojiCode);
         } else {
-            inputEditText.getText().insert(selectionStart, emojiChars);
+            inputEditText.getText().insert(selectionStart, emojiCode);
         }
         return inputEditText.getText().toString();
     }
 
-    public static CharSequence writeEmoji(String emojiChars, EditText inputEditText, Map<String, Bitmap> emojiMap) {
+    public static CharSequence writeEmoji(String emojiCode, EditText inputEditText, Map<String, Bitmap> emojiMap) {
         int selectionStart = inputEditText.getSelectionStart();
         int selectionEnd = inputEditText.getSelectionEnd();
         Debug.anchor("selectionStart:" + selectionStart + ", selectionEnd:" + selectionEnd);
 
         Context context = inputEditText.getContext();
-        CharSequence emojiChar = EmojiBuilder.toEmoji(context, emojiChars, emojiMap);
+        CharSequence emojiChar = EmojiBuilder.toEmojiChar(context, emojiCode, emojiMap);
 
         if (selectionEnd > selectionStart) {
             inputEditText.getText().replace(selectionStart, selectionEnd, emojiChar);

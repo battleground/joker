@@ -1,81 +1,101 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:isScrollContainer="true"
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <ImageView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/list_selector_background"
+                android:clickable="true"
+                android:onClick="onEmojiSmileEvent"
+                android:padding="4dp"
+                android:src="@drawable/ic_emoji_smile" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/list_selector_background"
+                android:clickable="true"
+                android:onClick="onEmojiAndroidEvent"
+                android:padding="4dp"
+                android:src="@drawable/ic_emoji_android" />
+        </LinearLayout>
+
+
+        <EditText
+            android:id="@+id/inputBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:editable="false"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="12dp"
+            android:hint="消息..." />
+
+        <EditText
+            android:id="@+id/inputBarHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:enabled="false"
+            android:hint="数据源..."
+            android:textSize="10sp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#CCC" />
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:background="#DDD"
+            android:padding="12dp"
+            android:text="一条消息!"
+            android:textSize="18sp" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
             android:background="@android:drawable/list_selector_background"
             android:clickable="true"
-            android:onClick="onEmojiSmileEvent"
-            android:padding="4dp"
-            android:src="@drawable/ic_emoji_smile" />
+            android:onClick="onSendEvent"
+            android:padding="12dp"
+            android:text="发送 >"
+            android:textSize="18sp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/list_selector_background"
-            android:clickable="true"
-            android:onClick="onEmojiAndroidEvent"
-            android:padding="4dp"
-            android:src="@drawable/ic_emoji_android" />
     </LinearLayout>
 
 
-    <EditText
-        android:id="@+id/inputBar"
+    <com.abooc.emoji.widget.ChatWidget
+        android:id="@+id/ChatWidget"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="12dp"
-        android:hint="消息..." />
-
-    <EditText
-        android:id="@+id/inputBarHint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:enabled="false"
-        android:hint="数据源..."
-        android:textSize="10sp" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#CCC" />
-
-    <TextView
-        android:id="@+id/message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:background="#DDD"
-        android:padding="12dp"
-        android:text="一条消息!"
-        android:textSize="18sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:background="@android:drawable/list_selector_background"
+        android:layout_height="match_parent"
+        android:background="#30000000"
         android:clickable="true"
-        android:onClick="onSendEvent"
-        android:padding="12dp"
-        android:text="发送 >"
-        android:textSize="18sp" />
+        android:onClick="onHideKeyboardEvent"
+        android:visibility="visible">
 
-</LinearLayout>
+        <include layout="@layout/chat_input_and_emojions" />
+    </com.abooc.emoji.widget.ChatWidget>
+</FrameLayout>

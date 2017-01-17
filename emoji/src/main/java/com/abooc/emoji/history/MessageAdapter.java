@@ -54,7 +54,7 @@ class MessageAdapter extends ArrayAdapter<Message> {
 
         void attachData(Message message) {
             if (!message.hasBuild()) {
-                CharSequence builder = EmojiBuilder.toEmojiString(mContext, message.message, Emoji.emotionsBitmap);
+                CharSequence builder = EmojiBuilder.toEmojiCharSequence(mContext, message.message, Emoji.emotionsBitmap);
                 message.spannableMessage = builder;
             }
 

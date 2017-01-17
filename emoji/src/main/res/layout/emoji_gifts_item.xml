@@ -17,5 +17,5 @@
         android:gravity="center"
         android:text="200 金币"
         android:textColor="#D22"
-        android:textSize="12sp" />
+        android:textSize="10sp" />
 </LinearLayout>

@@ -1,14 +1,12 @@
 package com.abooc.emoji;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -18,94 +16,59 @@ import android.widget.TextView;
 import com.abooc.emoji.history.HistoryActivity;
 import com.abooc.emoji.test.Emoji;
 import com.abooc.emoji.test.Emojicon;
+import com.abooc.emoji.widget.ChatWidget;
 import com.abooc.plugin.about.AboutActivity;
 import com.abooc.util.Debug;
 
-public class ChatActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+import java.util.ArrayList;
+
+public class ChatActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
 
     public static String testMessage = "这是一条[微笑]的表情、[安卓][安卓]2个表情。";
 
-    View emojicons;
     EditText inputBarHint;
-    TextView messageHistory;
 
-    InputBarView mInputBarView;
-    View chat_inputview;
-
-    View inputWidget;
-    //    Animation mAnimationIn;
-    Animation mAnimationOut;
+    ChatWidget iChatWidget;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mAnimationIn = AnimationUtils.loadAnimation(this, R.anim.push_up_in);
-        mAnimationOut = AnimationUtils.loadAnimation(this, R.anim.slide_out_down);
 
         setContentView(R.layout.activity_chat);
-        inputWidget = findViewById(R.id.ChatWidget);
-        inputWidget.setVisibility(View.GONE);
 
-
-        chat_inputview = findViewById(R.id.chat_inputview);
-
-        emojicons = findViewById(R.id.emojicons);
-        emojicons.setVisibility(View.GONE);
+        iChatWidget = (ChatWidget) findViewById(R.id.ChatWidget);
+        iChatWidget.setActivity(this);
+        iChatWidget.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                onSendEvent(v);
+                return false;
+            }
+        });
 
         inputBarHint = (EditText) findViewById(R.id.inputBarHint);
-        messageHistory = (TextView) findViewById(R.id.message_history);
-
-        Emoji.build(getResources());
-
         inputBarHint.setText(testMessage);
-        CharSequence emojiString = EmojiBuilder.toEmojiString(this, testMessage, Emoji.emotionsBitmap);
-        messageHistory.setText(emojiString);
 
-        View inputBar_virtual = findViewById(R.id.inputBar_virtual);
-        inputBar_virtual.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                inputWidget.setVisibility(View.VISIBLE);
-                chat_inputview.findViewById(R.id.inputBar).requestFocus();
-                onShowKeyboardEvent(v);
+        findViewById(R.id.inputBar_virtual).setOnClickListener(this);
 
-            }
-        });
+        attachListView();
 
+        messageLists.add(testMessage);
+        mMessagesAdapter.notifyDataSetChanged();
+    }
 
-        View inputBar = findViewById(R.id.inputBarView);
-        mInputBarView = new InputBarView(inputBar);
-        mInputBarView.setOnClickEvent(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.inputBar_show_emojicon:
-                        onShowEmojiEvent(v);
-                        break;
-                    case R.id.inputBar_show_keyboard:
-                        onShowKeyboardEvent(v);
-                        break;
-                }
-            }
-        });
+    ArrayList<String> messageLists = new ArrayList<>();
+    ArrayAdapter<String> mMessagesAdapter;
+    ListView iListView;
 
-        String[] strings = {
-                "第一项", "第一项", "第一项", "第一项", "第一项",
-                "第2项", "第2项", "第2项", "第2项", "第2项",
-                "第3项", "第3项", "第3项", "第3项", "第3项",
-                "第4项", "第4项", "第4项", "第4项", "第4项"
-        };
+    void attachListView() {
 
-
-        ListView iListView = (ListView) findViewById(R.id.ListView);
+        iListView = (ListView) findViewById(R.id.ListView);
         iListView.setOnItemClickListener(this);
 
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, strings);
-        iListView.setAdapter(adapter);
-
-
+        mMessagesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, messageLists);
+        iListView.setAdapter(mMessagesAdapter);
     }
 
     @Override
@@ -138,52 +101,25 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     @Override
+    public void onClick(View v) {
+        iChatWidget.show();
+        iChatWidget.showKeyboard();
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Debug.anchor("点击 " + position);
     }
 
-    public void onHideKeyboardEvent(View view) {
-        Keyboard.hideKeyboard(this);
-        inputWidget.setVisibility(View.GONE);
-    }
-
-
-    public void onShowEmojiEvent(View view) {
-        Debug.anchor();
-        mInputBarView.showKeyboard();
-        Keyboard.hideKeyboard(this);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                emojicons.setVisibility(View.VISIBLE);
-            }
-        }, 150);
-    }
-
-    public void onShowKeyboardEvent(View view) {
-        Debug.anchor();
-        mInputBarView.showEmojicon();
-        Keyboard.showKeyboard(ChatActivity.this);
-
-        emojicons.startAnimation(mAnimationOut);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                emojicons.setVisibility(View.GONE);
-            }
-        }, 50);
-    }
-
     public void onSendEvent(View view) {
         inputBarHint.setText(null);
-        String toString = mInputBarView.getText().toString();
+
+
+        String toString = iChatWidget.getString();
         inputBarHint.setHint(toString);
-        mInputBarView.setText(null);
 
-        CharSequence emojiString = EmojiBuilder.toEmojiString(this, testMessage, Emoji.emotionsBitmap);
-        messageHistory.setText(emojiString);
-
+        mMessagesAdapter.insert(toString, mMessagesAdapter.getCount());
+        iListView.smoothScrollToPosition(mMessagesAdapter.getCount());
     }
 
     public void onEmojiSmileEvent(View view) {

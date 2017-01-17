@@ -17,34 +17,42 @@ public class InputBarView {
 
     View.OnClickListener mOnClickListener;
 
-    InputBarView(View view) {
+    public InputBarView(View view) {
         inputBar = (EditText) view.findViewById(R.id.inputBar);
         inputBar_show_emojicon = view.findViewById(R.id.inputBar_show_emojicon);
         inputBar_show_keyboard = view.findViewById(R.id.inputBar_show_keyboard);
     }
 
-    void setOnClickEvent(View.OnClickListener listener) {
+    public void setOnClickEvent(View.OnClickListener listener) {
         mOnClickListener = listener;
         inputBar_show_emojicon.setOnClickListener(listener);
         inputBar_show_keyboard.setOnClickListener(listener);
     }
 
-    void showKeyboard() {
+    public void showKeyboard() {
         inputBar_show_emojicon.setVisibility(View.GONE);
         inputBar_show_keyboard.setVisibility(View.VISIBLE);
     }
 
-    void showEmojicon() {
+    public void showEmojicon() {
         inputBar_show_keyboard.setVisibility(View.GONE);
         inputBar_show_emojicon.setVisibility(View.VISIBLE);
     }
 
-    void setText(CharSequence text) {
+    public void setText(CharSequence text) {
         inputBar.setText(text);
     }
 
-    Editable getText() {
+    public EditText getEditText() {
+        return inputBar;
+    }
+
+    public Editable getText() {
         return inputBar.getText();
+    }
+
+    public boolean requestFocus() {
+        return inputBar.requestFocus();
     }
 
 }

@@ -2,6 +2,7 @@ package com.abooc.emoji;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.abooc.emoji.history.HistoryActivity;
 import com.abooc.emoji.test.Emoji;
 import com.abooc.emoji.test.Emojicon;
+import com.abooc.emoji.widget.ChatWidget;
 import com.abooc.plugin.about.AboutActivity;
 
 public class EmojiActivity extends AppCompatActivity {
@@ -23,11 +25,13 @@ public class EmojiActivity extends AppCompatActivity {
     EditText inputBar;
     TextView messageText;
 
+    ChatWidget iChatWidget;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_emoji);
+
         inputBar = (EditText) findViewById(R.id.inputBar);
         inputBarHint = (EditText) findViewById(R.id.inputBarHint);
         messageText = (TextView) findViewById(R.id.message);
@@ -36,9 +40,28 @@ public class EmojiActivity extends AppCompatActivity {
 
         inputBarHint.setText(testMessage);
 
-        CharSequence emojiString = EmojiBuilder.toEmojiString(this, testMessage, Emoji.emotionsBitmap);
+        CharSequence emojiString = EmojiBuilder.toEmojiCharSequence(this, testMessage, Emoji.emotionsBitmap);
         inputBar.setText(emojiString);
+        inputBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                iChatWidget.show();
+            }
+        });
+
         messageText.setText(emojiString);
+
+
+        iChatWidget = (ChatWidget) findViewById(R.id.ChatWidget);
+        iChatWidget.setActivity(this);
+        iChatWidget.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                onSend(v);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -67,7 +90,15 @@ public class EmojiActivity extends AppCompatActivity {
         inputBarHint.setHint(currentString);
         inputBar.setText(null);
 
-        CharSequence emojiString = EmojiBuilder.toEmojiString(this, currentString, Emoji.emotionsBitmap);
+        CharSequence emojiString = EmojiBuilder.toEmojiCharSequence(this, currentString, Emoji.emotionsBitmap);
+        messageText.setText(emojiString);
+    }
+
+    public void onSend(View view) {
+        String toString = iChatWidget.getString();
+        inputBarHint.setHint(toString);
+
+        CharSequence emojiString = EmojiBuilder.toEmojiCharSequence(this, toString, Emoji.emotionsBitmap);
         messageText.setText(emojiString);
 
     }
