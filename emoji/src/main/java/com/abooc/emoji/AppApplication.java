@@ -2,6 +2,7 @@ package com.abooc.emoji;
 
 import android.app.Application;
 
+import com.abooc.emoji.test.Emoji;
 import com.abooc.plugin.about.About;
 
 /**

@@ -1,4 +1,4 @@
-package com.abooc.emoji;
+package com.abooc.emoji.chat;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,12 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.abooc.emoji.R;
 import com.abooc.joker.tab.Tab;
 import com.abooc.joker.tab.TabManager;
 
-import static com.abooc.emoji.EmojionsFragment.Tabs.ADD;
-import static com.abooc.emoji.EmojionsFragment.Tabs.EMOJICON;
-import static com.abooc.emoji.EmojionsFragment.Tabs.GIFTS;
+import static com.abooc.emoji.chat.EmojionsFragment.Tabs.ADD;
+import static com.abooc.emoji.chat.EmojionsFragment.Tabs.EMOJICON;
+import static com.abooc.emoji.chat.EmojionsFragment.Tabs.GIFTS;
 
 public class EmojionsFragment extends Fragment implements View.OnClickListener {
 

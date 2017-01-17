@@ -22,7 +22,7 @@
         android:contentDescription="间隔线" />
 
     <fragment
-        android:name="com.abooc.emoji.EmojionsFragment"
+        android:name="com.abooc.emoji.chat.EmojionsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="表情模块" />

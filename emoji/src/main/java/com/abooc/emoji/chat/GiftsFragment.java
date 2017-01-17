@@ -1,35 +1,30 @@
-package com.abooc.emoji;
+package com.abooc.emoji.chat;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 
+import com.abooc.emoji.R;
 import com.abooc.util.Debug;
 
 import java.util.ArrayList;
 
 
-/**
- * 表情
- */
-public class EmojiFragment extends Fragment {
+public class GiftsFragment extends Fragment {
 
     ViewPager viewPager;
 
-    public EmojiFragment() {
+    public GiftsFragment() {
     }
 
     @Override
@@ -52,16 +47,6 @@ public class EmojiFragment extends Fragment {
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
     }
-
-    PagerAdapter buildFragmentAdapter() {
-        FragmentManager manager = getChildFragmentManager();
-        FragmentHandlerAdapter tabsAdapter = new FragmentHandlerAdapter(manager, getContext());
-        tabsAdapter.addTab(new FragmentHandlerAdapter.TabInfo(GiftsFragment.class, "Gifts", null))
-                .addTab(new FragmentHandlerAdapter.TabInfo(EmojiAddFragment.class, "Emoji-Add", null));
-        viewPager.setOffscreenPageLimit(tabsAdapter.getCount());
-        return tabsAdapter;
-    }
-
 
     static class ViewAdapter extends PagerAdapter {
 
@@ -91,11 +76,12 @@ public class EmojiFragment extends Fragment {
         public Object instantiateItem(ViewGroup container, int position) {
 
             String[] strings = emojis.get(position);
-            EmojiAdapter adapter = new EmojiAdapter(mContext, R.layout.emoji_item, strings);
+            GiftAdapter adapter = new GiftAdapter(mContext, R.layout.emoji_gifts_item, strings);
 
 
             LayoutInflater inflater = LayoutInflater.from(mContext);
             GridView gridView = (GridView) inflater.inflate(R.layout.emoji, container, false);
+            gridView.setNumColumns(4);
             gridView.setTag(position);
             gridView.setOnItemClickListener(mOnItemClickListener);
             gridView.setAdapter(adapter);
@@ -104,17 +90,13 @@ public class EmojiFragment extends Fragment {
             return gridView;
         }
 
-        OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
+        AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int pageIndex = (int) parent.getTag();
                 String[] strings = emojis.get(pageIndex);
 
-                if (position == (strings.length - 1)) {
-                    Debug.anchor("退格键：" + position);
-                } else {
-                    Debug.anchor("表情：" + position);
-                }
+                Debug.anchor("礼物：" + position);
             }
         };
 
@@ -122,36 +104,23 @@ public class EmojiFragment extends Fragment {
 
         static {
             String[] strings0 = {
-                    "第一项", "第一项", "第一项", "第一项", "第一项",
-                    "第2项", "第2项", "第2项", "第2项", "第2项",
-                    "第3项", "第3项", "第3项", "第3项", "第3项",
-                    "第4项", "第4项", "第4项", "第4项", "第4项",
-                    "退格键"
+                    "第一项", "第一项", "第一项", "第一项",
+                    "第3项", "第3项", "第3项"
             };
             String[] strings1 = {
-                    "第一项", "第一项", "第一项", "第一项", "第一项",
-                    "第2项", "第2项", "第2项", "第2项", "第2项",
-                    "第4项", "第4项", "第4项", "第4项", "第4项",
-                    "退格键"
-            };
-            String[] strings2 = {
-                    "第一项", "第一项", "第一项", "第一项", "第一项",
-                    "第4项", "第4项", "第4项", "第4项", "第4项",
-                    "退格键"
+                    "第一项", "第一项", "第一项", "第一项"
             };
             emojis.add(strings0);
             emojis.add(strings1);
-            emojis.add(strings2);
         }
-
 
     }
 
-    static class EmojiAdapter extends ArrayAdapter<String> {
+    static class GiftAdapter extends ArrayAdapter<String> {
 
         int resId;
 
-        public EmojiAdapter(Context context, int resource, String[] objects) {
+        public GiftAdapter(Context context, int resource, String[] objects) {
             super(context, resource, objects);
             resId = resource;
         }
@@ -161,17 +130,9 @@ public class EmojiFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            ImageView imageView = (ImageView) inflater.inflate(resId, parent, false);
+            View view = inflater.inflate(resId, parent, false);
 
-            if (position == (getCount() - 1)) {
-                imageView.setImageResource(R.drawable.ic_editor_backspace);
-            } else {
-                imageView.setImageResource(R.drawable.ic_emoji_smile);
-            }
-
-            return imageView;
+            return view;
         }
     }
-
-
 }

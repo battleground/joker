@@ -47,12 +47,4 @@ public class InputBarView {
         return inputBar.getText();
     }
 
-    int getSelectionStart() {
-        return inputBar.getSelectionStart();
-    }
-
-    int getSelectionEnd() {
-        return inputBar.getSelectionEnd();
-    }
-
 }

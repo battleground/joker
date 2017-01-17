@@ -32,8 +32,8 @@
     <FrameLayout
         android:layout_width="0.5dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="6dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
         android:background="#DDD" />
 
     <EditText
@@ -55,8 +55,8 @@
     <FrameLayout
         android:layout_width="0.5dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="6dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
         android:background="#DDD" />
 
     <TextView
