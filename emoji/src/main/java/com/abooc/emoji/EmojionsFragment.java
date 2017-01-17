@@ -50,8 +50,16 @@ public class EmojionsFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.emojicons_menu_settings).setOnClickListener(this);
     }
 
+
+    View mView;
     @Override
     public void onClick(View v) {
+        if (mView != null) {
+            mView.setSelected(false);
+        }
+        mView = v;
+        v.setSelected(true);
+
         onClickTab(v);
     }
 

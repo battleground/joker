@@ -66,14 +66,9 @@ public class EmojiFragment extends Fragment {
     static class ViewAdapter extends PagerAdapter {
 
         Context mContext;
-        ArrayList<View> views = new ArrayList<>();
 
         ViewAdapter(Context context) {
             mContext = context;
-        }
-
-        ViewAdapter(ArrayList<View> views) {
-            this.views = views;
         }
 
         @Override
@@ -166,7 +161,7 @@ public class EmojiFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            ImageView imageView = (ImageView) inflater.inflate(R.layout.emoji_item, parent, false);
+            ImageView imageView = (ImageView) inflater.inflate(resId, parent, false);
 
             if (position == (getCount() - 1)) {
                 imageView.setImageResource(R.drawable.ic_editor_backspace);
