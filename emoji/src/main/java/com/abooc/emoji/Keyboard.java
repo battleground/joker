@@ -14,8 +14,7 @@ public class Keyboard {
     /**
      * 隐藏软键盘
      */
-    public static boolean hideKeyboard(Context context) {
-        Activity activity = (Activity) context;
+    public static boolean hideKeyboard(Activity activity) {
         if (activity != null) {
             InputMethodManager imm = (InputMethodManager) activity
                     .getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -30,8 +29,7 @@ public class Keyboard {
     /**
      * 显示软键盘
      */
-    public static void showKeyboard(Context context) {
-        Activity activity = (Activity) context;
+    public static void showKeyboard(Activity activity) {
         if (activity != null) {
             InputMethodManager imm = (InputMethodManager) activity
                     .getSystemService(Context.INPUT_METHOD_SERVICE);

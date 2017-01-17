@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -56,10 +58,14 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
     View chat_inputview;
 
     View inputWidget;
+//    Animation mAnimationIn;
+    Animation mAnimationOut;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        mAnimationIn = AnimationUtils.loadAnimation(this, R.anim.push_up_in);
+        mAnimationOut = AnimationUtils.loadAnimation(this, R.anim.slide_out_down);
 
         setContentView(R.layout.activity_chat);
         inputWidget = findViewById(R.id.inputWidget);
@@ -175,20 +181,22 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
             public void run() {
                 emojicons.setVisibility(View.VISIBLE);
             }
-        }, 100);
+        }, 150);
     }
 
     public void onShowKeyboardEvent(View view) {
         Debug.anchor();
         mInputBarView.showEmojicon();
-        Keyboard.showKeyboard(this);
+        Keyboard.showKeyboard(ChatActivity.this);
+
+        emojicons.startAnimation(mAnimationOut);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 emojicons.setVisibility(View.GONE);
             }
-        }, 100);
+        }, 50);
     }
 
     public void onSendEvent(View view) {
