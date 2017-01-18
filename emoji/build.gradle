@@ -31,5 +31,5 @@ dependencies {
 
     compile 'com.abooc.plugin:plugin-about:1.0.5'
     compile 'com.abooc.debug:debug-core:1.2.0'
-    compile 'com.abooc.joker:joker-tab:1.0.1'
+    compile 'com.abooc.joker:joker-tab:1.1.0'
 }

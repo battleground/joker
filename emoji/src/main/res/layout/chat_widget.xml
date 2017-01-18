@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/chat_inputview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
@@ -13,7 +12,11 @@
         android:background="#CCC"
         android:contentDescription="间隔线" />
 
-    <include layout="@layout/inputbar" />
+    <FrameLayout
+        android:id="@+id/InputBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="输入栏" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -21,9 +24,6 @@
         android:background="#CCC"
         android:contentDescription="间隔线" />
 
-    <fragment
-        android:name="com.abooc.emoji.chat.EmojionsFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="表情模块" />
+    <include layout="@layout/emojions" />
+
 </LinearLayout>

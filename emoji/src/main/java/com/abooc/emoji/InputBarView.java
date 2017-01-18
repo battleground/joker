@@ -1,14 +1,20 @@
 package com.abooc.emoji;
 
+import android.content.Context;
 import android.text.Editable;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+
+import com.abooc.emoji.widget.ChatWidget;
 
 /**
  * Created by dayu on 2017/1/12.
  */
 
-public class InputBarView {
+public class InputBarView extends LinearLayout implements ChatWidget.OnViewerListener {
 
 
     EditText inputBar;
@@ -17,10 +23,46 @@ public class InputBarView {
 
     View.OnClickListener mOnClickListener;
 
-    public InputBarView(View view) {
-        inputBar = (EditText) view.findViewById(R.id.inputBar);
-        inputBar_show_emojicon = view.findViewById(R.id.inputBar_show_emojicon);
-        inputBar_show_keyboard = view.findViewById(R.id.inputBar_show_keyboard);
+
+    public InputBarView(Context context) {
+        this(context, null, 0);
+    }
+
+    public InputBarView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public InputBarView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+
+//        TypedArray a = context.obtainStyledAttributes(
+//                attrs, R.styleable.InputBarView, defStyleAttr, 0);
+//        a.recycle();
+        LayoutInflater.from(context).inflate(R.layout.inputbar, this, true);
+    }
+
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        inputBar = (EditText) findViewById(R.id.inputBar);
+        inputBar_show_emojicon = findViewById(R.id.inputBar_show_emojicon);
+        inputBar_show_keyboard = findViewById(R.id.inputBar_show_keyboard);
+    }
+
+
+    @Override
+    public void onShowKeyboard() {
+        showEmojicon();
+    }
+
+    @Override
+    public void onShowEmojions() {
+        showKeyboard();
     }
 
     public void setOnClickEvent(View.OnClickListener listener) {
@@ -51,7 +93,7 @@ public class InputBarView {
         return inputBar.getText();
     }
 
-    public boolean requestFocus() {
+    public boolean focus() {
         return inputBar.requestFocus();
     }
 

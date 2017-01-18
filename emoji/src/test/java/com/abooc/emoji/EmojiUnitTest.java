@@ -1,11 +1,10 @@
 package com.abooc.emoji;
 
-import com.abooc.emoji.EmojiActivity;
+import com.abooc.emoji.test.Data;
 
 import org.junit.Test;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,16 +15,10 @@ import java.util.regex.Pattern;
  */
 public class EmojiUnitTest {
 
-    String message = EmojiActivity.testMessage;
+    String message = Data.testMessage;
 
-    String pattern = EmojiActivity.pattern;
+    String PATTERN = EmojiBuilder.EMOJI_PATTERN;
 
-    static Map<String, Integer> emotions = new HashMap<>();
-
-    static {
-        emotions.put("[微笑]", com.bftv.emoji.R.drawable.ic_emoji_smile);
-        emotions.put("[安卓]", com.bftv.emoji.R.mipmap.ic_launcher);
-    }
 
     @Test
     public void test_string() throws Exception {
@@ -52,7 +45,7 @@ public class EmojiUnitTest {
     }
 
     String replace(String resource, String replacement) {
-        Pattern r = Pattern.compile(pattern);
+        Pattern r = Pattern.compile(PATTERN);
         Matcher m = r.matcher(resource);
 
         while (m.find()) {
@@ -68,10 +61,28 @@ public class EmojiUnitTest {
 
         System.out.println("原数据：" + message);
 
-        HashMap<int[], String> stringHashMap = EmojiActivity.findIndex(message);
+        HashMap<int[], String> stringHashMap = findIndex(message);
 
         System.out.println("新数据：" + stringHashMap);
 
     }
+
+    private HashMap<int[], String> findIndex(String message) {
+
+        Pattern pattern = Pattern.compile(PATTERN);
+        Matcher matcher = pattern.matcher(message);
+
+        HashMap<int[], String> map = new HashMap<>();
+        while (matcher.find()) {
+            String emojiChars = matcher.group(0);
+            int start = matcher.start();
+            int end = matcher.end();
+
+            map.put(new int[]{start, end}, emojiChars);
+            System.out.println("From map: " + emojiChars + ", [" + start + " - " + end + "]");
+        }
+        return map;
+    }
+
 
 }

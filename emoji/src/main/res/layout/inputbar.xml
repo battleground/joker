@@ -9,25 +9,25 @@
     <ImageView
         android:id="@+id/inputBar_show_emojicon"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="50dp"
         android:background="@android:drawable/list_selector_background"
         android:clickable="true"
         android:gravity="center"
         android:onClick="onShowEmojiEvent"
-        android:padding="6dp"
+        android:padding="10dp"
         android:src="@drawable/ic_emoji_smile" />
 
     <ImageView
         android:id="@+id/inputBar_show_keyboard"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="50dp"
         android:background="@android:drawable/list_selector_background"
         android:clickable="true"
         android:gravity="center"
         android:onClick="onShowKeyboardEvent"
-        android:padding="6dp"
+        android:padding="10dp"
         android:src="@drawable/ic_action_keyboard"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <FrameLayout
         android:layout_width="0.5dp"
@@ -40,17 +40,17 @@
         android:id="@+id/inputBar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="6dp"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         android:layout_weight="1"
         android:background="@drawable/edit_input_background"
         android:gravity="center_vertical"
         android:hint="输入消息..."
         android:paddingLeft="4dp"
         android:singleLine="true"
-        android:textSize="11sp" />
+        android:textSize="14sp" />
 
     <FrameLayout
         android:layout_width="0.5dp"
@@ -67,6 +67,5 @@
         android:gravity="center"
         android:onClick="onSendEvent"
         android:padding="12dp"
-        android:text="发送"
-        android:textSize="18sp" />
+        android:text="发送" />
 </LinearLayout>

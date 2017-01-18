@@ -91,11 +91,15 @@
         android:id="@+id/ChatWidget"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#30000000"
+        android:background="#20000000"
         android:clickable="true"
         android:visibility="visible">
 
-        <include layout="@layout/chat_input_and_emojions" />
+        <com.abooc.emoji.InputBarView
+            android:id="@+id/InputBarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="输入栏" />
     </com.abooc.emoji.widget.ChatWidget>
 
 </FrameLayout>

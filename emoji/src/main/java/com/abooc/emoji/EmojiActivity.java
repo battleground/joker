@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -22,46 +23,70 @@ public class EmojiActivity extends AppCompatActivity {
 
 
     EditText inputBarHint;
-    EditText inputBar;
+    EditText inputBar_virtual;
     TextView messageText;
 
     ChatWidget iChatWidget;
+    InputBarView mInputBarView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emoji);
 
-        inputBar = (EditText) findViewById(R.id.inputBar);
+        inputBar_virtual = (EditText) findViewById(R.id.inputBar_virtual);
         inputBarHint = (EditText) findViewById(R.id.inputBarHint);
         messageText = (TextView) findViewById(R.id.message);
 
-        Emoji.build(getResources());
-
         inputBarHint.setText(testMessage);
 
-        CharSequence emojiString = EmojiBuilder.toEmojiCharSequence(this, testMessage, Emoji.emotionsBitmap);
-        inputBar.setText(emojiString);
-        inputBar.setOnClickListener(new View.OnClickListener() {
+        inputBar_virtual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                iChatWidget.showKeyboard();
                 iChatWidget.show();
             }
         });
 
-        messageText.setText(emojiString);
+        CharSequence emojiChar = EmojiBuilder.toEmojiCharSequence(this, testMessage, Emoji.emotionsBitmap);
+        messageText.setText(emojiChar);
 
+        addInputBar();
 
         iChatWidget = (ChatWidget) findViewById(R.id.ChatWidget);
         iChatWidget.setActivity(this);
-        iChatWidget.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        iChatWidget.attachTabContent(getSupportFragmentManager());
+        iChatWidget.setOnViewerListener(mInputBarView);
+
+        iChatWidget.showKeyboard();
+    }
+
+    public void addInputBar() {
+        mInputBarView = (InputBarView) findViewById(R.id.InputBarView);
+        mInputBarView.setOnClickEvent(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.inputBar_show_emojicon:
+                        iChatWidget.showEmoji();
+                        break;
+                    case R.id.inputBar_show_keyboard:
+                        iChatWidget.showKeyboard();
+                        break;
+                }
+            }
+        });
+        mInputBarView.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                onSend(v);
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+//                    String toString = mInputBarView.getText().toString();
+//                    mInputBarView.setText(null);
+                }
                 return false;
             }
         });
+
     }
 
     @Override
@@ -86,35 +111,33 @@ public class EmojiActivity extends AppCompatActivity {
 
     public void onSendEvent(View view) {
         inputBarHint.setText(null);
-        String currentString = inputBar.getText().toString();
+        inputBar_virtual.setText(null);
+        String currentString = mInputBarView.getText().toString();
         inputBarHint.setHint(currentString);
-        inputBar.setText(null);
 
-        CharSequence emojiString = EmojiBuilder.toEmojiCharSequence(this, currentString, Emoji.emotionsBitmap);
-        messageText.setText(emojiString);
+        CharSequence emojiChar = EmojiBuilder.toEmojiCharSequence(this, currentString, Emoji.emotionsBitmap);
+        messageText.setText(emojiChar);
+
+        mInputBarView.setText(null);
     }
-
-    public void onSend(View view) {
-        String toString = iChatWidget.getString();
-        inputBarHint.setHint(toString);
-
-        CharSequence emojiString = EmojiBuilder.toEmojiCharSequence(this, toString, Emoji.emotionsBitmap);
-        messageText.setText(emojiString);
-
-    }
-
 
     public void onEmojiSmileEvent(View view) {
         String code = Emojicon.微笑.code();
-        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBar, Emoji.emotionsBitmap);
+        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBar_virtual, Emoji.emotionsBitmap);
         inputBarHint.setText(emojiResult.toString());
     }
 
     public void onEmojiAndroidEvent(View view) {
         String code = Emojicon.安卓.code();
-        String emojiResult = EmojiBuilder.writeEmoji(code, inputBar);
+        String emojiResult = EmojiBuilder.writeEmoji(code, inputBar_virtual);
         inputBarHint.setText(emojiResult.toString());
     }
 
+    @Override
+    public void onBackPressed() {
+        if (!iChatWidget.onBackPressed()) {
+            super.onBackPressed();
+        }
+    }
 }
 

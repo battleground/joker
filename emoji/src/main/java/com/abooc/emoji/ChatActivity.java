@@ -2,7 +2,6 @@ package com.abooc.emoji;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -11,9 +10,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.abooc.emoji.history.HistoryActivity;
+import com.abooc.emoji.test.Data;
 import com.abooc.emoji.test.Emoji;
 import com.abooc.emoji.test.Emojicon;
 import com.abooc.emoji.widget.ChatWidget;
@@ -25,36 +24,31 @@ import java.util.ArrayList;
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
 
-    public static String testMessage = "这是一条[微笑]的表情、[安卓][安卓]2个表情。";
-
     EditText inputBarHint;
 
     ChatWidget iChatWidget;
+    InputBarView mInputBarView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_chat);
+
+        addInputBar();
 
         iChatWidget = (ChatWidget) findViewById(R.id.ChatWidget);
         iChatWidget.setActivity(this);
-        iChatWidget.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                onSendEvent(v);
-                return false;
-            }
-        });
+        iChatWidget.attachTabContent(getSupportFragmentManager());
+        iChatWidget.setOnViewerListener(mInputBarView);
 
         inputBarHint = (EditText) findViewById(R.id.inputBarHint);
-        inputBarHint.setText(testMessage);
+        inputBarHint.setText(Data.testMessage);
 
         findViewById(R.id.inputBar_virtual).setOnClickListener(this);
 
         attachListView();
 
-        messageLists.add(testMessage);
+        messageLists.add(Data.testMessage);
         mMessagesAdapter.notifyDataSetChanged();
     }
 
@@ -63,12 +57,28 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     ListView iListView;
 
     void attachListView() {
-
         iListView = (ListView) findViewById(R.id.ListView);
         iListView.setOnItemClickListener(this);
 
         mMessagesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, messageLists);
         iListView.setAdapter(mMessagesAdapter);
+    }
+
+    public void addInputBar() {
+        mInputBarView = (InputBarView) findViewById(R.id.InputBarView);
+        mInputBarView.setOnClickEvent(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.inputBar_show_emojicon:
+                        iChatWidget.showEmoji();
+                        break;
+                    case R.id.inputBar_show_keyboard:
+                        iChatWidget.showKeyboard();
+                        break;
+                }
+            }
+        });
     }
 
     @Override
@@ -94,7 +104,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
 //        if (Keyboard.hideKeyboard(this)) {
-//            chat_input_and_emojions.setVisibility(View.GONE);
+//            chat_widget.setVisibility(View.GONE);
 //            return true;
 //        }
         return super.dispatchTouchEvent(ev);
@@ -114,12 +124,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     public void onSendEvent(View view) {
         inputBarHint.setText(null);
 
-
         String toString = iChatWidget.getString();
         inputBarHint.setHint(toString);
 
         mMessagesAdapter.insert(toString, mMessagesAdapter.getCount());
         iListView.smoothScrollToPosition(mMessagesAdapter.getCount());
+
+
+        mInputBarView.setText(null);
     }
 
     public void onEmojiSmileEvent(View view) {
@@ -134,5 +146,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         inputBarHint.setText(emojiResult.toString());
     }
 
+    @Override
+    public void onBackPressed() {
+        if (!iChatWidget.onBackPressed()) {
+            super.onBackPressed();
+        }
+    }
 }
 

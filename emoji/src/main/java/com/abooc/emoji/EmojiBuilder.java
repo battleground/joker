@@ -44,8 +44,10 @@ public class EmojiBuilder {
             System.out.println("From map: " + emojiChars + ", [" + start + " - " + end + "]");
 
             Bitmap bitmap = emojiMap.get(emojiChars);
-            ImageSpan imageSpan = new ImageSpan(ctx, bitmap);
-            spannableString.setSpan(imageSpan, start, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            if (bitmap != null) {
+                ImageSpan imageSpan = new ImageSpan(ctx, bitmap);
+                spannableString.setSpan(imageSpan, start, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            }
         }
         System.out.println("\n");
         return spannableString;

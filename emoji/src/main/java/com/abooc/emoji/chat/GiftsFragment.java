@@ -15,14 +15,17 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 import com.abooc.emoji.R;
+import com.abooc.emoji.test.Data;
+import com.abooc.emoji.test.Gift;
 import com.abooc.util.Debug;
 
 import java.util.ArrayList;
 
 
-public class GiftsFragment extends Fragment {
-
-    ViewPager viewPager;
+/**
+ * 礼物
+ */
+public class GiftsFragment extends Fragment implements GridViewer, AdapterView.OnItemClickListener {
 
     public GiftsFragment() {
     }
@@ -41,24 +44,52 @@ public class GiftsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        viewPager = (ViewPager) view.findViewById(R.id.ViewPager);
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.ViewPager);
 
-        PagerAdapter pagerAdapter = new ViewAdapter(getContext());
+        ViewAdapter pagerAdapter = new ViewAdapter(getContext());
+        pagerAdapter.setData(Data.gifts);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
     }
 
-    static class ViewAdapter extends PagerAdapter {
+
+    private AdapterView.OnItemClickListener mOnItemClickListener;
+
+    @Override
+    public void setOnItemClickListener(AdapterView.OnItemClickListener l) {
+        mOnItemClickListener = l;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        if (mOnItemClickListener != null) {
+            mOnItemClickListener.onItemClick(parent, view, position, id);
+        }
+    }
+
+
+    class ViewAdapter extends PagerAdapter {
 
         Context mContext;
+        ArrayList<Gift[]> mArray;
+
 
         ViewAdapter(Context context) {
             mContext = context;
         }
 
+        public void setData(ArrayList<Gift[]> array) {
+            mArray = array;
+        }
+
+        public Gift[] getItem(int position) {
+            return mArray.get(position);
+        }
+
         @Override
         public int getCount() {
-            return emojis.size();
+            return mArray.size();
         }
 
         @Override
@@ -67,60 +98,35 @@ public class GiftsFragment extends Fragment {
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position,
-                                Object object) {
+        public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
 
-            String[] strings = emojis.get(position);
-            GiftAdapter adapter = new GiftAdapter(mContext, R.layout.emoji_gifts_item, strings);
+            Gift[] gifts = getItem(position);
+            GiftAdapter adapter = new GiftAdapter(mContext, R.layout.emoji_gifts_item, gifts);
 
 
             LayoutInflater inflater = LayoutInflater.from(mContext);
             GridView gridView = (GridView) inflater.inflate(R.layout.emoji, container, false);
             gridView.setNumColumns(4);
             gridView.setTag(position);
-            gridView.setOnItemClickListener(mOnItemClickListener);
+            gridView.setOnItemClickListener(GiftsFragment.this);
             gridView.setAdapter(adapter);
 
             container.addView(gridView);
             return gridView;
         }
 
-        AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int pageIndex = (int) parent.getTag();
-                String[] strings = emojis.get(pageIndex);
-
-                Debug.anchor("礼物：" + position);
-            }
-        };
-
-        static ArrayList<String[]> emojis = new ArrayList<>();
-
-        static {
-            String[] strings0 = {
-                    "第一项", "第一项", "第一项", "第一项",
-                    "第3项", "第3项", "第3项"
-            };
-            String[] strings1 = {
-                    "第一项", "第一项", "第一项", "第一项"
-            };
-            emojis.add(strings0);
-            emojis.add(strings1);
-        }
-
     }
 
-    static class GiftAdapter extends ArrayAdapter<String> {
+    static class GiftAdapter extends ArrayAdapter<Gift> {
 
         int resId;
 
-        public GiftAdapter(Context context, int resource, String[] objects) {
+        public GiftAdapter(Context context, int resource, Gift[] objects) {
             super(context, resource, objects);
             resId = resource;
         }
@@ -135,4 +141,16 @@ public class GiftsFragment extends Fragment {
             return view;
         }
     }
+
+
+    AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            int pageIndex = (int) parent.getTag();
+            Gift[] gifts = Data.gifts.get(pageIndex);
+
+            Debug.anchor("礼物：" + position);
+        }
+    };
+
 }

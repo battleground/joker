@@ -11,16 +11,16 @@ import com.abooc.emoji.R;
 import com.abooc.joker.tab.Tab;
 import com.abooc.joker.tab.TabManager;
 
-import static com.abooc.emoji.chat.EmojionsFragment.Tabs.ADD;
-import static com.abooc.emoji.chat.EmojionsFragment.Tabs.EMOJICON;
-import static com.abooc.emoji.chat.EmojionsFragment.Tabs.GIFTS;
+import static com.abooc.emoji.chat.EmojionTabsFragment.Tabs.ADD;
+import static com.abooc.emoji.chat.EmojionTabsFragment.Tabs.EMOJICON;
+import static com.abooc.emoji.chat.EmojionTabsFragment.Tabs.GIFTS;
 
-public class EmojionsFragment extends Fragment implements View.OnClickListener {
+public class EmojionTabsFragment extends Fragment implements View.OnClickListener {
 
 
     TabManager iTabManager;
 
-    public EmojionsFragment() {
+    public EmojionTabsFragment() {
     }
 
     @Override
@@ -31,7 +31,7 @@ public class EmojionsFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_emojions, container, false);
+        return inflater.inflate(R.layout.emojions, container, false);
     }
 
     @Override

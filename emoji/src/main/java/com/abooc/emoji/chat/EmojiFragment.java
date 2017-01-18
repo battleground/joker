@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -17,8 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.abooc.emoji.FragmentHandlerAdapter;
 import com.abooc.emoji.R;
+import com.abooc.emoji.test.Data;
 import com.abooc.util.Debug;
 
 import java.util.ArrayList;
@@ -27,9 +26,7 @@ import java.util.ArrayList;
 /**
  * 表情
  */
-public class EmojiFragment extends Fragment {
-
-    ViewPager viewPager;
+public class EmojiFragment extends Fragment implements GridViewer, OnItemClickListener {
 
     public EmojiFragment() {
     }
@@ -48,34 +45,50 @@ public class EmojiFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        viewPager = (ViewPager) view.findViewById(R.id.ViewPager);
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.ViewPager);
 
-        PagerAdapter pagerAdapter = new ViewAdapter(getContext());
+        ViewAdapter pagerAdapter = new ViewAdapter(getContext());
+        pagerAdapter.setData(Data.emojis);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
     }
 
-    PagerAdapter buildFragmentAdapter() {
-        FragmentManager manager = getChildFragmentManager();
-        FragmentHandlerAdapter tabsAdapter = new FragmentHandlerAdapter(manager, getContext());
-        tabsAdapter.addTab(new FragmentHandlerAdapter.TabInfo(GiftsFragment.class, "Gifts", null))
-                .addTab(new FragmentHandlerAdapter.TabInfo(EmojiAddFragment.class, "Emoji-Add", null));
-        viewPager.setOffscreenPageLimit(tabsAdapter.getCount());
-        return tabsAdapter;
+    private OnItemClickListener mOnItemClickListener;
+
+    @Override
+    public void setOnItemClickListener(OnItemClickListener l) {
+        mOnItemClickListener = l;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        if (mOnItemClickListener != null) {
+            mOnItemClickListener.onItemClick(parent, view, position, id);
+        }
     }
 
 
-    static class ViewAdapter extends PagerAdapter {
+    class ViewAdapter extends PagerAdapter {
 
         Context mContext;
+        ArrayList<String[]> mArray;
 
         ViewAdapter(Context context) {
             mContext = context;
         }
 
+        public void setData(ArrayList<String[]> array) {
+            mArray = array;
+        }
+
+        public String[] getItem(int position) {
+            return mArray.get(position);
+        }
+
         @Override
         public int getCount() {
-            return emojis.size();
+            return mArray.size();
         }
 
         @Override
@@ -92,58 +105,18 @@ public class EmojiFragment extends Fragment {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
 
-            String[] strings = emojis.get(position);
+            String[] strings = getItem(position);
             EmojiAdapter adapter = new EmojiAdapter(mContext, R.layout.emoji_item, strings);
 
 
             LayoutInflater inflater = LayoutInflater.from(mContext);
             GridView gridView = (GridView) inflater.inflate(R.layout.emoji, container, false);
             gridView.setTag(position);
-            gridView.setOnItemClickListener(mOnItemClickListener);
+            gridView.setOnItemClickListener(EmojiFragment.this);
             gridView.setAdapter(adapter);
 
             container.addView(gridView);
             return gridView;
-        }
-
-        OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int pageIndex = (int) parent.getTag();
-                String[] strings = emojis.get(pageIndex);
-
-                if (position == (strings.length - 1)) {
-                    Debug.anchor("退格键：" + position);
-                } else {
-                    Debug.anchor("表情：" + position);
-                }
-            }
-        };
-
-        static ArrayList<String[]> emojis = new ArrayList<>();
-
-        static {
-            String[] strings0 = {
-                    "第一项", "第一项", "第一项", "第一项", "第一项",
-                    "第2项", "第2项", "第2项", "第2项", "第2项",
-                    "第3项", "第3项", "第3项", "第3项", "第3项",
-                    "第4项", "第4项", "第4项", "第4项", "第4项",
-                    "退格键"
-            };
-            String[] strings1 = {
-                    "第一项", "第一项", "第一项", "第一项", "第一项",
-                    "第2项", "第2项", "第2项", "第2项", "第2项",
-                    "第4项", "第4项", "第4项", "第4项", "第4项",
-                    "退格键"
-            };
-            String[] strings2 = {
-                    "第一项", "第一项", "第一项", "第一项", "第一项",
-                    "第4项", "第4项", "第4项", "第4项", "第4项",
-                    "退格键"
-            };
-            emojis.add(strings0);
-            emojis.add(strings1);
-            emojis.add(strings2);
         }
 
 
@@ -174,6 +147,21 @@ public class EmojiFragment extends Fragment {
             return imageView;
         }
     }
+
+
+    OnItemClickListener mItemClickListener = new OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            int pageIndex = (int) parent.getTag();
+            String[] strings = Data.emojis.get(pageIndex);
+
+            if (position == (strings.length - 1)) {
+                Debug.anchor("退格键：" + position);
+            } else {
+                Debug.anchor("表情：" + position);
+            }
+        }
+    };
 
 
 }
