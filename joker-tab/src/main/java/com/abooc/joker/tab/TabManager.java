@@ -16,6 +16,9 @@ public class TabManager {
 
     public Fragment prev;
     public Fragment content;
+
+    boolean toBackStack = false;
+
     @IdRes
     public int containerViewId;
 
@@ -28,6 +31,10 @@ public class TabManager {
         this.mContext = context;
         this.mFragmentManager = fragmentManager;
         this.containerViewId = containerViewId;
+    }
+
+    public void setBackStack(boolean enable) {
+        this.toBackStack = enable;
     }
 
     private OnSwitchListener iOnSwitchListener;
@@ -47,9 +54,11 @@ public class TabManager {
             Logger.out(tab.name);
             FragmentTransaction transaction = mFragmentManager.beginTransaction();
             Fragment fragment = Fragment.instantiate(mContext, tab.fragment.getName());
-            transaction.add(containerViewId, fragment, tab.name)
-                    .addToBackStack(tab.name)
-                    .commit();
+            transaction.add(containerViewId, fragment, tab.name);
+
+            if (toBackStack) transaction.addToBackStack(tab.name);
+
+            transaction.commit();
             return fragment;
         } else {
             return byTag;
