@@ -31,7 +31,7 @@ public class EmojionTabsFragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.emojions, container, false);
+        return inflater.inflate(R.layout.emojion_tabs, container, false);
     }
 
     @Override

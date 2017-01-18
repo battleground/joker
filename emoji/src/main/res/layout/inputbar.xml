@@ -9,18 +9,18 @@
     <ImageView
         android:id="@+id/inputBar_show_emojicon"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="match_parent"
         android:background="@android:drawable/list_selector_background"
         android:clickable="true"
         android:gravity="center"
         android:onClick="onShowEmojiEvent"
         android:padding="10dp"
-        android:src="@drawable/ic_emoji_smile" />
+        android:src="@drawable/ic_action_emoji" />
 
     <ImageView
         android:id="@+id/inputBar_show_keyboard"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="match_parent"
         android:background="@android:drawable/list_selector_background"
         android:clickable="true"
         android:gravity="center"
@@ -48,9 +48,11 @@
         android:background="@drawable/edit_input_background"
         android:gravity="center_vertical"
         android:hint="输入消息..."
+        android:imeActionLabel="@string/send"
+        android:imeOptions="actionSend"
         android:paddingLeft="4dp"
-        android:singleLine="true"
-        android:textSize="14sp" />
+        android:paddingRight="4dp"
+        android:singleLine="true" />
 
     <FrameLayout
         android:layout_width="0.5dp"

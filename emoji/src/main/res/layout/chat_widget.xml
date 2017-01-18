@@ -16,7 +16,8 @@
         android:id="@+id/InputBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="输入栏" />
+        android:contentDescription="输入栏"
+        android:minHeight="40dp" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -24,6 +25,6 @@
         android:background="#CCC"
         android:contentDescription="间隔线" />
 
-    <include layout="@layout/emojions" />
+    <include layout="@layout/emojion_tabs" />
 
 </LinearLayout>

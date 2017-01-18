@@ -4,6 +4,6 @@
     android:layout_height="match_parent"
     tools:context="com.abooc.emoji.chat.EmojionTabsFragment">
 
-    <include layout="@layout/emojions" />
+    <include layout="@layout/emojion_tabs" />
 
 </FrameLayout>

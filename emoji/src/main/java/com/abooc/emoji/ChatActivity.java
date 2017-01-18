@@ -2,14 +2,17 @@ package com.abooc.emoji;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.abooc.emoji.history.HistoryActivity;
 import com.abooc.emoji.test.Data;
@@ -40,6 +43,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         iChatWidget.setActivity(this);
         iChatWidget.attachTabContent(getSupportFragmentManager());
         iChatWidget.setOnViewerListener(mInputBarView);
+        iChatWidget.showKeyboard();
 
         inputBarHint = (EditText) findViewById(R.id.inputBarHint);
         inputBarHint.setText(Data.testMessage);
@@ -77,6 +81,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         iChatWidget.showKeyboard();
                         break;
                 }
+            }
+        });
+        mInputBarView.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    onSendEvent(v);
+                }
+                return false;
             }
         });
     }

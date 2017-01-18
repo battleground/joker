@@ -57,8 +57,10 @@ public class EmojiBuilder {
     public static CharSequence toEmojiChar(Context ctx, String emojiCode, Map<String, Bitmap> emojiMap) {
         SpannableStringBuilder spannableString = new SpannableStringBuilder(emojiCode);
         Bitmap bitmap = emojiMap.get(emojiCode);
-        ImageSpan imageSpan = new ImageSpan(ctx, bitmap);
-        spannableString.setSpan(imageSpan, 0, emojiCode.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        if (bitmap != null) {
+            ImageSpan imageSpan = new ImageSpan(ctx, bitmap);
+            spannableString.setSpan(imageSpan, 0, emojiCode.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        }
         return spannableString;
     }
 

@@ -19,12 +19,14 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 
+import com.abooc.emoji.EmojiBuilder;
 import com.abooc.emoji.Keyboard;
 import com.abooc.emoji.R;
 import com.abooc.emoji.chat.EmojiAddFragment;
 import com.abooc.emoji.chat.EmojiFragment;
 import com.abooc.emoji.chat.GiftsFragment;
 import com.abooc.emoji.chat.GridViewer;
+import com.abooc.emoji.test.Emoji;
 import com.abooc.emoji.test.Gift;
 import com.abooc.joker.tab.Tab;
 import com.abooc.joker.tab.TabManager;
@@ -49,6 +51,9 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
     private Animation mAnimationOut;
 
     private boolean mKeyboardShown;
+
+    // 区分收起键盘意图，切换表情时，收起键盘但不自动关闭；强制收起键盘操作时，自动关闭模块；
+    private boolean mCloseAction = true;
 
     private OnViewerListener mOnViewerListener = new OnViewerListener() {
         @Override
@@ -92,12 +97,13 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
                     if (!mKeyboardShown) {
                         onKeyboardShown();
                     }
-
+                    mCloseAction = true;
                     mKeyboardShown = true;
 
                 } else {
                     //小于200时，为不显示虚拟键盘或虚拟键盘隐藏
                     if (mKeyboardShown) {
+//                        mCloseAction = true;
                         onKeyboardHidden();
                     }
 
@@ -192,14 +198,13 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
             String item = (String) adapter.getItem(position);
             Debug.anchor("position：" + position + ", " + item);
 
-            mEditText.getText().append(item);
+            EmojiBuilder.writeEmoji(item, mEditText, Emoji.emotionsBitmap);
 
         } else if (content instanceof GiftsFragment) {
             Gift item = (Gift) adapter.getItem(position);
             Debug.anchor("position：" + position + ", " + item.name);
 
-            mEditText.getText().append(item.code);
-
+            EmojiBuilder.writeEmoji(item.code, mEditText, Emoji.emotionsBitmap);
         }
 
     }
@@ -220,6 +225,10 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
         mOnViewerListener.onShowEmojions();
         showEmojiView();
+
+        if (mCloseAction) {
+            hide();
+        }
     }
 
     enum Tabs {
@@ -286,6 +295,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
     public void showEmoji() {
         Debug.anchor();
+        mCloseAction = false;
         Keyboard.hideKeyboard(mActivity);
     }
 

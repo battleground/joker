@@ -57,7 +57,6 @@ public class EmojiActivity extends AppCompatActivity {
         iChatWidget.setActivity(this);
         iChatWidget.attachTabContent(getSupportFragmentManager());
         iChatWidget.setOnViewerListener(mInputBarView);
-
         iChatWidget.showKeyboard();
     }
 
@@ -80,8 +79,7 @@ public class EmojiActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
-//                    String toString = mInputBarView.getText().toString();
-//                    mInputBarView.setText(null);
+                    onSendEvent(v);
                 }
                 return false;
             }
