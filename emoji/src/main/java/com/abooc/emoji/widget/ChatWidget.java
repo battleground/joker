@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -18,7 +19,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 
-import com.abooc.emoji.InputBarView;
 import com.abooc.emoji.Keyboard;
 import com.abooc.emoji.R;
 import com.abooc.emoji.chat.EmojiAddFragment;
@@ -38,23 +38,17 @@ import static com.abooc.emoji.widget.ChatWidget.Tabs.GIFTS;
  * Created by dayu on 2017/1/17.
  */
 
-public class ChatWidget extends FrameLayout implements View.OnClickListener, GridView.OnItemClickListener {
+public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, View.OnClickListener, GridView.OnItemClickListener {
 
+    private Activity mActivity;
+    private EditText mEditText;
 
-    public interface OnViewerListener {
-
-        void onShowKeyboard();
-
-        void onShowEmojions();
-    }
-
-    Activity mActivity;
-    EditText mEditText;
-
-    View mEmojiconsContainer;
+    private View mEmojiconsContainer;
 
     //    Animation mAnimationIn;
-    Animation mAnimationOut;
+    private Animation mAnimationOut;
+
+    private boolean mKeyboardShown;
 
     private OnViewerListener mOnViewerListener = new OnViewerListener() {
         @Override
@@ -83,27 +77,59 @@ public class ChatWidget extends FrameLayout implements View.OnClickListener, Gri
 
     }
 
+    void keyboard(final View rootView) {
+        //该Activity的最外层Layout
+
+        //给该layout设置监听，监听其布局发生变化事件
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                //比较Activity根布局与当前布局的大小
+                int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
+                if (heightDiff > 200) {
+                    //超过200时，一般为显示虚拟键盘事件
+                    if (!mKeyboardShown) {
+                        onKeyboardShown();
+                    }
+
+                    mKeyboardShown = true;
+
+                } else {
+                    //小于200时，为不显示虚拟键盘或虚拟键盘隐藏
+                    if (mKeyboardShown) {
+                        onKeyboardHidden();
+                    }
+
+                    mKeyboardShown = false;
+                }
+            }
+        });
+    }
+
     public void setOnViewerListener(OnViewerListener listener) {
         mOnViewerListener = listener;
     }
 
     @Override
     protected void onFinishInflate() {
+
         setOnClickListener(this);
 
-        int count = getChildCount();
-
-        View childView = getChildAt(0);
         View inputBarLayout = getChildAt(1);
         mEditText = (EditText) inputBarLayout.findViewById(R.id.inputBar);
-
-
-        Debug.anchor(count + ", childView:" + (childView instanceof InputBarView ? "InputBarView" : childView.getClass().getSimpleName()) + "\n"
-                + ", inputBarLayout:" + (inputBarLayout instanceof InputBarView ? "InputBarView" : inputBarLayout.getClass().getSimpleName()));
 
         mEmojiconsContainer = findViewById(R.id.emojicons);
 
         reAddView(inputBarLayout);
+
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        keyboard(this);
     }
 
     private void reAddView(View view) {
@@ -122,7 +148,7 @@ public class ChatWidget extends FrameLayout implements View.OnClickListener, Gri
 
     }
 
-    TabManager iTabManager;
+    private TabManager iTabManager;
 
     public ChatWidget attachTabContent(FragmentManager manager) {
         iTabManager = new TabManager(getContext(), manager, R.id.ChildTabContent);
@@ -179,6 +205,22 @@ public class ChatWidget extends FrameLayout implements View.OnClickListener, Gri
     }
 
     View mView;
+
+    @Override
+    public void onKeyboardShown() {
+        Debug.anchor("键盘弹出");
+
+        mOnViewerListener.onShowKeyboard();
+        hideEmojiView();
+    }
+
+    @Override
+    public void onKeyboardHidden() {
+        Debug.anchor("键盘隐藏");
+
+        mOnViewerListener.onShowEmojions();
+        showEmojiView();
+    }
 
     enum Tabs {
         ADD("添加表情", EmojiAddFragment.class),
@@ -244,8 +286,17 @@ public class ChatWidget extends FrameLayout implements View.OnClickListener, Gri
 
     public void showEmoji() {
         Debug.anchor();
-        mOnViewerListener.onShowEmojions();
         Keyboard.hideKeyboard(mActivity);
+    }
+
+    public void showKeyboard() {
+        Debug.anchor();
+        mEditText.requestFocus();
+        Keyboard.showKeyboard(mActivity);
+
+    }
+
+    private void showEmojiView() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -254,12 +305,7 @@ public class ChatWidget extends FrameLayout implements View.OnClickListener, Gri
         }, 150);
     }
 
-    public void showKeyboard() {
-        Debug.anchor();
-        mEditText.requestFocus();
-        mOnViewerListener.onShowKeyboard();
-        Keyboard.showKeyboard(mActivity);
-
+    private void hideEmojiView() {
         mEmojiconsContainer.startAnimation(mAnimationOut);
 
         new Handler().postDelayed(new Runnable() {

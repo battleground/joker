@@ -8,20 +8,20 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.abooc.emoji.widget.ChatWidget;
+import com.abooc.emoji.widget.OnViewerListener;
 
 /**
  * Created by dayu on 2017/1/12.
  */
 
-public class InputBarView extends LinearLayout implements ChatWidget.OnViewerListener {
+public class InputBarView extends LinearLayout implements OnViewerListener {
 
 
-    EditText inputBar;
-    View inputBar_show_emojicon;
-    View inputBar_show_keyboard;
+    private EditText inputBar;
+    private View inputBar_show_emojicon;
+    private View inputBar_show_keyboard;
 
-    View.OnClickListener mOnClickListener;
+    private View.OnClickListener mOnClickListener;
 
 
     public InputBarView(Context context) {
