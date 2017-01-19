@@ -43,7 +43,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         iChatWidget.setActivity(this);
         iChatWidget.attachTabContent(getSupportFragmentManager());
         iChatWidget.setOnViewerListener(mInputBarView);
-        iChatWidget.showKeyboard();
+        iChatWidget.dismiss();
 
         inputBarHint = (EditText) findViewById(R.id.inputBarHint);
         inputBarHint.setText(Data.testMessage);

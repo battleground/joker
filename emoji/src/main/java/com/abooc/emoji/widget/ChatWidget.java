@@ -98,8 +98,6 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
             public void onGlobalLayout() {
                 //比较Activity根布局与当前布局的大小
                 int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
-                Debug.anchor(heightDiff);
-
                 if (heightDiff > 200) {
                     show();
                 } else {
@@ -137,6 +135,12 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
         View inputBarLayout = getChildAt(1);
         mEditText = (EditText) inputBarLayout.findViewById(R.id.inputBar);
+        mEditText.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showKeyboard();
+            }
+        });
 
         mEmojiconsContainer = findViewById(R.id.emojicons);
 
@@ -225,14 +229,11 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
     @Override
     public void onKeyboardShown() {
-        mOnViewerListener.onShowKeyboard();
         hideEmojiView();
     }
 
     @Override
     public void onKeyboardHidden() {
-        mOnViewerListener.onShowEmojions();
-
         if (mCloseAction) {
             dismiss();
         } else {
@@ -319,11 +320,17 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
         Debug.anchor("收起键盘");
         mCloseAction = false;
         Keyboard.hideKeyboard(mActivity);
+        if (true) {
+            showEmojiView();
+        }
     }
 
     public void showKeyboard() {
         mEditText.requestFocus();
         Keyboard.showInputMethod(mActivity, mEditText);
+        if (true) {
+            hideEmojiView();
+        }
     }
 
     private Handler mHandler = new Handler();
@@ -336,6 +343,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
                 @Override
                 public void run() {
                     mEmojiconsContainer.setVisibility(View.VISIBLE);
+                    mOnViewerListener.onShowEmojions();
                 }
             }, 150);
         }
@@ -351,6 +359,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
                 @Override
                 public void run() {
                     mEmojiconsContainer.setVisibility(View.GONE);
+                    mOnViewerListener.onShowKeyboard();
                 }
             }, 50);
         }
