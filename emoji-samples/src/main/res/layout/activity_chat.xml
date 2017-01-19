@@ -1,0 +1,106 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:isScrollContainer="true"
+    android:orientation="vertical">
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFF"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_margin="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:enabled="false"
+                android:hint="消息原数据："
+                android:textSize="10sp" />
+
+            <EditText
+                android:id="@+id/inputBarHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:enabled="false"
+                android:focusable="false"
+                android:hint="消息..."
+                android:textSize="12sp" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#CCC" />
+
+            <ListView
+                android:id="@+id/ListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="#FFF"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_weight="1"
+                android:background="#CCC" />
+
+            <TextView
+                android:id="@+id/inputBar_virtual"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginTop="10dp"
+                android:focusable="false"
+                android:layout_weight="1"
+                android:background="@drawable/edit_input_background"
+                android:gravity="center_vertical"
+                android:hint="输入消息..."
+                android:paddingLeft="4dp"
+                android:singleLine="true"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <com.abooc.emoji.widget.ChatWidget
+        android:id="@+id/ChatWidget"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#20000000"
+        android:clickable="true"
+        android:visibility="visible">
+
+        <com.abooc.emoji.samples.InputBarView
+            android:id="@+id/InputBarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="输入栏" />
+    </com.abooc.emoji.widget.ChatWidget>
+
+</FrameLayout>

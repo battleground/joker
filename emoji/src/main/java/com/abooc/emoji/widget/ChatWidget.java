@@ -133,8 +133,19 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
         setOnClickListener(this);
 
-        View inputBarLayout = getChildAt(1);
-        mEditText = (EditText) inputBarLayout.findViewById(R.id.inputBar);
+        ViewGroup inputBarLayout = (ViewGroup) getChildAt(1);
+
+        ViewGroup inputRoot = (ViewGroup) inputBarLayout.getChildAt(0);
+        int childCount = inputRoot.getChildCount();
+
+        for (int i = 0; i < childCount; i++) {
+            View view = inputRoot.getChildAt(i);
+            if (view instanceof EditText) {
+                mEditText = (EditText) view;
+                break;
+            }
+        }
+
         mEditText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -257,27 +268,26 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
     public void onClickTab(View view) {
         Fragment fragment;
-        switch (view.getId()) {
-            case R.id.emojicons_menu_add:
-                fragment = iTabManager.instance(iTabManager.getTabs().get(0));
-                iTabManager.switchTo(iTabManager.content, fragment);
-                break;
-            case R.id.emojicons_menu_emojicon:
-                fragment = iTabManager.instance(iTabManager.getTabs().get(1));
-                iTabManager.switchTo(iTabManager.content, fragment);
-                break;
-            case R.id.emojicons_menu_gifts:
-                Tab tab = iTabManager.getTabs().get(2);
-                fragment = iTabManager.instance(tab);
-                iTabManager.switchTo(iTabManager.content, fragment);
-                break;
+        int i = view.getId();
+        if (i == R.id.emojicons_menu_add) {
+            fragment = iTabManager.instance(iTabManager.getTabs().get(0));
+            iTabManager.switchTo(iTabManager.content, fragment);
+
+        } else if (i == R.id.emojicons_menu_emojicon) {
+            fragment = iTabManager.instance(iTabManager.getTabs().get(1));
+            iTabManager.switchTo(iTabManager.content, fragment);
+
+        } else if (i == R.id.emojicons_menu_gifts) {
+            Tab tab = iTabManager.getTabs().get(2);
+            fragment = iTabManager.instance(tab);
+            iTabManager.switchTo(iTabManager.content, fragment);
+
         }
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.ChatWidget) {
-
+        if (v == this) {
             Keyboard.hideKeyboard(mActivity);
             dismiss();
         } else {
