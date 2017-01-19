@@ -126,7 +126,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         iChatWidget.show();
-        iChatWidget.showKeyboard();
+//        iChatWidget.showKeyboard();
     }
 
     @Override

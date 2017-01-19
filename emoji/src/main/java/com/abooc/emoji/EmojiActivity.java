@@ -43,7 +43,6 @@ public class EmojiActivity extends AppCompatActivity {
         inputBar_virtual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iChatWidget.showKeyboard();
                 iChatWidget.show();
             }
         });
@@ -57,7 +56,6 @@ public class EmojiActivity extends AppCompatActivity {
         iChatWidget.setActivity(this);
         iChatWidget.attachTabContent(getSupportFragmentManager());
         iChatWidget.setOnViewerListener(mInputBarView);
-        iChatWidget.showKeyboard();
     }
 
     public void addInputBar() {

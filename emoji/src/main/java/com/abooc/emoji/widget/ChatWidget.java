@@ -52,6 +52,12 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
     private boolean mKeyboardShown;
 
+
+    private static final int VIEW_STATUS_KEYBOARD = 1;
+    private static final int VIEW_STATUS_EMOJIONS = 2;
+
+    private int mStatus = VIEW_STATUS_KEYBOARD;
+
     // 区分收起键盘意图，切换表情时，收起键盘但不自动关闭；强制收起键盘操作时，自动关闭模块；
     private boolean mCloseAction = true;
 
@@ -92,23 +98,30 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
             public void onGlobalLayout() {
                 //比较Activity根布局与当前布局的大小
                 int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
+                Debug.anchor(heightDiff);
+
                 if (heightDiff > 200) {
-                    //超过200时，一般为显示虚拟键盘事件
-                    if (!mKeyboardShown) {
-                        onKeyboardShown();
-                    }
-                    mCloseAction = true;
-                    mKeyboardShown = true;
-
+                    show();
                 } else {
-                    //小于200时，为不显示虚拟键盘或虚拟键盘隐藏
-                    if (mKeyboardShown) {
-//                        mCloseAction = true;
-                        onKeyboardHidden();
-                    }
-
-                    mKeyboardShown = false;
+                    hide();
                 }
+            }
+
+            void show() {
+                if (!mKeyboardShown) {
+                    Debug.anchor("键盘已弹出");
+                    onKeyboardShown();
+                }
+                mCloseAction = true;
+                mKeyboardShown = true;
+            }
+
+            void hide() {
+                if (mKeyboardShown) {
+                    Debug.anchor("键盘已收起");
+                    onKeyboardHidden();
+                }
+                mKeyboardShown = false;
             }
         });
     }
@@ -135,7 +148,9 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        keyboard(this);
+        Debug.anchor();
+        mAnimationOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);
+        keyboard((View) this.getParent());
     }
 
     private void reAddView(View view) {
@@ -149,9 +164,6 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
     public void setActivity(Activity activity) {
         mActivity = activity;
-
-        mAnimationOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);
-
     }
 
     private TabManager iTabManager;
@@ -213,21 +225,18 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
     @Override
     public void onKeyboardShown() {
-        Debug.anchor("键盘弹出");
-
         mOnViewerListener.onShowKeyboard();
         hideEmojiView();
     }
 
     @Override
     public void onKeyboardHidden() {
-        Debug.anchor("键盘隐藏");
-
         mOnViewerListener.onShowEmojions();
-        showEmojiView();
 
         if (mCloseAction) {
-            hide();
+            dismiss();
+        } else {
+            showEmojiView();
         }
     }
 
@@ -269,7 +278,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
         if (v.getId() == R.id.ChatWidget) {
 
             Keyboard.hideKeyboard(mActivity);
-            hide();
+            dismiss();
         } else {
             if (mView != null) {
                 mView.setSelected(false);
@@ -286,50 +295,71 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
     }
 
     public void show() {
+        Debug.anchor("启动模块");
         setVisibility(View.VISIBLE);
+        if (mStatus == VIEW_STATUS_KEYBOARD) {
+            showKeyboard();
+        } else {
+            showEmoji();
+        }
     }
 
-    public void hide() {
+    public void dismiss() {
+        Debug.anchor("关闭模块");
+        mEditText.clearFocus();
         setVisibility(View.GONE);
+//        if (mStatus == VIEW_STATUS_EMOJIONS) {
+//            Debug.anchor("      恢复键盘状态，隐藏表情模块！");
+//            mStatus = VIEW_STATUS_KEYBOARD;
+//            mEmojiconsContainer.setVisibility(View.GONE);
+//        }
     }
 
     public void showEmoji() {
-        Debug.anchor();
+        Debug.anchor("收起键盘");
         mCloseAction = false;
         Keyboard.hideKeyboard(mActivity);
     }
 
     public void showKeyboard() {
-        Debug.anchor();
         mEditText.requestFocus();
-        Keyboard.showKeyboard(mActivity);
-
+        Keyboard.showInputMethod(mActivity, mEditText);
     }
 
+    private Handler mHandler = new Handler();
+
     private void showEmojiView() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mEmojiconsContainer.setVisibility(View.VISIBLE);
-            }
-        }, 150);
+        mStatus = VIEW_STATUS_EMOJIONS;
+        if (mEmojiconsContainer.getVisibility() != View.VISIBLE) {
+            Debug.anchor("显示表情模块");
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mEmojiconsContainer.setVisibility(View.VISIBLE);
+                }
+            }, 150);
+        }
     }
 
     private void hideEmojiView() {
-        mEmojiconsContainer.startAnimation(mAnimationOut);
+        mStatus = VIEW_STATUS_KEYBOARD;
+        if (mEmojiconsContainer.getVisibility() == View.VISIBLE) {
+            Debug.anchor("隐藏表情模块");
+            mEmojiconsContainer.startAnimation(mAnimationOut);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mEmojiconsContainer.setVisibility(View.GONE);
-            }
-        }, 50);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mEmojiconsContainer.setVisibility(View.GONE);
+                }
+            }, 50);
+        }
     }
 
     public boolean onBackPressed() {
         if (getVisibility() == View.VISIBLE) {
             Keyboard.hideKeyboard(mActivity);
-            hide();
+            dismiss();
             return true;
         }
         return false;
