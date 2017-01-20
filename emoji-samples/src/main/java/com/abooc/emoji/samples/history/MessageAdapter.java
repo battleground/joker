@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.abooc.emoji.EmojiBuilder;
 import com.abooc.emoji.samples.Message;
 import com.abooc.emoji.samples.R;
-import com.abooc.emoji.test.Emoji;
+import com.abooc.emoji.test.Data;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ class MessageAdapter extends ArrayAdapter<Message> {
 
         void attachData(Message message) {
             if (!message.hasBuild()) {
-                CharSequence builder = EmojiBuilder.toEmojiCharSequence(mContext, message.message, Emoji.emotionsBitmap);
+                CharSequence builder = EmojiBuilder.toEmojiCharSequence(mContext, message.message, Data.emotionsBitmapCache);
                 message.spannableMessage = builder;
             }
 

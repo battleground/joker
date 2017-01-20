@@ -2,7 +2,7 @@ package com.abooc.emoji.samples;
 
 import android.app.Application;
 
-import com.abooc.emoji.test.Emoji;
+import com.abooc.emoji.test.Data;
 import com.abooc.plugin.about.About;
 
 /**
@@ -13,7 +13,7 @@ public class AppApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Emoji.build(getResources());
+        Data.build(getResources());
         About.defaultAbout(this);
     }
 }

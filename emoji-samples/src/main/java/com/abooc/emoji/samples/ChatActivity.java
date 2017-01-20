@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.abooc.emoji.EmojiBuilder;
 import com.abooc.emoji.samples.history.HistoryActivity;
 import com.abooc.emoji.test.Data;
-import com.abooc.emoji.test.Emoji;
 import com.abooc.emoji.test.Emojicon;
 import com.abooc.emoji.widget.ChatWidget;
 import com.abooc.plugin.about.AboutActivity;
@@ -150,13 +149,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onEmojiSmileEvent(View view) {
         String code = Emojicon.微笑.code();
-        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBarHint, Emoji.emotionsBitmap);
+        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBarHint, Data.emotionsBitmapCache);
         inputBarHint.setText(emojiResult.toString());
     }
 
     public void onEmojiAndroidEvent(View view) {
         String code = Emojicon.安卓.code();
-        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBarHint, Emoji.emotionsBitmap);
+        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBarHint, Data.emotionsBitmapCache);
         inputBarHint.setText(emojiResult.toString());
     }
 

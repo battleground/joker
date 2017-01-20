@@ -1,6 +1,7 @@
 package com.abooc.emoji.chat;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 
 import com.abooc.emoji.R;
 import com.abooc.emoji.test.Data;
+import com.abooc.emoji.test.Emoji;
 import com.abooc.util.Debug;
 
 import java.util.ArrayList;
@@ -72,17 +74,17 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
     class ViewAdapter extends PagerAdapter {
 
         Context mContext;
-        ArrayList<String[]> mArray;
+        ArrayList<Emoji[]> mArray;
 
         ViewAdapter(Context context) {
             mContext = context;
         }
 
-        public void setData(ArrayList<String[]> array) {
+        public void setData(ArrayList<Emoji[]> array) {
             mArray = array;
         }
 
-        public String[] getItem(int position) {
+        public Emoji[] getItem(int position) {
             return mArray.get(position);
         }
 
@@ -105,8 +107,8 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
 
-            String[] strings = getItem(position);
-            EmojiAdapter adapter = new EmojiAdapter(mContext, R.layout.emoji_item, strings);
+            Emoji[] emojis = getItem(position);
+            EmojiAdapter adapter = new EmojiAdapter(mContext, R.layout.emoji_item, emojis);
 
 
             LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -122,30 +124,34 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
 
     }
 
-    static class EmojiAdapter extends ArrayAdapter<String> {
+    static class EmojiAdapter extends ArrayAdapter<Emoji> {
 
+        Resources mResources;
         int resId;
 
-        public EmojiAdapter(Context context, int resource, String[] objects) {
+        public EmojiAdapter(Context context, int resource, Emoji[] objects) {
             super(context, resource, objects);
             resId = resource;
+            mResources = getContext().getResources();
         }
 
         @NonNull
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
-            LayoutInflater inflater = LayoutInflater.from(getContext());
-            ImageView imageView = (ImageView) inflater.inflate(resId, parent, false);
-
-            if (position == (getCount() - 1)) {
-                imageView.setImageResource(R.drawable.ic_editor_backspace);
-            } else {
-                imageView.setImageResource(R.drawable.ic_emoji_smile);
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                convertView = inflater.inflate(resId, parent, false);
             }
+            Emoji item = getItem(position);
+
+            ImageView imageView = (ImageView) convertView;
+            int identifier = mResources.getIdentifier(item.icon, "drawable", getContext().getPackageName());
+            imageView.setImageResource(identifier);
 
             return imageView;
         }
+
+
     }
 
 
@@ -153,7 +159,7 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             int pageIndex = (int) parent.getTag();
-            String[] strings = Data.emojis.get(pageIndex);
+            Emoji[] strings = Data.emojis.get(pageIndex);
 
             if (position == (strings.length - 1)) {
                 Debug.anchor("退格键：" + position);

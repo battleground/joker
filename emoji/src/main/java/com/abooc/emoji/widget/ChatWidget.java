@@ -26,6 +26,7 @@ import com.abooc.emoji.chat.EmojiAddFragment;
 import com.abooc.emoji.chat.EmojiFragment;
 import com.abooc.emoji.chat.GiftsFragment;
 import com.abooc.emoji.chat.GridViewer;
+import com.abooc.emoji.test.Data;
 import com.abooc.emoji.test.Emoji;
 import com.abooc.emoji.test.Gift;
 import com.abooc.joker.tab.Tab;
@@ -222,16 +223,16 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
             mEditText.getText().append(item);
 
         } else if (content instanceof EmojiFragment) {
-            String item = (String) adapter.getItem(position);
+            Emoji item = (Emoji) adapter.getItem(position);
             Debug.anchor("position：" + position + ", " + item);
 
-            EmojiBuilder.writeEmoji(item, mEditText, Emoji.emotionsBitmap);
+            EmojiBuilder.writeEmoji(item.code, mEditText, Data.emotionsBitmapCache);
 
         } else if (content instanceof GiftsFragment) {
             Gift item = (Gift) adapter.getItem(position);
             Debug.anchor("position：" + position + ", " + item.name);
 
-            EmojiBuilder.writeEmoji(item.code, mEditText, Emoji.emotionsBitmap);
+            EmojiBuilder.writeEmoji(item.code, mEditText, Data.emotionsBitmapCache);
         }
 
     }

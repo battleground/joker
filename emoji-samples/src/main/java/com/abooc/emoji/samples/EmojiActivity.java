@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.abooc.emoji.EmojiBuilder;
 import com.abooc.emoji.samples.history.HistoryActivity;
-import com.abooc.emoji.test.Emoji;
+import com.abooc.emoji.test.Data;
 import com.abooc.emoji.test.Emojicon;
 import com.abooc.emoji.widget.ChatWidget;
 import com.abooc.plugin.about.AboutActivity;
@@ -48,7 +48,7 @@ public class EmojiActivity extends AppCompatActivity {
             }
         });
 
-        CharSequence emojiChar = EmojiBuilder.toEmojiCharSequence(this, testMessage, Emoji.emotionsBitmap);
+        CharSequence emojiChar = EmojiBuilder.toEmojiCharSequence(this, testMessage, Data.emotionsBitmapCache);
         messageText.setText(emojiChar);
 
         addInputBar();
@@ -112,7 +112,7 @@ public class EmojiActivity extends AppCompatActivity {
         String currentString = mInputBarView.getText().toString();
         inputBarHint.setHint(currentString);
 
-        CharSequence emojiChar = EmojiBuilder.toEmojiCharSequence(this, currentString, Emoji.emotionsBitmap);
+        CharSequence emojiChar = EmojiBuilder.toEmojiCharSequence(this, currentString, Data.emotionsBitmapCache);
         messageText.setText(emojiChar);
 
         mInputBarView.setText(null);
@@ -120,7 +120,7 @@ public class EmojiActivity extends AppCompatActivity {
 
     public void onEmojiSmileEvent(View view) {
         String code = Emojicon.微笑.code();
-        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBar_virtual, Emoji.emotionsBitmap);
+        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBar_virtual, Data.emotionsBitmapCache);
         inputBarHint.setText(emojiResult.toString());
     }
 
