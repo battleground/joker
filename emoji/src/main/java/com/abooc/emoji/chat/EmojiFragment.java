@@ -18,11 +18,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.abooc.emoji.R;
-import com.abooc.emoji.test.EmojiCache;
 import com.abooc.emoji.test.Emoji;
+import com.abooc.emoji.test.EmojiCache;
 import com.abooc.util.Debug;
-
-import java.util.ArrayList;
 
 
 /**
@@ -50,7 +48,8 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.ViewPager);
 
         ViewAdapter pagerAdapter = new ViewAdapter(getContext());
-        pagerAdapter.setData(EmojiCache.getEmojiLists());
+        pagerAdapter.setData(EmojiCache.getEmojiArrays());
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
     }
@@ -74,23 +73,44 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
     class ViewAdapter extends PagerAdapter {
 
         Context mContext;
-        ArrayList<Emoji[]> mArray;
+        Emoji[] mArray;
+        int mCount;
+        int mPage = 0;
+        int pageSize = 20;
 
         ViewAdapter(Context context) {
             mContext = context;
         }
 
-        public void setData(ArrayList<Emoji[]> array) {
-            mArray = array;
+        int getPage(int count, int pageSize) {
+            int page = (count + (pageSize - 1)) / pageSize;
+            return page;
         }
 
-        public Emoji[] getItem(int position) {
-            return mArray.get(position);
+        public void setData(Emoji[] array) {
+            mArray = array;
+            mCount = array.length;
+            mPage = getPage(mCount, pageSize);
+
+            Emoji emoji = array[0];
+            Debug.anchor(emoji.name + " -> " + emoji.icon);
+            Debug.anchor("总数：" + mCount + ", 页数：" + mPage);
+        }
+
+        public Emoji[] getGroup(int page) {
+            int thisPageSize = page < (mPage - 1) ? pageSize : (mCount % pageSize);
+            int start = (page * pageSize);
+            int end = start + thisPageSize;
+
+            Emoji[] newArray = new Emoji[thisPageSize];
+            Debug.anchor("第" + page + "页数量：" + thisPageSize + ", start：" + start + "， end：" + end);
+            System.arraycopy(mArray, start, newArray, 0, thisPageSize);
+            return newArray;
         }
 
         @Override
         public int getCount() {
-            return mArray.size();
+            return mPage;
         }
 
         @Override
@@ -107,9 +127,8 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
 
-            Emoji[] emojis = getItem(position);
+            Emoji[] emojis = getGroup(position);
             EmojiAdapter adapter = new EmojiAdapter(mContext, R.layout.emoji_item, emojis);
-
 
             LayoutInflater inflater = LayoutInflater.from(mContext);
             GridView gridView = (GridView) inflater.inflate(R.layout.emoji, container, false);
@@ -127,12 +146,25 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
     static class EmojiAdapter extends ArrayAdapter<Emoji> {
 
         Resources mResources;
+        String mPackageName;
         int resId;
 
         public EmojiAdapter(Context context, int resource, Emoji[] objects) {
             super(context, resource, objects);
             resId = resource;
             mResources = getContext().getResources();
+            mPackageName = getContext().getPackageName();
+        }
+
+        @Override
+        public int getCount() {
+            return super.getCount() + 1;
+        }
+
+        @Nullable
+        @Override
+        public Emoji getItem(int position) {
+            return position < super.getCount() ? super.getItem(position) : null;
         }
 
         @NonNull
@@ -149,7 +181,7 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
             if (item == null) {
                 imageView.setImageResource(R.drawable.emoji_backspace);
             } else {
-                int identifier = mResources.getIdentifier(item.icon, "drawable", getContext().getPackageName());
+                int identifier = mResources.getIdentifier(item.icon, "drawable", mPackageName);
                 imageView.setImageResource(identifier);
             }
             return imageView;
@@ -157,21 +189,5 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
 
 
     }
-
-
-    OnItemClickListener mItemClickListener = new OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            int pageIndex = (int) parent.getTag();
-            Emoji[] strings = EmojiCache.getEmojiLists().get(pageIndex);
-
-            if (position == (strings.length - 1)) {
-                Debug.anchor("退格键：" + position);
-            } else {
-                Debug.anchor("表情：" + position);
-            }
-        }
-    };
-
 
 }

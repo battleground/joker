@@ -1,6 +1,10 @@
 package com.abooc.emoji;
 
+import com.abooc.emoji.test.EmojiCache;
+
 import org.junit.Test;
+
+import java.util.HashMap;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -8,6 +12,48 @@ import org.junit.Test;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
+
+
+    @Test
+    public void test_buildEmojis() throws Exception {
+
+        HashMap<String, String> namesMap = EmojiCache.buildNamesMap();
+
+        int count = namesMap.size();
+        int pageCount = getPage(count, 20);
+
+        out("共" + pageCount + "页，每页" + 20 + "条。\n");
+
+        String[] names = new String[count];
+        namesMap.keySet().toArray(names);
+
+        for (int page = 1; page <= pageCount; page++) {
+
+            int pageSize = page < pageCount ? 20 : (count % 20);
+
+            out("\n第" + page + "页，共" + pageSize + "条。");
+
+            for (int index = 0; index < pageSize; index++) {
+
+                String name = names[index + ((page - 1) * 20)];
+                String icon = namesMap.get(name);
+
+                out(name + ":" + icon);
+            }
+
+        }
+    }
+
+
+    static int getPage(int count, int pageSize) {
+        int page = (count + (pageSize - 1)) / pageSize;
+        return page;
+    }
+
+    static void out(String s) {
+        System.out.println(s);
+    }
+
     @Test
     public void addition_isCorrect() throws Exception {
 

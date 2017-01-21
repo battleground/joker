@@ -1,10 +1,12 @@
 package com.abooc.emoji.test;
 
+import java.io.Serializable;
+
 /**
  * Created by dayu on 2017/1/12.
  */
 
-public class Emoji {
+public class Emoji implements Serializable {
 
     public String name;
     public String code;
