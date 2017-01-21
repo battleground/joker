@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.abooc.emoji.EmojiBuilder;
 import com.abooc.emoji.samples.history.HistoryActivity;
-import com.abooc.emoji.test.Data;
+import com.abooc.emoji.test.EmojiCache;
 import com.abooc.emoji.test.Emojicon;
 import com.abooc.emoji.widget.ChatWidget;
 import com.abooc.plugin.about.AboutActivity;
@@ -46,13 +46,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         iChatWidget.dismiss();
 
         inputBarHint = (EditText) findViewById(R.id.inputBarHint);
-        inputBarHint.setText(Data.testMessage);
+        inputBarHint.setText(EmojiCache.testMessage);
 
         findViewById(R.id.inputBar_virtual).setOnClickListener(this);
 
         attachListView();
 
-        messageLists.add(Data.testMessage);
+        messageLists.add(EmojiCache.testMessage);
         mMessagesAdapter.notifyDataSetChanged();
     }
 
@@ -149,13 +149,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onEmojiSmileEvent(View view) {
         String code = Emojicon.微笑.code();
-        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBarHint, Data.emotionsBitmapCache);
+        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBarHint, EmojiCache.getCache());
         inputBarHint.setText(emojiResult.toString());
     }
 
     public void onEmojiAndroidEvent(View view) {
         String code = Emojicon.安卓.code();
-        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBarHint, Data.emotionsBitmapCache);
+        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBarHint, EmojiCache.getCache());
         inputBarHint.setText(emojiResult.toString());
     }
 

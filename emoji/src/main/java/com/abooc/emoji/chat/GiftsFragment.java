@@ -15,7 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 import com.abooc.emoji.R;
-import com.abooc.emoji.test.Data;
+import com.abooc.emoji.test.EmojiCache;
 import com.abooc.emoji.test.Gift;
 import com.abooc.util.Debug;
 
@@ -47,7 +47,7 @@ public class GiftsFragment extends Fragment implements GridViewer, AdapterView.O
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.ViewPager);
 
         ViewAdapter pagerAdapter = new ViewAdapter(getContext());
-        pagerAdapter.setData(Data.gifts);
+        pagerAdapter.setData(EmojiCache.gifts);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
     }
@@ -147,7 +147,7 @@ public class GiftsFragment extends Fragment implements GridViewer, AdapterView.O
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             int pageIndex = (int) parent.getTag();
-            Gift[] gifts = Data.gifts.get(pageIndex);
+            Gift[] gifts = EmojiCache.gifts.get(pageIndex);
 
             Debug.anchor("礼物：" + position);
         }

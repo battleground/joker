@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +27,7 @@ import com.abooc.emoji.chat.EmojiAddFragment;
 import com.abooc.emoji.chat.EmojiFragment;
 import com.abooc.emoji.chat.GiftsFragment;
 import com.abooc.emoji.chat.GridViewer;
-import com.abooc.emoji.test.Data;
+import com.abooc.emoji.test.EmojiCache;
 import com.abooc.emoji.test.Emoji;
 import com.abooc.emoji.test.Gift;
 import com.abooc.joker.tab.Tab;
@@ -226,13 +227,39 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
             Emoji item = (Emoji) adapter.getItem(position);
             Debug.anchor("position：" + position + ", " + item);
 
-            EmojiBuilder.writeEmoji(item.code, mEditText, Data.emotionsBitmapCache);
+            if (item == null) {
+                int selectionStart = mEditText.getSelectionStart();// 获取光标的位置
+                Debug.anchor("光标位置:" + selectionStart);
+                if (selectionStart > 0) {
+                    String body = mEditText.getText().toString();
+                    Debug.anchor("文本内容:" + body);
+                    if (!TextUtils.isEmpty(body)) {
+                        String tempStr = body.substring(0, selectionStart);
+                        Debug.anchor("tempStr:" + tempStr);
+                        int i = tempStr.lastIndexOf("[");// 获取最后一个表情的位置
+                        Debug.anchor("[" + i + ", " + selectionStart + "]");
+                        if (i != -1) {
+                            CharSequence cs = tempStr.subSequence(i, selectionStart);
+//                            if (cs.equals("[fac")) {// 判断是否是一个表情
+                            mEditText.getText().delete(i, selectionStart);
+//                                return;
+//                            }
+                        } else {
+//                        mEditText.getText().delete(selectionStart - 1, selectionStart);
+                        }
+                    }
+                }
+
+            } else {
+                EmojiBuilder.writeEmoji(item.code, mEditText, EmojiCache.getCache());
+            }
+
 
         } else if (content instanceof GiftsFragment) {
             Gift item = (Gift) adapter.getItem(position);
             Debug.anchor("position：" + position + ", " + item.name);
 
-            EmojiBuilder.writeEmoji(item.code, mEditText, Data.emotionsBitmapCache);
+            EmojiBuilder.writeEmoji(item.code, mEditText, EmojiCache.getCache());
         }
 
     }

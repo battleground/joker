@@ -1,6 +1,6 @@
 package com.abooc.emoji;
 
-import com.abooc.emoji.test.Data;
+import com.abooc.emoji.test.EmojiCache;
 
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  */
 public class EmojiUnitTest {
 
-    String message = Data.testMessage;
+    String message = EmojiCache.testMessage;
 
     String PATTERN = EmojiBuilder.EMOJI_PATTERN;
 

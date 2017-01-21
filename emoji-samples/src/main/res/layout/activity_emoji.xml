@@ -24,7 +24,7 @@
                 android:clickable="true"
                 android:onClick="onEmojiSmileEvent"
                 android:padding="4dp"
-                android:src="@drawable/ic_emoji_smile" />
+                android:src="@drawable/ic_action_emoji" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
                 android:clickable="true"
                 android:onClick="onEmojiAndroidEvent"
                 android:padding="4dp"
-                android:src="@drawable/ic_emoji_android" />
+                android:src="@drawable/ic_action_keyboard" />
         </LinearLayout>
 
 

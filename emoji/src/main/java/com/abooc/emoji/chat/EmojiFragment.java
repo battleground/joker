@@ -18,7 +18,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.abooc.emoji.R;
-import com.abooc.emoji.test.Data;
+import com.abooc.emoji.test.EmojiCache;
 import com.abooc.emoji.test.Emoji;
 import com.abooc.util.Debug;
 
@@ -50,7 +50,7 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.ViewPager);
 
         ViewAdapter pagerAdapter = new ViewAdapter(getContext());
-        pagerAdapter.setData(Data.emojis);
+        pagerAdapter.setData(EmojiCache.getEmojiLists());
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
     }
@@ -145,9 +145,13 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
             Emoji item = getItem(position);
 
             ImageView imageView = (ImageView) convertView;
-            int identifier = mResources.getIdentifier(item.icon, "drawable", getContext().getPackageName());
-            imageView.setImageResource(identifier);
 
+            if (item == null) {
+                imageView.setImageResource(R.drawable.emoji_backspace);
+            } else {
+                int identifier = mResources.getIdentifier(item.icon, "drawable", getContext().getPackageName());
+                imageView.setImageResource(identifier);
+            }
             return imageView;
         }
 
@@ -159,7 +163,7 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             int pageIndex = (int) parent.getTag();
-            Emoji[] strings = Data.emojis.get(pageIndex);
+            Emoji[] strings = EmojiCache.getEmojiLists().get(pageIndex);
 
             if (position == (strings.length - 1)) {
                 Debug.anchor("退格键：" + position);
