@@ -39,6 +39,8 @@ import static com.abooc.emoji.widget.ChatWidget.Tabs.EMOJICON;
 import static com.abooc.emoji.widget.ChatWidget.Tabs.GIFTS;
 
 /**
+ * 聊天控件
+ * <p>
  * Created by dayu on 2017/1/17.
  */
 
@@ -54,6 +56,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
     private boolean mKeyboardShown;
 
+    private boolean mCharMode = false;
 
     private static final int VIEW_STATUS_KEYBOARD = 1;
     private static final int VIEW_STATUS_EMOJIONS = 2;
@@ -88,6 +91,10 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
         LayoutInflater.from(context).inflate(R.layout.chat_widget, this, true);
 
+    }
+
+    public void setCharMode(boolean enable) {
+        mCharMode = enable;
     }
 
     void keyboard(final View rootView) {
@@ -211,6 +218,11 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
         return iTabManager;
     }
 
+    public void switchTo(int position) {
+        Fragment fragment = iTabManager.instance(iTabManager.getTabs().get(position));
+        iTabManager.switchTo(iTabManager.content, fragment);
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Fragment content = iTabManager.content;
@@ -229,7 +241,11 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
             if (item == null) {
                 delete();
             } else {
-                EmojiBuilder.writeEmoji(item.code, mEditText, EmojiCache.getCache());
+                if (mCharMode) {
+                    EmojiBuilder.writeEmoji(item.code, mEditText);
+                } else {
+                    EmojiBuilder.writeEmoji(item.code, mEditText, EmojiCache.getCache());
+                }
             }
 
 
@@ -247,15 +263,11 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
      */
     void delete() {
         int selectionStart = mEditText.getSelectionStart();// 获取光标的位置
-        Debug.anchor("光标位置:" + selectionStart);
         if (selectionStart > 0) {
             String body = mEditText.getText().toString();
-            Debug.anchor("文本内容:" + body);
             if (!TextUtils.isEmpty(body)) {
                 String tempStr = body.substring(0, selectionStart);
-                Debug.anchor("tempStr:" + tempStr);
                 int i = tempStr.lastIndexOf("[");// 获取最后一个表情的位置
-                Debug.anchor("[" + i + ", " + selectionStart + "]");
                 if (i != -1) {
                     mEditText.getText().delete(i, selectionStart);
                 } else {

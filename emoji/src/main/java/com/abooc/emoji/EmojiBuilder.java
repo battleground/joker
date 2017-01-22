@@ -7,8 +7,6 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 import android.widget.EditText;
 
-import com.abooc.util.Debug;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -28,7 +26,6 @@ public class EmojiBuilder {
      * @return 返回将表情符转为图片显示的内容。
      */
     public static CharSequence toEmojiCharSequence(Context ctx, String message, Map<String, Bitmap> emojiMap) {
-        Debug.anchor(message);
         SpannableStringBuilder spannableString = new SpannableStringBuilder(message);
 
         Pattern pattern = Pattern.compile(EMOJI_PATTERN);
@@ -41,7 +38,6 @@ public class EmojiBuilder {
             int end = matcher.end();
 
             map.put(new int[]{start, end}, emojiChars);
-            System.out.println("From map: " + emojiChars + ", [" + start + " - " + end + "]");
 
             Bitmap bitmap = emojiMap.get(emojiChars);
             if (bitmap != null) {
@@ -49,7 +45,6 @@ public class EmojiBuilder {
                 spannableString.setSpan(imageSpan, start, end, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
             }
         }
-        System.out.println("\n");
         return spannableString;
     }
 
@@ -68,7 +63,6 @@ public class EmojiBuilder {
     public static String writeEmoji(String emojiCode, EditText inputEditText) {
         int selectionStart = inputEditText.getSelectionStart();
         int selectionEnd = inputEditText.getSelectionEnd();
-        Debug.anchor("selectionStart:" + selectionStart + ", selectionEnd:" + selectionEnd);
 
         if (selectionEnd > selectionStart) {
             inputEditText.getText().replace(selectionStart, selectionEnd, emojiCode);
@@ -81,7 +75,6 @@ public class EmojiBuilder {
     public static CharSequence writeEmoji(String emojiCode, EditText inputEditText, Map<String, Bitmap> emojiMap) {
         int selectionStart = inputEditText.getSelectionStart();
         int selectionEnd = inputEditText.getSelectionEnd();
-        Debug.anchor("selectionStart:" + selectionStart + ", selectionEnd:" + selectionEnd);
 
         Context context = inputEditText.getContext();
         CharSequence emojiChar = EmojiBuilder.toEmojiChar(context, emojiCode, emojiMap);

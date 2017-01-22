@@ -13,9 +13,7 @@ import android.widget.TextView;
 import com.abooc.emoji.EmojiBuilder;
 import com.abooc.emoji.samples.history.HistoryActivity;
 import com.abooc.emoji.test.EmojiCache;
-import com.abooc.emoji.test.Emojicon;
 import com.abooc.emoji.widget.ChatWidget;
-import com.abooc.joker.tab.TabManager;
 import com.abooc.plugin.about.AboutActivity;
 
 public class EmojiActivity extends AppCompatActivity {
@@ -56,7 +54,8 @@ public class EmojiActivity extends AppCompatActivity {
 
         iChatWidget = (ChatWidget) findViewById(R.id.ChatWidget);
         iChatWidget.setActivity(this);
-        TabManager tabManager = iChatWidget.attachTabContent(getSupportFragmentManager());
+        iChatWidget.setCharMode(true);
+        iChatWidget.attachTabContent(getSupportFragmentManager());
         iChatWidget.setOnViewerListener(mInputBarView);
 
     }
@@ -121,15 +120,14 @@ public class EmojiActivity extends AppCompatActivity {
     }
 
     public void onEmojiSmileEvent(View view) {
-        String code = Emojicon.微笑.code();
-        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBar_virtual, EmojiCache.getCache());
-        inputBarHint.setText(emojiResult.toString());
+        iChatWidget.show();
+        iChatWidget.showEmoji();
+        iChatWidget.switchTo(2);
     }
 
     public void onEmojiAndroidEvent(View view) {
-        String code = Emojicon.安卓.code();
-        String emojiResult = EmojiBuilder.writeEmoji(code, inputBar_virtual);
-        inputBarHint.setText(emojiResult.toString());
+        iChatWidget.show();
+        iChatWidget.showKeyboard();
     }
 
     @Override

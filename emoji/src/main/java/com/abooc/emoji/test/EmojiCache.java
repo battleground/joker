@@ -65,41 +65,6 @@ public class EmojiCache {
 
     }
 
-    static void aa(HashMap<String, String> namesMap, int pageSize) {
-
-        int count = namesMap.size();
-        int page = getPage(count, 20);
-
-        String[] names = (String[]) namesMap.keySet().toArray();
-
-        for (int i = 0; i < page; i++) {
-
-        }
-
-
-        Emoji[] emojiArray0 = new Emoji[pageSize + 1];
-        Emoji[] e1 = new Emoji[pageSize + 1];
-
-
-//        int length = emoji_names0.length;
-//        for (int index = 0; index < length; index++) {
-//            String emojiName = emoji_names0[index];
-//            String emojiCode = emojiName;
-//            e0[index] = new Emoji(emojiName, "[" + emojiName + "]", emojiCode);
-//        }
-//
-//        length = emoji_names1.length;
-//        for (int index = 0; index < length; index++) {
-//            String emojiName = emoji_names1[index];
-//            String emojiCode = emojiName;
-//            e1[index] = new Emoji(emojiName, "[" + emojiName + "]", emojiCode);
-//        }
-//
-//        emojiArrays.add(e0);
-//        emojiArrays.add(e1);
-    }
-
-
     static int getPage(int count, int pageSize) {
         int page = (count + (pageSize - 1)) / pageSize;
         return page;
