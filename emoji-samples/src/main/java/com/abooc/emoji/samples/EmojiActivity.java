@@ -15,6 +15,7 @@ import com.abooc.emoji.samples.history.HistoryActivity;
 import com.abooc.emoji.test.EmojiCache;
 import com.abooc.emoji.test.Emojicon;
 import com.abooc.emoji.widget.ChatWidget;
+import com.abooc.joker.tab.TabManager;
 import com.abooc.plugin.about.AboutActivity;
 
 public class EmojiActivity extends AppCompatActivity {
@@ -55,8 +56,9 @@ public class EmojiActivity extends AppCompatActivity {
 
         iChatWidget = (ChatWidget) findViewById(R.id.ChatWidget);
         iChatWidget.setActivity(this);
-        iChatWidget.attachTabContent(getSupportFragmentManager());
+        TabManager tabManager = iChatWidget.attachTabContent(getSupportFragmentManager());
         iChatWidget.setOnViewerListener(mInputBarView);
+
     }
 
     public void addInputBar() {

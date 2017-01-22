@@ -24,13 +24,13 @@ public class EmojiCache {
 
     private static Map<String, Bitmap> emotionsBitmapCache = new HashMap<>();
 
-    public static void buildCache(Resources res) {
+    public static void buildCache(Resources res, String defPackage) {
         Emoji[] emojis = emojiArrays;
         int length = emojis.length;
         for (int i = 0; i < length; i++) {
             Emoji emoji = emojis[i];
             if (emoji == null) continue;
-            int identifier = res.getIdentifier(emoji.icon, "drawable", "com.abooc.emoji.samples");
+            int identifier = res.getIdentifier(emoji.icon, "drawable", defPackage);
             Bitmap bitmapSmile = BitmapFactory.decodeResource(res, identifier);
             emotionsBitmapCache.put(emoji.code, bitmapSmile);
         }

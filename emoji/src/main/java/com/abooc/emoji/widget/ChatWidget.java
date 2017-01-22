@@ -185,15 +185,14 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
     private TabManager iTabManager;
 
-    public ChatWidget attachTabContent(FragmentManager manager) {
+    public TabManager attachTabContent(FragmentManager manager) {
         iTabManager = new TabManager(getContext(), manager, R.id.ChildTabContent);
         iTabManager
                 .add(iTabManager.build(ADD.name, ADD.cls))
                 .add(iTabManager.build(EMOJICON.name, EMOJICON.cls))
                 .add(iTabManager.build(GIFTS.name, GIFTS.cls));
 
-        Fragment fragment = iTabManager.instance(iTabManager.getTabs().get(0));
-        iTabManager.switchTo(null, fragment);
+        Fragment fragment = iTabManager.instance(iTabManager.getTabs().get(1));
         iTabManager.setOnSwitchListener(new TabManager.OnSwitchListener() {
             @Override
             public void onSwitched(Fragment fragment, Fragment fragment1) {
@@ -208,7 +207,8 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
         findViewById(R.id.emojicons_menu_gifts).setOnClickListener(this);
         findViewById(R.id.emojicons_menu_settings).setOnClickListener(this);
 
-        return this;
+        iTabManager.switchTo(null, fragment);
+        return iTabManager;
     }
 
     @Override
