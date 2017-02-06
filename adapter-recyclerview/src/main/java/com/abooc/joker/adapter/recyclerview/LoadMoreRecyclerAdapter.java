@@ -110,7 +110,7 @@ public abstract class LoadMoreRecyclerAdapter<T> extends BaseRecyclerAdapter<T> 
     }
 
     public boolean isFooter(int position) {
-        return position == getCount();
+        return position == getItemCount() - 1;
     }
 
     /**

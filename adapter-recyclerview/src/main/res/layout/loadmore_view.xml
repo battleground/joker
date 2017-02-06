@@ -23,7 +23,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:textColor="@color/loadmore_text_color"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:text="没有更多了"
         android:visibility="gone"/>
 

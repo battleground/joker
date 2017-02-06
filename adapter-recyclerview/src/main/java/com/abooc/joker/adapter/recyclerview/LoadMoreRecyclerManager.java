@@ -14,7 +14,7 @@ import com.abooc.joker.adapter.recyclerview.ViewHolder.OnRecyclerItemClickListen
  * @author zhangjunpu
  * @date 15/5/5
  */
-public class LoadMoreRecyclerManager<T extends RecyclerView> {
+public class LoadMoreRecyclerManager {
 
     /**
      * 加载更多
@@ -35,7 +35,7 @@ public class LoadMoreRecyclerManager<T extends RecyclerView> {
     private boolean isNoMore = false;
     private boolean isFailureStatus = false;
 
-    public LoadMoreRecyclerManager(Context context, T recyclerView) {
+    public LoadMoreRecyclerManager(Context context, RecyclerView recyclerView) {
         mContext = context;
         mAdapter = (LoadMoreRecyclerAdapter) recyclerView.getAdapter();
         mAdapter.addOnFooterItemClickListener(new OnRecyclerItemClickListener() {
