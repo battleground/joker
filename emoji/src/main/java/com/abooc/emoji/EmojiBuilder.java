@@ -7,7 +7,6 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 import android.widget.EditText;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,13 +30,10 @@ public class EmojiBuilder {
         Pattern pattern = Pattern.compile(EMOJI_PATTERN);
         Matcher matcher = pattern.matcher(message);
 
-        HashMap<int[], String> map = new HashMap<>();
         while (matcher.find()) {
             String emojiChars = matcher.group(0);
             int start = matcher.start();
             int end = matcher.end();
-
-            map.put(new int[]{start, end}, emojiChars);
 
             Bitmap bitmap = emojiMap.get(emojiChars);
             if (bitmap != null) {

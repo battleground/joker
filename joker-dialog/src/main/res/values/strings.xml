@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">joker-dialog</string>
+    <string name="joker_dialog_scanning_scan">正在识别</string>
+    <string name="joker_dialog_scanning_selection">请选择轮播频道</string>
+    <string name="joker_dialog_scanning_error">未能识别出轮播频道</string>
+    <string name="joker_dialog_scanning_guide">请确认暴风电视正处于轮播频道\n请确认电视与手机处于同一局域网络下</string>
+</resources>
