@@ -2,29 +2,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.abooc.joker.dialog">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
 
     <application android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true">
 
+    <!--<application android:allowBackup="true"-->
+        <!--android:label="@string/app_name"-->
         <!--android:icon="@mipmap/ic_launcher"-->
         <!--android:theme="@style/AppTheme"-->
         <!--android:supportsRtl="true">-->
-        <activity android:name=".samples.SamplesActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <!--<activity android:name=".samples.SamplesActivity">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-        <service android:name="org.fourthline.cling.android.AndroidUpnpServiceImpl" />
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
 
         <service android:name="com.abooc.upnp.AppAndroidUPnPService" />
 
