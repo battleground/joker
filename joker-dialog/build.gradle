@@ -1,5 +1,5 @@
-//apply plugin: 'com.android.application'
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
+//apply plugin: 'com.android.library'
 apply from: 'http://git.oschina.net/battleground/debug/raw/master/library/maven.gradle'
 
 android {
@@ -7,7 +7,7 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-//        applicationId "com.abooc.joker.dialog"
+        applicationId "com.abooc.joker.dialog"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1

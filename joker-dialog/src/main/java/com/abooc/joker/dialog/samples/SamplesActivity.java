@@ -6,23 +6,44 @@ import android.view.View;
 
 import com.abooc.joker.dialog.R;
 import com.abooc.joker.dialog.ScannerSamples;
+import com.abooc.joker.dialog.SensorEventBuilder;
+import com.abooc.joker.dialog.ShakeDialog;
 import com.abooc.joker.dialog.UPnP;
 import com.abooc.upnp.Discovery;
 import com.abooc.upnp.DlnaManager;
 import com.abooc.upnp.RendererPlayer;
+import com.abooc.upnp.model.DeviceDisplay;
 
 import org.fourthline.cling.support.model.Res;
 import org.fourthline.cling.support.model.item.Photo;
+import org.lee.java.util.Empty;
 
-public class SamplesActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class SamplesActivity extends AppCompatActivity implements SensorEventBuilder.EventListener {
+
+    private SensorEventBuilder mSensorBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mSensorBuilder = new SensorEventBuilder(this).builder(this);
 
         Discovery.get().init(SamplesActivity.this);
         DlnaManager.getInstance().startService(SamplesActivity.this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSensorBuilder.turnOn();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSensorBuilder.turnOff();
     }
 
     public void onShowScanningDialog(View view) {
@@ -41,6 +62,37 @@ public class SamplesActivity extends AppCompatActivity {
 
         RendererPlayer player = RendererPlayer.get();
         player.start(url, metadata);
+    }
+
+
+    @Override
+    public void onShake() {
+        ArrayList<DeviceDisplay> list = Discovery.get().getList();
+        if (Empty.isEmpty(list)) {
+            final ShakeDialog iDialog = new ShakeDialog(this);
+            iDialog.show();
+//            onNoRouters();
+        } else {
+
+            if (list.size() == 1) {
+//                saveVideo();
+//                DeviceDisplay display = list.get(0);
+//                DlnaManager.getInstance().bind(display.getOriginDevice(), null);
+//                display.setChecked(true);
+//                String json = getSeriesJson();
+//                int seriesIndex = getSeriesIndex();
+//                DLNAPlayerActivity.launch(this, json, seriesIndex);
+            } else {
+                if (DlnaManager.getInstance().hasBound()) {
+//                    saveVideo();
+//                    String json = getSeriesJson();
+//                    int seriesIndex = getSeriesIndex();
+//                    DLNAPlayerActivity.launch(this, json, seriesIndex);
+                } else {
+                    ScannerSamples.show(this);
+                }
+            }
+        }
     }
 
 }

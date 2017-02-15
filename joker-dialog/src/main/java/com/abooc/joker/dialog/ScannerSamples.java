@@ -41,10 +41,12 @@ public class ScannerSamples extends UPnPPresenter {
 
     }
 
+    public static ScanningDialog.OnSelectedDeviceListener onSelectedDeviceListener;
+
     static ScanningDialog.OnSelectedDeviceListener registerEvent(final ScanningDialog iScanningDialog) {
         return new ScanningDialog.OnSelectedDeviceListener() {
             @Override
-            public void onSelectedDevice(DeviceDisplay device) {
+            public void onSelectedDevice(final DeviceDisplay device) {
 
                 boolean bind = DlnaManager.getInstance().bind(device.getOriginDevice(), null);
                 if (bind) {
@@ -57,6 +59,9 @@ public class ScannerSamples extends UPnPPresenter {
                     @Override
                     public void run() {
                         iScanningDialog.dismiss();
+                        if (onSelectedDeviceListener != null) {
+                            onSelectedDeviceListener.onSelectedDevice(device);
+                        }
                     }
                 }, 300);
             }

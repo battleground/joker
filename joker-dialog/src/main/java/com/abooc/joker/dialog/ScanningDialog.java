@@ -30,7 +30,7 @@ import java.util.List;
 public class ScanningDialog extends android.app.Dialog implements AdapterView.OnItemClickListener, View.OnClickListener, Viewer {
 
     public interface OnSelectedDeviceListener {
-        void onSelectedDevice(DeviceDisplay device);
+        public void onSelectedDevice(DeviceDisplay device);
     }
 
     ImageView mIconView;
