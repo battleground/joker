@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply from: 'https://raw.githubusercontent.com/abooc/debug/master/library/maven.gradle'
+apply from: 'http://git.oschina.net/battleground/debug/raw/master/library/maven.gradle'
 
 android {
     compileSdkVersion 25
@@ -24,8 +24,5 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     testCompile 'junit:junit:4.12'
 }

@@ -10,6 +10,6 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="hello_blank_fragment"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:textAppearance="@android:style/TextAppearance.Large" />
 
 </FrameLayout>

@@ -1,7 +1,7 @@
 package com.abooc.joker.dialog.samples;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.abooc.joker.dialog.R;
@@ -20,7 +20,7 @@ import org.lee.java.util.Empty;
 
 import java.util.ArrayList;
 
-public class SamplesActivity extends AppCompatActivity implements SensorEventBuilder.EventListener {
+public class SamplesActivity extends Activity implements SensorEventBuilder.EventListener {
 
     private SensorEventBuilder mSensorBuilder;
 
