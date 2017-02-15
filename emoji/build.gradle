@@ -1,13 +1,15 @@
 apply plugin: 'com.android.library'
 apply from: 'http://git.oschina.net/battleground/debug/raw/master/library/maven.gradle'
 
+def cfg = rootProject.ext.configuration
+
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion cfg.compileSdkVersion
+    buildToolsVersion cfg.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 25
+        minSdkVersion cfg.minSdkVersion2
+        targetSdkVersion cfg.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
@@ -24,7 +26,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile "com.android.support:appcompat-v7:${cfg.supportVersion}"
     testCompile 'junit:junit:4.12'
 
     compile 'com.abooc.debug:debug-core:1.2.0'

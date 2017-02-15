@@ -8,16 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 多选列表
- *
  * @author zhangjunpu
- *  15/8/10
+ * @date 2017/2/14
  */
-public abstract class MultipleChoiceRecyclerAdapter<T> extends BaseRecyclerAdapter<T> implements ViewHolder.OnRecyclerItemClickListener {
 
-    protected List<T> mCheckedList = new ArrayList<T>();
+public abstract class MultipleChoiceLoadMoreRecyclerAdapter<T> extends LoadMoreRecyclerAdapter<T> {
 
-    public MultipleChoiceRecyclerAdapter(Context context) {
+    protected List<T> mCheckedList = new ArrayList<>();
+
+    public MultipleChoiceLoadMoreRecyclerAdapter(Context context) {
         super(context);
     }
 
@@ -34,12 +33,17 @@ public abstract class MultipleChoiceRecyclerAdapter<T> extends BaseRecyclerAdapt
      * 判断是否存在
      *
      * @param object 对象
-     * @return true or false
+     * @return
      */
     protected boolean exist(T object) {
         return mCheckedList.contains(object);
     }
 
+    /**
+     * 获取选择列表
+     *
+     * @return
+     */
     public List<T> getCheckedList() {
         return mCheckedList;
     }
@@ -54,7 +58,7 @@ public abstract class MultipleChoiceRecyclerAdapter<T> extends BaseRecyclerAdapt
     /**
      * 获取已选择的数量
      *
-     * @return int size
+     * @return
      */
     public int getCheckedCount() {
         return mCheckedList.size();
@@ -63,7 +67,7 @@ public abstract class MultipleChoiceRecyclerAdapter<T> extends BaseRecyclerAdapt
     /**
      * 选择或取消选择全部
      *
-     * @param flag flag
+     * @param flag
      */
     public void checkedAll(boolean flag) {
         clearCheckedList();
