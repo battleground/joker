@@ -1,13 +1,15 @@
 apply plugin: 'com.android.application'
 
+def cfg = rootProject.ext.configuration
+
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion cfg.compileSdkVersion
+    buildToolsVersion cfg.buildToolsVersion
 
     defaultConfig {
         applicationId "com.abooc.emoji.samples"
-        minSdkVersion 15
-        targetSdkVersion 25
+        minSdkVersion cfg.minSdkVersion2
+        targetSdkVersion cfg.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
@@ -26,8 +28,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 
-    compile 'com.android.support:appcompat-v7:25.+'
-    compile 'com.android.support:support-v4:25.+'
+    compile "com.android.support:appcompat-v7:${cfg.supportVersion}"
 
     compile 'com.abooc.plugin:plugin-about:1.0.5'
 
