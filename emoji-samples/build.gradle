@@ -30,7 +30,7 @@ dependencies {
 
     compile "com.android.support:appcompat-v7:${cfg.supportVersion}"
 
-    compile 'com.abooc.plugin:plugin-about:1.0.5'
+    compile 'com.abooc.plugin:plugin-about:latest.integration'
 
     compile project(':emoji')
 }
