@@ -1,11 +1,13 @@
 package com.abooc.joker.dialog.samples;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 
 import com.abooc.joker.dialog.R;
 import com.abooc.joker.dialog.ScannerSamples;
+import com.abooc.joker.dialog.ScanningDialog;
 import com.abooc.joker.dialog.SensorEventBuilder;
 import com.abooc.joker.dialog.ShakeDialog;
 import com.abooc.joker.dialog.UPnP;
@@ -13,14 +15,24 @@ import com.abooc.upnp.Discovery;
 import com.abooc.upnp.DlnaManager;
 import com.abooc.upnp.RendererPlayer;
 import com.abooc.upnp.model.DeviceDisplay;
+import com.abooc.util.Debug;
 
 import org.fourthline.cling.support.model.Res;
 import org.fourthline.cling.support.model.item.Photo;
-import org.lee.java.util.Empty;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class SamplesActivity extends Activity implements SensorEventBuilder.EventListener {
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+public class SamplesActivity extends Activity implements SensorEventBuilder.EventListener,
+        DialogInterface.OnShowListener, DialogInterface.OnDismissListener, ScanningDialog.OnSelectedDeviceListener {
 
     private SensorEventBuilder mSensorBuilder;
 
@@ -47,6 +59,8 @@ public class SamplesActivity extends Activity implements SensorEventBuilder.Even
     }
 
     public void onShowScanningDialog(View view) {
+        ScannerSamples.onSelectedDeviceListener = this;
+        ScannerSamples.addOnShowListener(this, this);
         ScannerSamples.show(this);
     }
 
@@ -64,17 +78,33 @@ public class SamplesActivity extends Activity implements SensorEventBuilder.Even
         player.start(url, metadata);
     }
 
+    public void onFlyTVVideo(View view) {
+        String url = "http://images.apple.com/v/home/cx/images/gallery/iphone_square_large.jpg";
+        Res res = UPnP.buildRes("image/jpeg", "filePath", url, 0);
+
+//        TVVideoItem item = new TVVideoItem("1", "1", "标题", "unknown", res);
+//        item.setChannelID("222");
+//        item.setChannelUid("1");
+//        item.setChannelName("张三的频道");
+//        item.setChannelNickname("张三");
+//        item.setChannelAvatar("http://avatar-img.b0.upaiyun.com//imgface//origin//2016-03//3b67a03f2901694a6f7fa48a74d349d9.jpg!180x180");
+//        String metadata = UPnP.buildMetadataXml(item);
+
+//        RendererPlayer player = RendererPlayer.get();
+//        player.start(url, metadata);
+    }
+
 
     @Override
     public void onShake() {
-        ArrayList<DeviceDisplay> list = Discovery.get().getList();
-        if (Empty.isEmpty(list)) {
+        if (!ShakeDialog.hasShown) {
             final ShakeDialog iDialog = new ShakeDialog(this);
             iDialog.show();
-//            onNoRouters();
-        } else {
+            return;
+        }
 
-            if (list.size() == 1) {
+        ArrayList<DeviceDisplay> list = Discovery.get().getList();
+        if (list.size() == 1) {
 //                saveVideo();
 //                DeviceDisplay display = list.get(0);
 //                DlnaManager.getInstance().bind(display.getOriginDevice(), null);
@@ -82,17 +112,65 @@ public class SamplesActivity extends Activity implements SensorEventBuilder.Even
 //                String json = getSeriesJson();
 //                int seriesIndex = getSeriesIndex();
 //                DLNAPlayerActivity.launch(this, json, seriesIndex);
-            } else {
-                if (DlnaManager.getInstance().hasBound()) {
-//                    saveVideo();
-//                    String json = getSeriesJson();
-//                    int seriesIndex = getSeriesIndex();
-//                    DLNAPlayerActivity.launch(this, json, seriesIndex);
-                } else {
-                    ScannerSamples.show(this);
-                }
-            }
+        } else {
+            ScannerSamples.onSelectedDeviceListener = this;
+            ScannerSamples.addOnShowListener(this, this);
+            ScannerSamples.show(this);
         }
+    }
+
+    @Override
+    public void onSelectedDevice(DeviceDisplay device) {
+
+        post(device.getHost());
+    }
+
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
+
+    OkHttpClient client = new OkHttpClient();
+
+    public void post(String ip) {
+//        String url = "http://192.168.1.174:21367";
+        String url = "http://" + ip + ":21367";
+        String json = "{" +
+                "\"code\":230," +
+                "\"info\":\"\"" +
+                "}";
+
+        RequestBody body = RequestBody.create(JSON, json);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                String name = Thread.currentThread().getName();
+                Debug.error(name + "\n" + e.toString());
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String name = Thread.currentThread().getName();
+                Debug.anchor(name + "\n" + response.body().string());
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onShow(DialogInterface dialog) {
+        mSensorBuilder.turnOff();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        mSensorBuilder.turnOn();
     }
 
 }

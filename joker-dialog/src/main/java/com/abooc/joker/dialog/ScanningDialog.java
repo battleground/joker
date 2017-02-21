@@ -2,7 +2,6 @@ package com.abooc.joker.dialog;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,8 +15,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.abooc.upnp.model.DeviceDisplay;
-
-import org.fourthline.cling.model.meta.Device;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -194,7 +191,6 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
             onItemClickListener = listener;
         }
 
-        @NonNull
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
@@ -238,8 +234,7 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
 
             void attachData(DeviceDisplay device) {
                 String name = device.getDevice().getFriendlyName();
-                int ip = getIP(device.getHost());
-                iNameText.setText(name + ":" + ip);
+                iNameText.setText(name);
                 joinView.setText(device.isChecked() ? "已连接" : "立即加入");
             }
         }

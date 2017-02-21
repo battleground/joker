@@ -12,6 +12,9 @@ import android.view.Window;
 
 public class ShakeDialog extends android.app.Dialog implements View.OnClickListener {
 
+
+    public static boolean hasShown;
+
     public ShakeDialog(Context context) {
         this(context, 0);
     }
@@ -35,5 +38,11 @@ public class ShakeDialog extends android.app.Dialog implements View.OnClickListe
     @Override
     public void onClick(View v) {
         dismiss();
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        hasShown = true;
     }
 }

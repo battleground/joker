@@ -13,8 +13,16 @@ import com.abooc.upnp.model.DeviceDisplay;
 
 public class ScannerSamples extends UPnPPresenter {
 
+    static DialogInterface.OnShowListener mOnShowListener;
+    static DialogInterface.OnDismissListener mOnDismissListener;
+
     public ScannerSamples(Viewer viewer, Handler handler) {
         super(viewer, handler);
+    }
+
+    public static void addOnShowListener(DialogInterface.OnShowListener showListener, DialogInterface.OnDismissListener dismissListener) {
+        mOnShowListener = showListener;
+        mOnDismissListener = dismissListener;
     }
 
     public static void show(Context context) {
@@ -25,6 +33,7 @@ public class ScannerSamples extends UPnPPresenter {
             public void onShow(DialogInterface dialog) {
                 iScanningDialog.setOnSelectedDeviceListener(registerEvent(iScanningDialog));
 
+                if (mOnShowListener != null) mOnShowListener.onShow(dialog);
                 iUPnPPresenter.start();
             }
         });
@@ -35,7 +44,12 @@ public class ScannerSamples extends UPnPPresenter {
             @Override
             public void onDismiss(DialogInterface dialog) {
 
+                if (mOnDismissListener != null) mOnDismissListener.onDismiss(dialog);
                 iUPnPPresenter.quit();
+
+                onSelectedDeviceListener = null;
+                mOnShowListener = null;
+                mOnDismissListener = null;
             }
         });
 
