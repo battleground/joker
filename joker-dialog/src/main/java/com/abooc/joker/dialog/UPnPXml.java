@@ -18,7 +18,7 @@ import java.util.List;
  * email:allnet@live.cn
  * on 16/8/12.
  */
-public class UPnP {
+public class UPnPXml {
 
     public static String buildMetadataXml(Item item) {
         DIDLContent didlContent = new DIDLContent();

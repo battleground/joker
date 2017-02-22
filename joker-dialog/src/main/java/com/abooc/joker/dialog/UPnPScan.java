@@ -16,23 +16,37 @@ import org.fourthline.cling.registry.DefaultRegistryListener;
 import org.fourthline.cling.registry.Registry;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
-
-import static java.util.Collections.sort;
 
 /**
  * Created by dayu on 2017/2/7.
  */
 
-public class UPnPPresenter implements Presenter {
+public class UPnPScan implements Scan {
 
-    Viewer mViewer;
-    Handler mHandler;
+    private ScanViewer iScanViewer;
+    private Handler mUIThread = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            DeviceDisplay deviceDisplay = (DeviceDisplay) msg.obj;
+            if (msg.what == 1) {
+                if (iScanViewer.isScanning()) {
+                    iScanViewer.showListView();
+                }
+                iScanViewer.deviceAdded(deviceDisplay);
+            } else {
+                iScanViewer.deviceRemoved(deviceDisplay);
 
-    public UPnPPresenter(Viewer viewer, Handler handler) {
-        mViewer = viewer;
-        mHandler = handler;
+                if (iScanViewer.isEmpty()) {
+                    iScanViewer.onError();
+                }
+            }
+        }
+    };
 
+    public UPnPScan(ScanViewer viewer) {
+        iScanViewer = viewer;
     }
 
     public void start() {
@@ -42,16 +56,16 @@ public class UPnPPresenter implements Presenter {
 //            iHandler.sendEmptyMessage(0);
             iUITimer.start();
         } else {
-            mViewer.onScanning();
+            iScanViewer.onScanning();
 
-            sort(list, mComparatorByIP);
-            mViewer.showListView();
-            mViewer.onShowList(list);
+            Collections.sort(list, mComparatorByIP);
+            iScanViewer.showListView();
+            iScanViewer.onShowList(list);
             addListener();
         }
     }
 
-    void addListener() {
+    private void addListener() {
         Discovery.get().addDefaultRegistryListener(new DefaultRegistryListener() {
 
             @Override
@@ -60,38 +74,22 @@ public class UPnPPresenter implements Presenter {
                 if (deviceDisplay == null) return;
 
                 // 刷新列表
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mViewer.isScanning()) {
-                            mViewer.showListView();
-                        }
-                        mViewer.deviceAdded(deviceDisplay);
-                    }
-                });
-
+                Message message = Message.obtain(mUIThread, 1, deviceDisplay);
+                mUIThread.sendMessage(message);
             }
 
             @Override
             public void deviceRemoved(Registry registry, final Device device) {
+                DeviceDisplay deviceDisplay = new DeviceDisplay(new CDevice(device));
                 // 刷新列表
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        DeviceDisplay deviceDisplay = new DeviceDisplay(new CDevice(device));
-                        mViewer.deviceRemoved(deviceDisplay);
-
-                        if (mViewer.isEmpty()) {
-                            mViewer.onError();
-                        }
-                    }
-                });
+                Message message = Message.obtain(mUIThread, -1, deviceDisplay);
+                mUIThread.sendMessage(message);
             }
         });
 
     }
 
-    DeviceDisplay checkingDevice(Device device) {
+    private DeviceDisplay checkingDevice(Device device) {
         CDevice cDevice = new CDevice(device);
         if (cDevice.asService("AVTransport")) {
             DeviceDisplay deviceDisplay = new DeviceDisplay(cDevice);
@@ -108,28 +106,29 @@ public class UPnPPresenter implements Presenter {
         return null;
     }
 
-    String getHost(Device device) {
+    private String getHost(Device device) {
         RemoteDeviceIdentity identity = (RemoteDeviceIdentity) device.getIdentity();
         String host = identity.getDescriptorURL().getHost();
         return host;
     }
 
 
-    final Handler iHandler = new Handler() {
+    // TODO 测试
+    private final Handler iHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             Debug.anchor("" + msg.what);
 
             switch (msg.what) {
                 case 0:
-                    mViewer.onScanning();
+                    iScanViewer.onScanning();
                     sendEmptyMessageDelayed(1, 3000);
                     break;
                 case 1:
                     addListener();
                     break;
                 case -1:
-                    mViewer.onError();
+                    iScanViewer.onError();
                     break;
             }
         }
@@ -139,31 +138,31 @@ public class UPnPPresenter implements Presenter {
     private UITimer iUITimer = new UITimer(3) {
         @Override
         public void onStart() {
-            mViewer.onScanning();
+            iScanViewer.onScanning();
 
             Discovery.get().removeAll();
-//            DlnaManager.getInstance().getUpnpService().getControlPoint().search();
+            Discovery.get().search();
         }
 
         @Override
         public void onTick(int total, int tick) {
-            if(tick == 1){
+            if (tick == 1) {
                 addListener();
             }
         }
 
         @Override
         public void onCancel() {
-            mViewer.onError();
+            iScanViewer.onError();
         }
 
         @Override
         public void onFinish() {
             Debug.anchor();
-            if (mViewer.isEmpty()) {
-                mViewer.onError();
+            if (iScanViewer.isEmpty()) {
+                iScanViewer.onError();
             } else {
-                mViewer.notifyDataSetChanged();
+                iScanViewer.notifyDataSetChanged();
             }
         }
     };
@@ -171,14 +170,14 @@ public class UPnPPresenter implements Presenter {
     @Override
     public void scan() {
         Discovery.get().search();
-        mViewer.onScanning();
+        iScanViewer.onScanning();
     }
 
 
     /**
      * 根据IP地址排序
      */
-    private Comparator<DeviceDisplay> mComparatorByIP = new Comparator<DeviceDisplay>() {
+    static Comparator<DeviceDisplay> mComparatorByIP = new Comparator<DeviceDisplay>() {
         @Override
         public int compare(DeviceDisplay device, DeviceDisplay another) {
 
@@ -195,7 +194,7 @@ public class UPnPPresenter implements Presenter {
         }
     };
 
-    int getIP(String host) {
+    static int getIP(String host) {
         String ipThis = host.substring(host.lastIndexOf(".") + 1);
         return Integer.valueOf(ipThis).intValue();
     }

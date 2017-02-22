@@ -27,9 +27,9 @@ public class ExampleUnitTest {
     public void test_upnp_xml() throws IOException {
 
         String url = "http://images.apple.com/";
-        Res res = UPnP.buildRes("image/jpeg", "filePath", url, 0);
+        Res res = UPnPXml.buildRes("image/jpeg", "filePath", url, 0);
 //        Photo videoItem = new Photo("1", String.valueOf(1), "The New iPhone7", "unknown", "unknown", res);
-//        String metadata = UPnP.buildMetadataXml(videoItem);
+//        String metadata = UPnPXml.buildMetadataXml(videoItem);
 
 
 //        TVVideoItem item = new TVVideoItem("1", "1", "标题", null, res);
@@ -39,7 +39,7 @@ public class ExampleUnitTest {
 //        item.setChannelNickname("张三");
 //        item.setChannelAvatar("头像");
 //
-//        String metadata = UPnP.buildMetadataXml(item);
+//        String metadata = UPnPXml.buildMetadataXml(item);
 //
 //        out(metadata);
     }

@@ -17,25 +17,24 @@ import android.widget.TextView;
 import com.abooc.upnp.model.DeviceDisplay;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
  * Created by dayu on 2016/12/22.
  */
 
-public class ScanningDialog extends android.app.Dialog implements AdapterView.OnItemClickListener, View.OnClickListener, Viewer {
+public class ScanningDialog extends android.app.Dialog implements AdapterView.OnItemClickListener, View.OnClickListener, ScanViewer {
 
     public interface OnSelectedDeviceListener {
-        public void onSelectedDevice(DeviceDisplay device);
+        void onSelectedDevice(DeviceDisplay device);
     }
 
-    ImageView mIconView;
-    TextView mTitleText;
-    View mGuideView;
-    ListView mListView;
+    private ImageView mIconView;
+    private TextView mTitleText;
+    private View mGuideView;
+    private ListView mListView;
 
-    Adapter mAdapter;
+    private Adapter mAdapter;
     private OnSelectedDeviceListener mOnSelectedDeviceListener;
 
     public ScanningDialog(Context context) {
@@ -144,7 +143,7 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
     public void deviceAdded(DeviceDisplay device) {
         mAdapter.add(device);
         mAdapter.setNotifyOnChange(true);
-        mAdapter.sort(mComparatorByIP);
+        mAdapter.sort(UPnPScan.mComparatorByIP);
     }
 
     @Override
@@ -152,32 +151,6 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
         mAdapter.setNotifyOnChange(true);
         mAdapter.remove(device);
     }
-
-    /**
-     * 根据IP地址排序
-     */
-    private Comparator<DeviceDisplay> mComparatorByIP = new Comparator<DeviceDisplay>() {
-        @Override
-        public int compare(DeviceDisplay device, DeviceDisplay another) {
-
-            int ipThis = getIP(device.getHost());
-            int ipAnother = getIP(another.getHost());
-
-            if (ipThis > ipAnother) {
-                return 1;
-            } else if (ipThis < ipAnother) {
-                return -1;
-            } else {
-                return 0;
-            }
-        }
-    };
-
-    int getIP(String host) {
-        String ipThis = host.substring(host.lastIndexOf(".") + 1);
-        return Integer.valueOf(ipThis).intValue();
-    }
-
 
     private class Adapter extends ArrayAdapter<DeviceDisplay> implements View.OnClickListener {
 

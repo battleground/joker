@@ -11,14 +11,10 @@ import com.abooc.upnp.model.DeviceDisplay;
  * Created by dayu on 2017/2/14.
  */
 
-public class ScannerSamples extends UPnPPresenter {
+public class ScannerSamples {
 
-    static DialogInterface.OnShowListener mOnShowListener;
-    static DialogInterface.OnDismissListener mOnDismissListener;
-
-    public ScannerSamples(Viewer viewer, Handler handler) {
-        super(viewer, handler);
-    }
+    private static DialogInterface.OnShowListener mOnShowListener;
+    private static DialogInterface.OnDismissListener mOnDismissListener;
 
     public static void addOnShowListener(DialogInterface.OnShowListener showListener, DialogInterface.OnDismissListener dismissListener) {
         mOnShowListener = showListener;
@@ -27,7 +23,7 @@ public class ScannerSamples extends UPnPPresenter {
 
     public static void show(Context context) {
         final ScanningDialog iScanningDialog = new ScanningDialog(context);
-        final UPnPPresenter iUPnPPresenter = new UPnPPresenter(iScanningDialog, new Handler());
+        final UPnPScan iUPnPPresenter = new UPnPScan(iScanningDialog);
         iScanningDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
@@ -57,7 +53,7 @@ public class ScannerSamples extends UPnPPresenter {
 
     public static ScanningDialog.OnSelectedDeviceListener onSelectedDeviceListener;
 
-    static ScanningDialog.OnSelectedDeviceListener registerEvent(final ScanningDialog iScanningDialog) {
+    private static ScanningDialog.OnSelectedDeviceListener registerEvent(final ScanningDialog iScanningDialog) {
         return new ScanningDialog.OnSelectedDeviceListener() {
             @Override
             public void onSelectedDevice(final DeviceDisplay device) {

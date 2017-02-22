@@ -8,7 +8,7 @@ import java.util.List;
  * Created by dayu on 2017/2/7.
  */
 
-public interface Viewer {
+public interface ScanViewer {
 
     void onScanning();
 
