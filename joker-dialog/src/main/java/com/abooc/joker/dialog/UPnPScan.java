@@ -5,12 +5,12 @@ import android.os.Message;
 
 import com.abooc.upnp.Discovery;
 import com.abooc.upnp.DlnaManager;
+import com.abooc.upnp.extra.Filter;
 import com.abooc.upnp.model.CDevice;
 import com.abooc.upnp.model.DeviceDisplay;
 import com.abooc.util.Debug;
 
 import org.fourthline.cling.model.meta.Device;
-import org.fourthline.cling.model.meta.DeviceIdentity;
 import org.fourthline.cling.model.meta.RemoteDeviceIdentity;
 import org.fourthline.cling.registry.DefaultRegistryListener;
 import org.fourthline.cling.registry.Registry;
@@ -50,7 +50,7 @@ public class UPnPScan implements Scan {
     }
 
     public void start() {
-        final ArrayList<DeviceDisplay> list = Discovery.get().getList();
+        final ArrayList<DeviceDisplay> list = Discovery.get().getList(iFilter);
 
         if (list == null || list.isEmpty()) {
 //            iHandler.sendEmptyMessage(0);
@@ -89,21 +89,32 @@ public class UPnPScan implements Scan {
 
     }
 
-    private DeviceDisplay checkingDevice(Device device) {
-        CDevice cDevice = new CDevice(device);
-        if (cDevice.asService("AVTransport")) {
-            DeviceDisplay deviceDisplay = new DeviceDisplay(cDevice);
-            String host = getHost(device);
-            deviceDisplay.setHost(host);
+    Filter iFilter;
+//    Filter iFilter = new Filter() {
+//        @Override
+//        public boolean check(Device device) {
+//            return true;
+//        }
+//    };
 
-            DeviceIdentity boundIdentity = DlnaManager.getInstance().getBoundIdentity();
-            if (device.getIdentity().equals(boundIdentity)) {
-                deviceDisplay.setChecked(true);
-            }
-            return deviceDisplay;
+    public void setFilter(Filter filter) {
+        iFilter = filter;
+    }
+
+    private DeviceDisplay checkingDevice(Device device) {
+        if (iFilter != null && !iFilter.check(device)) {
+            return null;
         }
 
-        return null;
+        CDevice cDevice = new CDevice(device);
+        DeviceDisplay deviceDisplay = new DeviceDisplay(cDevice);
+        String host = getHost(device);
+        deviceDisplay.setHost(host);
+
+        if (DlnaManager.getInstance().isBound(device)) {
+            deviceDisplay.setChecked(true);
+        }
+        return deviceDisplay;
     }
 
     private String getHost(Device device) {
@@ -141,13 +152,13 @@ public class UPnPScan implements Scan {
             iScanViewer.onScanning();
 
             Discovery.get().removeAll();
-            Discovery.get().search();
         }
 
         @Override
         public void onTick(int total, int tick) {
             if (tick == 1) {
                 addListener();
+                Discovery.get().searchAll();
             }
         }
 

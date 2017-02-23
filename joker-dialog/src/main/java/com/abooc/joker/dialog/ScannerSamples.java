@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Handler;
 
 import com.abooc.upnp.DlnaManager;
+import com.abooc.upnp.extra.Filter;
 import com.abooc.upnp.model.DeviceDisplay;
 
 /**
@@ -21,16 +22,23 @@ public class ScannerSamples {
         mOnDismissListener = dismissListener;
     }
 
+
     public static void show(Context context) {
+        show(context, null);
+    }
+
+    public static void show(Context context, Filter filter) {
         final ScanningDialog iScanningDialog = new ScanningDialog(context);
-        final UPnPScan iUPnPPresenter = new UPnPScan(iScanningDialog);
+        final UPnPScan iUPnPScan = new UPnPScan(iScanningDialog);
+        iUPnPScan.setFilter(filter);
+
         iScanningDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
                 iScanningDialog.setOnSelectedDeviceListener(registerEvent(iScanningDialog));
 
                 if (mOnShowListener != null) mOnShowListener.onShow(dialog);
-                iUPnPPresenter.start();
+                iUPnPScan.start();
             }
         });
 
@@ -41,7 +49,7 @@ public class ScannerSamples {
             public void onDismiss(DialogInterface dialog) {
 
                 if (mOnDismissListener != null) mOnDismissListener.onDismiss(dialog);
-                iUPnPPresenter.quit();
+                iUPnPScan.quit();
 
                 onSelectedDeviceListener = null;
                 mOnShowListener = null;

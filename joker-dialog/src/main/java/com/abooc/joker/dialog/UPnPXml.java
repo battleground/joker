@@ -36,6 +36,7 @@ public class UPnPXml {
     public static Res buildRes(String mimeType, String filePath, String url, long size) {
         Res res = new Res(new MimeType(mimeType.substring(0, mimeType.indexOf('/')),
                 mimeType.substring(mimeType.indexOf('/') + 1)), size, url);
+        if (filePath == null || "".equals(filePath)) return res;
         try {
             String encode = URLEncoder.encode(filePath, "UTF-8");
             res.setImportUri(URI.create(encode));
@@ -47,6 +48,7 @@ public class UPnPXml {
 
 
     private static DIDLParser mDIDLParser = new DIDLParser();
+
     public static Item parseCurrentURIMetaData(String xml) {
         if (xml == null || "".equals(xml)) return null;
 //        Debug.anchor(xml);

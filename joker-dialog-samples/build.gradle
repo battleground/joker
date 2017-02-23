@@ -1,11 +1,11 @@
-apply plugin: 'com.android.library'
-apply from: 'http://git.oschina.net/battleground/debug/raw/master/library/maven.gradle'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
 
     defaultConfig {
+        applicationId "com.abooc.joker.dialog.samples"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
@@ -21,11 +21,24 @@ android {
         }
     }
 
+    packagingOptions {
+        exclude 'META-INF/beans.xml'
+    }
 }
 
 dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
     testCompile 'junit:junit:4.12'
-    compile 'com.abooc.upnp:cling-upnp:1.4.4.16400223(BETA)'
-//    compile 'com.abooc.upnp:cling-upnp:1.3.0214.1038'
+
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:design:25.1.1'
+
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+
+    compile project(':joker-dialog')
     compile 'com.abooc.debug:debug-core:latest.integration'
 }
