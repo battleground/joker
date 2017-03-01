@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEE"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/power"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_weight="1"
+        android:scaleType="fitEnd"
+        android:src="@drawable/tv_control_power" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1">
+
+        <com.baofeng.fengmi.remoter.KeyboardView
+            android:id="@+id/Keyboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:rotation="45">
+
+            <ImageView
+                android:id="@+id/up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="center"
+                android:src="@drawable/tv_control_circle_up" />
+
+            <ImageView
+                android:id="@+id/right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/up"
+                android:scaleType="center"
+                android:src="@drawable/tv_control_circle_right" />
+
+            <ImageView
+                android:id="@+id/left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/up"
+                android:scaleType="center"
+                android:src="@drawable/tv_control_circle_left" />
+
+            <ImageView
+                android:id="@+id/down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/up"
+                android:layout_toRightOf="@id/up"
+                android:scaleType="center"
+                android:src="@drawable/tv_control_circle_down" />
+
+            <com.baofeng.fengmi.remoter.RoundTouchImageView
+                android:id="@+id/submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:rotation="-45"
+                android:scaleType="center"
+                android:src="@drawable/tv_control_submit"
+                android:translationX="1dp"
+                android:translationY="3dp" />
+        </com.baofeng.fengmi.remoter.KeyboardView>
+
+        <com.baofeng.fengmi.remoter.TouchSweepView
+            android:id="@+id/view_touch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleType="center"
+            android:src="@drawable/ic_remote_touch_bg"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:scaleType="center"
+            android:src="@drawable/tv_control_home" />
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:scaleType="center"
+            android:src="@drawable/tv_control_back" />
+
+        <ImageView
+            android:id="@+id/menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:scaleType="center"
+            android:src="@drawable/tv_control_menu" />
+
+        <ImageView
+            android:id="@+id/biu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:scaleType="center"
+            android:src="@drawable/tv_control_biu" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/volume_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            android:src="@drawable/tv_control_volume_up" />
+
+        <ImageView
+            android:id="@+id/volume_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            android:src="@drawable/tv_control_volume_down" />
+    </LinearLayout>
+</LinearLayout>
