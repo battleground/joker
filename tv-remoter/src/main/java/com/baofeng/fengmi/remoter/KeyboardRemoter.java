@@ -1,6 +1,7 @@
 package com.baofeng.fengmi.remoter;
 
-import com.abooc.airplay.Sender;
+
+import com.abooc.airremoter.Sender;
 
 /**
  * 遥控器

@@ -1,11 +1,13 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+apply from: 'http://git.oschina.net/battleground/debug/raw/master/library/maven.gradle'
+
+def cfg = rootProject.ext.configuration
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "com.baofeng.fengmi.remoter"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
@@ -27,10 +29,14 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile "com.android.support:appcompat-v7:${cfg.supportVersion}"
     testCompile 'junit:junit:4.12'
 
 
     compile 'com.abooc.debug:debug-core:latest.integration'
-    compile 'com.abooc.airplay:airplay:1.2.10'
+    compile 'com.abooc.airremoter:airRemoter:0.3.0213'
+
+    compile 'com.abooc.joker:scanning:0.4.6.21270302(BETA)'
+//    compile project(':joker-dialog')
+
 }

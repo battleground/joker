@@ -117,31 +117,31 @@ public class RemoteControlFragment extends Fragment implements
     }
 
     private int getKeyCodeByView(View v) {
-        switch (v.getId()) {
-            case R.id.power:
-                return KeyCode.POWER;
-            case R.id.home:
-                return KeyCode.HOME;
-            case R.id.back:
-                return KeyCode.BACK;
-            case R.id.menu:
-                return KeyCode.MENU;
-            case R.id.biu:
-                return KeyCode.BIU;
-            case R.id.volume_up:
-                return KeyCode.VOLUME_UP;
-            case R.id.volume_down:
-                return KeyCode.VOLUME_DOWN;
-            case R.id.up:
-                return KeyCode.UP;
-            case R.id.down:
-                return KeyCode.DOWN;
-            case R.id.left:
-                return KeyCode.LEFT;
-            case R.id.right:
-                return KeyCode.RIGHT;
-            case R.id.submit:
-                return KeyCode.OK;
+        int i = v.getId();
+        if (i == R.id.power) {
+            return KeyCode.POWER;
+        } else if (i == R.id.home) {
+            return KeyCode.HOME;
+        } else if (i == R.id.back) {
+            return KeyCode.BACK;
+        } else if (i == R.id.menu) {
+            return KeyCode.MENU;
+        } else if (i == R.id.biu) {
+            return KeyCode.BIU;
+        } else if (i == R.id.volume_up) {
+            return KeyCode.VOLUME_UP;
+        } else if (i == R.id.volume_down) {
+            return KeyCode.VOLUME_DOWN;
+        } else if (i == R.id.up) {
+            return KeyCode.UP;
+        } else if (i == R.id.down) {
+            return KeyCode.DOWN;
+        } else if (i == R.id.left) {
+            return KeyCode.LEFT;
+        } else if (i == R.id.right) {
+            return KeyCode.RIGHT;
+        } else if (i == R.id.submit) {
+            return KeyCode.OK;
         }
         return 0;
     }

@@ -47,17 +47,6 @@
             android:paddingRight="14dp"
             android:src="@mipmap/ic_tv_control_change_mode" />
 
-        <ImageView
-            android:id="@+id/VR"
-            android:layout_width="wrap_content"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_toLeftOf="@id/Stitch"
-            android:clickable="true"
-            android:gravity="center"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            android:src="@drawable/ic_audiotrack_dark" />
-
     </RelativeLayout>
 
     <fragment

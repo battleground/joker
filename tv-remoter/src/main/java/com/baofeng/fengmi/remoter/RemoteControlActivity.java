@@ -8,24 +8,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.abooc.airplay.Sender;
-//import com.abooc.upnp.DlnaManager;
+import com.abooc.airremoter.Sender;
+import com.abooc.joker.dialog.ScannerSamples;
+import com.abooc.joker.dialog.ScanningDialog;
+import com.abooc.upnp.DlnaManager;
+import com.abooc.upnp.model.DeviceDisplay;
+import com.abooc.widget.Toast;
 
 /**
  * 遥控器
  */
-public class RemoteControlActivity extends AppCompatActivity {
+public class RemoteControlActivity extends AppCompatActivity implements ScanningDialog.OnSelectedDeviceListener {
 
     public static void launch(Context context) {
         Intent intent = new Intent(context, RemoteControlActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(intent);
-    }
-
-    public static void launch(Context context, boolean isVr) {
-        Intent intent = new Intent(context, RemoteControlActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("isVr", isVr);
         context.startActivity(intent);
     }
 
@@ -42,6 +39,7 @@ public class RemoteControlActivity extends AppCompatActivity {
 //            GuideRemoteActivity.launch(this);
 //        }
         attachRemoter();
+
     }
 
     @Override
@@ -51,9 +49,7 @@ public class RemoteControlActivity extends AppCompatActivity {
     }
 
     private void attachRemoter() {
-//        String ip = DlnaManager.getInstance().getBoundIp();
-        String ip = "";
-        Sender sender = Remoter.create(this, ip, Remoter.PORT_REMOTER);
+        Sender sender = SenderImpl.getSender();
         KeyboardRemoter remoter = new KeyboardRemoter(sender);
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_tv_control);
         RemoteControlFragment control = (RemoteControlFragment) fragment;
@@ -62,7 +58,6 @@ public class RemoteControlActivity extends AppCompatActivity {
 
     private void attachActionBar() {
         mTitleText = (TextView) findViewById(R.id.Title);
-        findViewById(R.id.VR).setVisibility(View.GONE);
     }
 
 
@@ -75,18 +70,40 @@ public class RemoteControlActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    private ScanningDialog scanningDialog;
+
     public void onShowDevicesEvent(View view) {
+        ScannerSamples.onSelectedDeviceListener = this;
+        ScannerSamples.title = "选择要连接的设备";
+        ScannerSamples.error = "未找到可用设备";
+        scanningDialog = ScannerSamples.show(this, null);
+    }
+
+    @Override
+    public void onSelectedDevice(DeviceDisplay deviceDisplay) {
+        beRemoter(deviceDisplay);
+    }
+
+    private void beRemoter(DeviceDisplay display) {
+        if (BaofengSupport.isBaofengTV(display.getOriginDevice())) {
+            DlnaManager.getInstance().unbound();
+            DlnaManager.getInstance().bind(display.getOriginDevice(), null);
+            display.setChecked(true);
+
+
+            String host = display.getHost();
+            SenderImpl.buildSender(host);
+            attachRemoter();
+        } else {
+            Toast.show("当前操作仅支持暴风TV");
+        }
+        scanningDialog.dismiss();
     }
 
     public void onSwitchEvent(View view) {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_tv_control);
         RemoteControlFragment control = (RemoteControlFragment) fragment;
         control.doKeyboardSwitch();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
 }
