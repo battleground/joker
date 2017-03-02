@@ -22,20 +22,26 @@ public class ScannerSamples {
         mOnDismissListener = dismissListener;
     }
 
+    public static String title;
+    public static String error;
 
-    public static void show(Context context) {
-        show(context, null);
+    public static ScanningDialog show(Context context) {
+        return show(context, null);
     }
 
-    public static void show(Context context, Filter filter) {
+    public static ScanningDialog show(Context context, Filter filter) {
         final ScanningDialog iScanningDialog = new ScanningDialog(context);
         final UPnPScan iUPnPScan = new UPnPScan(iScanningDialog);
         iUPnPScan.setFilter(filter);
 
+        iScanningDialog.setMessage(title);
+        iScanningDialog.setError(error);
+
         iScanningDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialog) {
-                iScanningDialog.setOnSelectedDeviceListener(registerEvent(iScanningDialog));
+//                iScanningDialog.setOnSelectedDeviceListener(registerEvent(iScanningDialog));
+                iScanningDialog.setOnSelectedDeviceListener(onSelectedDeviceListener);
 
                 if (mOnShowListener != null) mOnShowListener.onShow(dialog);
                 iUPnPScan.start();
@@ -57,6 +63,7 @@ public class ScannerSamples {
             }
         });
 
+        return iScanningDialog;
     }
 
     public static ScanningDialog.OnSelectedDeviceListener onSelectedDeviceListener;

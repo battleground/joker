@@ -2,6 +2,7 @@ package com.abooc.joker.dialog;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -76,6 +77,18 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
         this.mOnSelectedDeviceListener = onSelectedDeviceListener;
     }
 
+    String iMessage;
+
+    public void setMessage(String message) {
+        this.iMessage = message;
+    }
+
+    String error;
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.d("TAG", "position:" + position);
@@ -103,7 +116,11 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
     @Override
     public void onError() {
         mIconView.setImageResource(R.drawable.ic_dialog_scanning_error);
-        mTitleText.setText(R.string.joker_dialog_scanning_error);
+        if (TextUtils.isEmpty(error)) {
+            mTitleText.setText(R.string.joker_dialog_scanning_error);
+        } else {
+            mTitleText.setText(error);
+        }
 
         mGuideView.setVisibility(View.VISIBLE);
         mListView.setVisibility(View.GONE);
@@ -112,7 +129,11 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
     @Override
     public void showListView() {
         mIconView.setImageResource(R.drawable.ic_dialog_scanning_ok);
-        mTitleText.setText(R.string.joker_dialog_scanning_selection);
+        if (TextUtils.isEmpty(iMessage)) {
+            mTitleText.setText(R.string.joker_dialog_scanning_selection);
+        } else {
+            mTitleText.setText(iMessage);
+        }
 
         mGuideView.setVisibility(View.GONE);
         mListView.setVisibility(View.VISIBLE);

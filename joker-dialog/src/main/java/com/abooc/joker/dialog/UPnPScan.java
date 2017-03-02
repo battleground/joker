@@ -70,6 +70,7 @@ public class UPnPScan implements Scan {
 
             @Override
             public void deviceAdded(Registry registry, final Device device) {
+                Debug.anchor();
                 final DeviceDisplay deviceDisplay = checkingDevice(device);
                 if (deviceDisplay == null) return;
 
@@ -80,6 +81,7 @@ public class UPnPScan implements Scan {
 
             @Override
             public void deviceRemoved(Registry registry, final Device device) {
+                Debug.anchor();
                 DeviceDisplay deviceDisplay = new DeviceDisplay(new CDevice(device));
                 // 刷新列表
                 Message message = Message.obtain(mUIThread, -1, deviceDisplay);
@@ -157,8 +159,8 @@ public class UPnPScan implements Scan {
         @Override
         public void onTick(int total, int tick) {
             if (tick == 1) {
-                addListener();
                 Discovery.get().searchAll();
+                addListener();
             }
         }
 
