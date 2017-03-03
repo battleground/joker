@@ -56,6 +56,7 @@ public class SamplesActivity extends AppCompatActivity implements
                 return true;
             }
         });
+        Discovery.get().registerWiFiReceiver(this);
         DlnaManager.getInstance().startService(this, AndroidUpnpServiceImpl.class);
     }
 
