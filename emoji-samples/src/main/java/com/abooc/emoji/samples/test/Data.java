@@ -1,11 +1,10 @@
 package com.abooc.emoji.samples.test;
 
 import com.abooc.emoji.samples.Message;
-import com.abooc.emoji.test.Emojicon;
 
 import java.util.ArrayList;
 
-import static com.abooc.emoji.test.Emojicon.微笑;
+import static com.abooc.emoji.samples.test.Emojicon.微笑;
 
 public class Data {
 

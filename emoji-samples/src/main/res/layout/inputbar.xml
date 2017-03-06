@@ -14,8 +14,8 @@
         android:clickable="true"
         android:gravity="center"
         android:onClick="onShowEmojiEvent"
-        android:padding="10dp"
-        android:src="@drawable/ic_action_emoji" />
+        android:padding="2dp"
+        android:src="@drawable/ic_emoji_action_emojicon" />
 
     <ImageView
         android:id="@+id/inputBar_show_keyboard"
@@ -25,8 +25,8 @@
         android:clickable="true"
         android:gravity="center"
         android:onClick="onShowKeyboardEvent"
-        android:padding="10dp"
-        android:src="@drawable/ic_action_keyboard"
+        android:padding="2dp"
+        android:src="@drawable/ic_emoji_action_keyboard"
         android:visibility="visible" />
 
     <FrameLayout
@@ -48,11 +48,13 @@
         android:background="@drawable/edit_input_background"
         android:gravity="center_vertical"
         android:hint="输入消息..."
+        android:textColorHint="#888"
         android:imeActionLabel="@string/send"
         android:imeOptions="actionSend"
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:textColor="#333333" />
 
     <FrameLayout
         android:layout_width="0.5dp"

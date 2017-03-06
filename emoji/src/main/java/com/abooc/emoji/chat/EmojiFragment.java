@@ -18,15 +18,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.abooc.emoji.R;
-import com.abooc.emoji.test.Emoji;
-import com.abooc.emoji.test.EmojiCache;
+import com.abooc.emoji.EmojiCache;
 import com.abooc.util.Debug;
 
 
 /**
  * 表情
  */
-public class EmojiFragment extends Fragment implements GridViewer, OnItemClickListener {
+public class EmojiFragment extends Fragment implements GridViewer, OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     public EmojiFragment() {
     }
@@ -67,6 +66,11 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
         if (mOnItemClickListener != null) {
             mOnItemClickListener.onItemClick(parent, view, position, id);
         }
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        return false;
     }
 
 
@@ -134,6 +138,7 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
             GridView gridView = (GridView) inflater.inflate(R.layout.emoji, container, false);
             gridView.setTag(position);
             gridView.setOnItemClickListener(EmojiFragment.this);
+            gridView.setOnItemLongClickListener(EmojiFragment.this);
             gridView.setAdapter(adapter);
 
             container.addView(gridView);

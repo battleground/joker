@@ -1,4 +1,4 @@
-package com.abooc.emoji.test;
+package com.abooc.emoji.chat;
 
 import java.io.Serializable;
 
@@ -12,7 +12,7 @@ public class Emoji implements Serializable {
     public String code;
     public String icon;
 
-    Emoji(String name, String code, String icon) {
+    public Emoji(String name, String code, String icon) {
         this.name = name;
         this.code = code;
         this.icon = icon;

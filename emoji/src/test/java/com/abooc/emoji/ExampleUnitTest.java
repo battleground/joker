@@ -1,7 +1,5 @@
 package com.abooc.emoji;
 
-import com.abooc.emoji.test.EmojiCache;
-
 import org.junit.Test;
 
 import java.util.HashMap;

@@ -2,7 +2,7 @@ package com.abooc.emoji.samples;
 
 import android.app.Application;
 
-import com.abooc.emoji.test.EmojiCache;
+import com.abooc.emoji.EmojiCache;
 import com.abooc.plugin.about.About;
 
 /**

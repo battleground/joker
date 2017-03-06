@@ -23,20 +23,14 @@ import android.widget.GridView;
 import com.abooc.emoji.EmojiBuilder;
 import com.abooc.emoji.Keyboard;
 import com.abooc.emoji.R;
-import com.abooc.emoji.chat.EmojiAddFragment;
 import com.abooc.emoji.chat.EmojiFragment;
-import com.abooc.emoji.chat.GiftsFragment;
 import com.abooc.emoji.chat.GridViewer;
-import com.abooc.emoji.test.Emoji;
-import com.abooc.emoji.test.EmojiCache;
-import com.abooc.emoji.test.Gift;
-import com.abooc.joker.tab.Tab;
+import com.abooc.emoji.chat.Emoji;
+import com.abooc.emoji.EmojiCache;
 import com.abooc.joker.tab.TabManager;
 import com.abooc.util.Debug;
 
-import static com.abooc.emoji.widget.ChatWidget.Tabs.ADD;
 import static com.abooc.emoji.widget.ChatWidget.Tabs.EMOJICON;
-import static com.abooc.emoji.widget.ChatWidget.Tabs.GIFTS;
 
 /**
  * 聊天控件
@@ -195,11 +189,9 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
     public TabManager attachTabContent(FragmentManager manager) {
         iTabManager = new TabManager(getContext(), manager, R.id.ChildTabContent);
         iTabManager
-                .add(iTabManager.build(ADD.name, ADD.cls))
-                .add(iTabManager.build(EMOJICON.name, EMOJICON.cls))
-                .add(iTabManager.build(GIFTS.name, GIFTS.cls));
+                .add(iTabManager.build(EMOJICON.name, EMOJICON.cls));
 
-        Fragment fragment = iTabManager.instance(iTabManager.getTabs().get(1));
+        Fragment fragment = iTabManager.instance(iTabManager.getTabs().get(0));
         iTabManager.setOnSwitchListener(new TabManager.OnSwitchListener() {
             @Override
             public void onSwitched(Fragment fragment, Fragment fragment1) {
@@ -209,10 +201,10 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
             }
         });
 
-        findViewById(R.id.emojicons_menu_add).setOnClickListener(this);
+//        findViewById(R.id.emojicons_menu_add).setOnClickListener(this);
         findViewById(R.id.emojicons_menu_emojicon).setOnClickListener(this);
-        findViewById(R.id.emojicons_menu_gifts).setOnClickListener(this);
-        findViewById(R.id.emojicons_menu_settings).setOnClickListener(this);
+//        findViewById(R.id.emojicons_menu_gifts).setOnClickListener(this);
+//        findViewById(R.id.emojicons_menu_settings).setOnClickListener(this);
 
         iTabManager.switchTo(null, fragment);
         return iTabManager;
@@ -229,13 +221,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
         ArrayAdapter adapter = (ArrayAdapter) parent.getAdapter();
 
-        if (content instanceof EmojiAddFragment) {
-            String item = (String) adapter.getItem(position);
-            Debug.anchor("position：" + position + ", " + item);
-
-            mEditText.getText().append(item);
-
-        } else if (content instanceof EmojiFragment) {
+        if (content instanceof EmojiFragment) {
             Emoji item = (Emoji) adapter.getItem(position);
 
             if (item == null) {
@@ -247,13 +233,6 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
                     EmojiBuilder.writeEmoji(item.code, mEditText, EmojiCache.getCache());
                 }
             }
-
-
-        } else if (content instanceof GiftsFragment) {
-            Gift item = (Gift) adapter.getItem(position);
-            Debug.anchor("position：" + position + ", " + item.name);
-
-            EmojiBuilder.writeEmoji(item.code, mEditText, EmojiCache.getCache());
         }
 
     }
@@ -295,9 +274,9 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
     }
 
     enum Tabs {
-        ADD("添加表情", EmojiAddFragment.class),
-        EMOJICON("表情", EmojiFragment.class),
-        GIFTS("礼物", GiftsFragment.class);
+//        ADD("添加表情", EmojiAddFragment.class),
+        EMOJICON("表情", EmojiFragment.class);
+//        GIFTS("礼物", GiftsFragment.class);
 
         String name;
         Class<? extends Fragment> cls;
@@ -311,17 +290,8 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
     public void onClickTab(View view) {
         Fragment fragment;
         int i = view.getId();
-        if (i == R.id.emojicons_menu_add) {
+        if (i == R.id.emojicons_menu_emojicon) {
             fragment = iTabManager.instance(iTabManager.getTabs().get(0));
-            iTabManager.switchTo(iTabManager.content, fragment);
-
-        } else if (i == R.id.emojicons_menu_emojicon) {
-            fragment = iTabManager.instance(iTabManager.getTabs().get(1));
-            iTabManager.switchTo(iTabManager.content, fragment);
-
-        } else if (i == R.id.emojicons_menu_gifts) {
-            Tab tab = iTabManager.getTabs().get(2);
-            fragment = iTabManager.instance(tab);
             iTabManager.switchTo(iTabManager.content, fragment);
 
         }

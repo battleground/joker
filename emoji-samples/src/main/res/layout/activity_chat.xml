@@ -15,8 +15,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
             android:layout_margin="12dp"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -64,7 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_weight="1"
-                android:background="#CCC" />
+                android:background="#EEE" />
 
             <TextView
                 android:id="@+id/inputBar_virtual"
@@ -74,14 +74,14 @@
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="6dp"
                 android:layout_marginTop="10dp"
-                android:focusable="false"
                 android:layout_weight="1"
                 android:background="@drawable/edit_input_background"
+                android:focusable="false"
                 android:gravity="center_vertical"
                 android:hint="输入消息..."
                 android:paddingLeft="4dp"
                 android:singleLine="true"
-                android:textSize="11sp" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -92,7 +92,6 @@
         android:id="@+id/ChatWidget"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#20000000"
         android:clickable="true"
         android:visibility="visible">
 

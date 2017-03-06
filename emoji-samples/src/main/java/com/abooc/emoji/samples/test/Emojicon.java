@@ -1,10 +1,10 @@
-package com.abooc.emoji.test;
+package com.abooc.emoji.samples.test;
 
 import com.abooc.emoji.R;
 
 public enum Emojicon {
-    微笑(R.drawable.ic_action_emoji),
-    安卓(R.drawable.ic_action_keyboard);
+    微笑(R.drawable.ic_emoji_action_emojicon),
+    安卓(R.drawable.ic_emoji_action_keyboard);
 
     int value;
 

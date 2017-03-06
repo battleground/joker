@@ -1,12 +1,11 @@
-package com.abooc.emoji.test;
+package com.abooc.emoji;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.abooc.emoji.R;
+import com.abooc.emoji.chat.Emoji;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -21,13 +20,25 @@ public class EmojiCache {
 
     private static Emoji[] emojiArrays;
 
-
     private static Map<String, Bitmap> emotionsBitmapCache = new HashMap<>();
 
     public static void buildCache(Resources res, String defPackage) {
+        HashMap<String, String> namesMap = buildNamesMap();
+        Emoji[] array = new Emoji[namesMap.size()];
+        Iterator<String> iterator = namesMap.keySet().iterator();
+        int i = 0;
+        while (iterator.hasNext()) {
+            String name = iterator.next();
+            String icon = namesMap.get(name);
+            array[i] = new Emoji(name, "[" + name + "]", icon);
+            i++;
+        }
+
+        emojiArrays = array;
+
         Emoji[] emojis = emojiArrays;
         int length = emojis.length;
-        for (int i = 0; i < length; i++) {
+        for (i = 0; i < length; i++) {
             Emoji emoji = emojis[i];
             if (emoji == null) continue;
             int identifier = res.getIdentifier(emoji.icon, "drawable", defPackage);
@@ -46,23 +57,6 @@ public class EmojiCache {
 
     public static Emoji[] getEmojiArrays() {
         return emojiArrays;
-    }
-
-    public static void initialize() {
-
-        HashMap<String, String> namesMap = buildNamesMap();
-        Emoji[] array = new Emoji[namesMap.size()];
-        Iterator<String> iterator = namesMap.keySet().iterator();
-        int i = 0;
-        while (iterator.hasNext()) {
-            String name = iterator.next();
-            String icon = namesMap.get(name);
-            array[i] = new Emoji(name, "[" + name + "]", icon);
-            i++;
-        }
-
-        emojiArrays = array;
-
     }
 
     static int getPage(int count, int pageSize) {
@@ -130,38 +124,5 @@ public class EmojiCache {
         }
         return emojisNameMap;
     }
-
-    public static ArrayList<Gift[]> gifts = new ArrayList<>();
-
-    static {
-
-        Gift[] gifts0 = new Gift[7];
-        for (int i = 0; i < gifts0.length; i++) {
-
-            Gift gift = new Gift();
-            gift.name = "战斧" + i;
-            gift.code = "[zhanfu]";
-            gift.coin = "200 金币";
-            gift.iconId = R.drawable.ic_emoji_gifts_zhanfu;
-
-            gifts0[i] = gift;
-        }
-
-        Gift[] gifts1 = new Gift[5];
-        for (int i = 0; i < gifts1.length; i++) {
-
-            Gift gift = new Gift();
-            gift.name = "战斧" + i;
-            gift.code = "[zhanfu]";
-            gift.coin = "200 金币";
-            gift.iconId = R.drawable.ic_emoji_gifts_zhanfu;
-
-            gifts1[i] = gift;
-        }
-
-        gifts.add(gifts0);
-        gifts.add(gifts1);
-    }
-
 
 }

@@ -1,12 +1,17 @@
 package com.abooc.emoji.samples;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,8 +21,7 @@ import android.widget.TextView;
 
 import com.abooc.emoji.EmojiBuilder;
 import com.abooc.emoji.samples.history.HistoryActivity;
-import com.abooc.emoji.test.EmojiCache;
-import com.abooc.emoji.test.Emojicon;
+import com.abooc.emoji.EmojiCache;
 import com.abooc.emoji.widget.ChatWidget;
 import com.abooc.plugin.about.AboutActivity;
 import com.abooc.util.Debug;
@@ -64,7 +68,24 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         iListView = (ListView) findViewById(R.id.ListView);
         iListView.setOnItemClickListener(this);
 
-        mMessagesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, messageLists);
+        mMessagesAdapter = new ArrayAdapter<String>(this, 0, messageLists) {
+            @NonNull
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    convertView = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_1, null);
+                }
+
+
+                String message = getItem(position);
+
+                CharSequence emojiCharSequence = EmojiBuilder.toEmojiCharAll(getContext(), message, EmojiCache.getCache());
+
+                TextView textView = (TextView) convertView;
+                textView.setText(emojiCharSequence);
+                return convertView;
+            }
+        };
         iListView.setAdapter(mMessagesAdapter);
     }
 
@@ -137,26 +158,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     public void onSendEvent(View view) {
         inputBarHint.setText(null);
 
-        String toString = iChatWidget.getString();
-        inputBarHint.setHint(toString);
+        Editable text = mInputBarView.getText();
+        if (!TextUtils.isEmpty(text)) {
+            inputBarHint.setHint(text);
 
-        mMessagesAdapter.insert(toString, mMessagesAdapter.getCount());
-        iListView.smoothScrollToPosition(mMessagesAdapter.getCount());
+            mMessagesAdapter.insert(text.toString(), mMessagesAdapter.getCount());
+            iListView.smoothScrollToPosition(mMessagesAdapter.getCount());
 
-
-        mInputBarView.setText(null);
-    }
-
-    public void onEmojiSmileEvent(View view) {
-        String code = Emojicon.微笑.code();
-        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBarHint, EmojiCache.getCache());
-        inputBarHint.setText(emojiResult.toString());
-    }
-
-    public void onEmojiAndroidEvent(View view) {
-        String code = Emojicon.安卓.code();
-        CharSequence emojiResult = EmojiBuilder.writeEmoji(code, inputBarHint, EmojiCache.getCache());
-        inputBarHint.setText(emojiResult.toString());
+            mInputBarView.setText(null);
+        }
     }
 
     @Override

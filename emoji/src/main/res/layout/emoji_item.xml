@@ -3,4 +3,4 @@
     android:layout_height="50dp"
     android:background="@android:drawable/list_selector_background"
     android:padding="10dp"
-    android:src="@drawable/ic_action_emoji" />
+    android:src="@drawable/ic_emoji_action_emojicon" />
