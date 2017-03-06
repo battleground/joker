@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">joker-dialog</string>
     <string name="joker_dialog_scanning_scan">正在识别</string>
     <string name="joker_dialog_scanning_selection">请选择轮播频道</string>
     <string name="joker_dialog_scanning_error">未能识别出轮播频道</string>

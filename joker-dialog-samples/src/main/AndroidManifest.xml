@@ -21,11 +21,22 @@
         </activity>
 
         <service android:name="org.fourthline.cling.android.AndroidUpnpServiceImpl" />
+        <service android:name=".AppAndroidUPnPService" />
 
         <activity
             android:name=".AActivity"
             android:label="@string/title_activity_a"
             android:theme="@style/AppTheme.NoActionBar">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+
+        <activity
+            android:name=".DevicesActivity"
+            android:label="设备列表" >
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
 

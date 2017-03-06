@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.abooc.joker.dialog.R;
 import com.abooc.joker.dialog.ScannerSamples;
 import com.abooc.joker.dialog.ScanningDialog;
 import com.abooc.joker.dialog.ShakeDialog;
+import com.abooc.joker.dialog.UPnPScan;
 import com.abooc.joker.dialog.UPnPXml;
 import com.abooc.upnp.Discovery;
 import com.abooc.upnp.DlnaManager;
@@ -36,6 +36,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.abooc.joker.dialog.ScannerSamples.onSelectedDeviceListener;
+
 public class SamplesActivity extends AppCompatActivity implements
         SensorEventBuilder.EventListener,
         DialogInterface.OnShowListener, DialogInterface.OnDismissListener, ScanningDialog.OnSelectedDeviceListener {
@@ -45,7 +47,7 @@ public class SamplesActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_scanning_samples);
         mSensorBuilder = new SensorEventBuilder(this).builder(this);
 
         Discovery.get().registerWiFiReceiver(this);
@@ -72,8 +74,35 @@ public class SamplesActivity extends AppCompatActivity implements
         mSensorBuilder.turnOff();
     }
 
+    public void onShowScanningChannelsDialog(View view) {
+        onSelectedDeviceListener = this;
+
+        final AsyncScanningDialog iScanningDialog = new AsyncScanningDialog(this);
+        final UPnPScan iUPnPScan = new UPnPScan(iScanningDialog);
+
+        iScanningDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                iScanningDialog.setOnSelectedDeviceListener(onSelectedDeviceListener);
+
+                iUPnPScan.start();
+            }
+        });
+
+        iScanningDialog.show();
+
+        iScanningDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                iUPnPScan.quit();
+
+                onSelectedDeviceListener = null;
+            }
+        });
+    }
+
     public void onShowScanningDialog(View view) {
-        ScannerSamples.onSelectedDeviceListener = this;
+        onSelectedDeviceListener = this;
         ScannerSamples.addOnShowListener(this, this);
         ScannerSamples.show(this);
     }
@@ -133,7 +162,7 @@ public class SamplesActivity extends AppCompatActivity implements
 //            final UDAServiceType iUDAServiceType = new UDAServiceType("ContentDirectory");
             final UDAServiceType iUDAServiceType = new UDAServiceType("AVTransport");
 
-            ScannerSamples.onSelectedDeviceListener = this;
+            onSelectedDeviceListener = this;
             ScannerSamples.addOnShowListener(this, this);
             ScannerSamples.show(this, new Filter() {
                 @Override
@@ -148,45 +177,7 @@ public class SamplesActivity extends AppCompatActivity implements
     @Override
     public void onSelectedDevice(DeviceDisplay device) {
 
-        post(device.getHost());
-    }
-
-    public static final MediaType JSON
-            = MediaType.parse("application/json; charset=utf-8");
-
-    OkHttpClient client = new OkHttpClient();
-
-    public void post(String ip) {
-//        String url = "http://192.168.1.174:21367";
-        String url = "http://" + ip + ":21367";
-        String json = "{" +
-                "\"code\":230," +
-                "\"info\":\"\"" +
-                "}";
-
-        RequestBody body = RequestBody.create(JSON, json);
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                String name = Thread.currentThread().getName();
-                Debug.error(name + "\n" + e.toString());
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String name = Thread.currentThread().getName();
-                Debug.anchor(name + "\n" + response.body().string());
-
-            }
-        });
-
+        TVPoster.post(device.getHost());
     }
 
     @Override
@@ -206,4 +197,5 @@ public class SamplesActivity extends AppCompatActivity implements
         DlnaManager.getInstance().stop();
         Discovery.get().unregisterWiFiReceiver(this);
     }
+
 }
