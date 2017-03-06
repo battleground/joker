@@ -21,12 +21,12 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 
 import com.abooc.emoji.EmojiBuilder;
+import com.abooc.emoji.EmojiCache;
 import com.abooc.emoji.Keyboard;
 import com.abooc.emoji.R;
+import com.abooc.emoji.chat.Emoji;
 import com.abooc.emoji.chat.EmojiFragment;
 import com.abooc.emoji.chat.GridViewer;
-import com.abooc.emoji.chat.Emoji;
-import com.abooc.emoji.EmojiCache;
 import com.abooc.joker.tab.TabManager;
 import com.abooc.util.Debug;
 
@@ -40,9 +40,18 @@ import static com.abooc.emoji.widget.ChatWidget.Tabs.EMOJICON;
 
 public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, View.OnClickListener, GridView.OnItemClickListener {
 
+    public interface OnShownListener {
+
+        void onOpen();
+
+        void onClosed();
+
+    }
+
     private Activity mActivity;
     private EditText mEditText;
 
+    private OnShownListener iOnShownListener;
     private View mEmojiconsContainer;
 
     //    Animation mAnimationIn;
@@ -60,7 +69,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
     // 区分收起键盘意图，切换表情时，收起键盘但不自动关闭；强制收起键盘操作时，自动关闭模块；
     private boolean mCloseAction = true;
 
-    private OnViewerListener mOnViewerListener = new OnViewerListener() {
+    private OnEmojiViewerListener mOnEmojiViewerListener = new OnEmojiViewerListener() {
         @Override
         public void onShowKeyboard() {
 
@@ -127,8 +136,12 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
         });
     }
 
-    public void setOnViewerListener(OnViewerListener listener) {
-        mOnViewerListener = listener;
+    public void setOnShowListener(OnShownListener listener) {
+        iOnShownListener = listener;
+    }
+
+    public void setOnViewerListener(OnEmojiViewerListener listener) {
+        mOnEmojiViewerListener = listener;
     }
 
     @Override
@@ -201,10 +214,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
             }
         });
 
-//        findViewById(R.id.emojicons_menu_add).setOnClickListener(this);
         findViewById(R.id.emojicons_menu_emojicon).setOnClickListener(this);
-//        findViewById(R.id.emojicons_menu_gifts).setOnClickListener(this);
-//        findViewById(R.id.emojicons_menu_settings).setOnClickListener(this);
 
         iTabManager.switchTo(null, fragment);
         return iTabManager;
@@ -274,7 +284,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
     }
 
     enum Tabs {
-//        ADD("添加表情", EmojiAddFragment.class),
+        //        ADD("添加表情", EmojiAddFragment.class),
         EMOJICON("表情", EmojiFragment.class);
 //        GIFTS("礼物", GiftsFragment.class);
 
@@ -325,6 +335,10 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
         } else {
             showEmoji();
         }
+
+        if (iOnShownListener != null) {
+            iOnShownListener.onOpen();
+        }
     }
 
     public void dismiss() {
@@ -336,6 +350,10 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 //            mStatus = VIEW_STATUS_KEYBOARD;
 //            mEmojiconsContainer.setVisibility(View.GONE);
 //        }
+
+        if (iOnShownListener != null) {
+            iOnShownListener.onClosed();
+        }
     }
 
     public void showEmoji() {
@@ -365,7 +383,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
                 @Override
                 public void run() {
                     mEmojiconsContainer.setVisibility(View.VISIBLE);
-                    mOnViewerListener.onShowEmojions();
+                    mOnEmojiViewerListener.onShowEmojions();
                 }
             }, 150);
         }
@@ -381,7 +399,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
                 @Override
                 public void run() {
                     mEmojiconsContainer.setVisibility(View.GONE);
-                    mOnViewerListener.onShowKeyboard();
+                    mOnEmojiViewerListener.onShowKeyboard();
                 }
             }, 50);
         }

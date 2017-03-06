@@ -1,7 +1,7 @@
 
 package com.abooc.emoji.widget;
 
-public interface OnViewerListener {
+public interface OnEmojiViewerListener {
 
     void onShowKeyboard();
 

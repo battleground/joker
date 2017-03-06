@@ -8,13 +8,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.abooc.emoji.widget.OnViewerListener;
+import com.abooc.emoji.widget.OnEmojiViewerListener;
 
 /**
  * Created by dayu on 2017/1/12.
  */
 
-public class InputBarView extends LinearLayout implements OnViewerListener {
+public class InputBarView extends LinearLayout implements OnEmojiViewerListener {
 
 
     private EditText inputBar;
