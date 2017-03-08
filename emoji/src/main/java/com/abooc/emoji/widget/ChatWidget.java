@@ -38,7 +38,7 @@ import static com.abooc.emoji.widget.ChatWidget.Tabs.EMOJICON;
  * Created by dayu on 2017/1/17.
  */
 
-public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, View.OnClickListener, GridView.OnItemClickListener {
+public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, View.OnClickListener, GridView.OnItemClickListener, GridView.OnItemLongClickListener {
 
     public interface OnShownListener {
 
@@ -62,7 +62,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
     private boolean mCharMode = false;
 
     private static final int VIEW_STATUS_KEYBOARD = 1;
-    private static final int VIEW_STATUS_EMOJIONS = 2;
+    private static final int VIEW_STATUS_EMOJICONS = 2;
 
     private int mStatus = VIEW_STATUS_KEYBOARD;
 
@@ -211,6 +211,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
                 GridViewer viewer = (GridViewer) fragment1;
                 viewer.setOnItemClickListener(ChatWidget.this);
+                viewer.setOnItemLongClickListener(ChatWidget.this);
             }
         });
 
@@ -235,7 +236,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
             Emoji item = (Emoji) adapter.getItem(position);
 
             if (item == null) {
-                delete();
+                delete(mEditText);
             } else {
                 if (mCharMode) {
                     EmojiBuilder.writeEmoji(item.code, mEditText);
@@ -247,25 +248,38 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
     }
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        ArrayAdapter adapter = (ArrayAdapter) parent.getAdapter();
+        Emoji item = (Emoji) adapter.getItem(position);
+        if (item == null) {
+
+        }
+        return true;
+    }
+
     /**
      * 删除表情
      */
-    void delete() {
-        int selectionStart = mEditText.getSelectionStart();// 获取光标的位置
-        if (selectionStart > 0) {
-            String body = mEditText.getText().toString();
-            if (!TextUtils.isEmpty(body)) {
-                String tempStr = body.substring(0, selectionStart);
-                int i = tempStr.lastIndexOf("[");// 获取最后一个表情的位置
-                if (i != -1) {
-                    mEditText.getText().delete(i, selectionStart);
-                } else {
-                    mEditText.getText().delete(selectionStart - 1, selectionStart);
-                }
+    public static void delete(EditText editText) {
+        int selection = editText.getSelectionStart();// 获取光标的位置
+        String body = editText.getText().toString();
+        if (selection > 0 && !TextUtils.isEmpty(body)) {
+            int start;
+            CharSequence charSequence = body.subSequence(selection - 1, selection);
+            if ("]".equals(charSequence)) {
+                String tempStr = body.substring(0, selection);
+                start = tempStr.lastIndexOf("[");// 获取最后一个表情的位置
+                start = (start == -1 ? selection - 1 : start); // start=-1，表示不存在'['配对符号，则执行单个字符删除，即（selection - 1）。
+            } else {
+                start = selection - 1;
             }
+
+            editText.getText().delete(start, selection);
         }
 
     }
+
 
     View mView;
 
@@ -345,7 +359,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
         Debug.anchor("关闭模块");
         mEditText.clearFocus();
         setVisibility(View.GONE);
-//        if (mStatus == VIEW_STATUS_EMOJIONS) {
+//        if (mStatus == VIEW_STATUS_EMOJICONS) {
 //            Debug.anchor("      恢复键盘状态，隐藏表情模块！");
 //            mStatus = VIEW_STATUS_KEYBOARD;
 //            mEmojiconsContainer.setVisibility(View.GONE);
@@ -376,7 +390,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
     private Handler mHandler = new Handler();
 
     private void showEmojiView() {
-        mStatus = VIEW_STATUS_EMOJIONS;
+        mStatus = VIEW_STATUS_EMOJICONS;
         if (mEmojiconsContainer.getVisibility() != View.VISIBLE) {
             Debug.anchor("显示表情模块");
             mHandler.postDelayed(new Runnable() {

@@ -34,6 +34,8 @@ public class EmojiActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emoji);
 
+        getSupportActionBar().setSubtitle(getClass().getSimpleName());
+
         inputBar_virtual = (EditText) findViewById(R.id.inputBar_virtual);
         inputBarHint = (EditText) findViewById(R.id.inputBarHint);
         messageText = (TextView) findViewById(R.id.message);

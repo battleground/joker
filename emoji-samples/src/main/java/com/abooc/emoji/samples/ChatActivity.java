@@ -1,6 +1,8 @@
 package com.abooc.emoji.samples;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -20,8 +22,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.abooc.emoji.EmojiBuilder;
-import com.abooc.emoji.samples.history.HistoryActivity;
 import com.abooc.emoji.EmojiCache;
+import com.abooc.emoji.samples.history.HistoryActivity;
 import com.abooc.emoji.widget.ChatWidget;
 import com.abooc.plugin.about.AboutActivity;
 import com.abooc.util.Debug;
@@ -36,12 +38,43 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     ChatWidget iChatWidget;
     InputBarView mInputBarView;
 
+    RemoveHandler mRemoveHandler = new RemoveHandler();
+
+    class RemoveHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            ChatWidget.delete(inputBarHint);
+
+            sendEmptyMessageDelayed(-1, 300);
+        }
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        getSupportActionBar().setSubtitle(getClass().getSimpleName());
+
         addInputBar();
+
+        View longClickView = findViewById(R.id.LongClick);
+        longClickView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRemoveHandler.removeMessages(-1);
+            }
+        });
+        longClickView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mRemoveHandler.sendEmptyMessageDelayed(-1, 1000);
+                return false;
+            }
+        });
+
 
         iChatWidget = (ChatWidget) findViewById(R.id.ChatWidget);
         iChatWidget.setActivity(this);
@@ -51,6 +84,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         inputBarHint = (EditText) findViewById(R.id.inputBarHint);
         inputBarHint.setText(EmojiCache.testMessage);
+        inputBarHint.setSelection(inputBarHint.getText().length() - 3);
 
         findViewById(R.id.inputBar_virtual).setOnClickListener(this);
 

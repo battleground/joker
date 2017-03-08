@@ -17,8 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.abooc.emoji.R;
 import com.abooc.emoji.EmojiCache;
+import com.abooc.emoji.R;
 import com.abooc.util.Debug;
 
 
@@ -54,10 +54,16 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
     }
 
     private OnItemClickListener mOnItemClickListener;
+    private AdapterView.OnItemLongClickListener mOnItemLongClickListener;
 
     @Override
     public void setOnItemClickListener(OnItemClickListener l) {
         mOnItemClickListener = l;
+    }
+
+    @Override
+    public void setOnItemLongClickListener(AdapterView.OnItemLongClickListener l) {
+        mOnItemLongClickListener = l;
     }
 
     @Override

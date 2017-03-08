@@ -13,7 +13,6 @@ public class AppApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        EmojiCache.initialize();
         EmojiCache.buildCache(getResources(), getPackageName());
         About.defaultAbout(this);
     }

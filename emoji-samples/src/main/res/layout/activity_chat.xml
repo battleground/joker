@@ -27,6 +27,16 @@
                 android:hint="消息原数据："
                 android:textSize="10sp" />
 
+            <TextView
+                android:id="@+id/LongClick"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@android:drawable/list_selector_background"
+                android:clickable="true"
+                android:padding="12dp"
+                android:text="长按" />
+
             <EditText
                 android:id="@+id/inputBarHint"
                 android:layout_width="match_parent"
@@ -34,8 +44,6 @@
                 android:layout_marginBottom="12dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
-                android:enabled="false"
-                android:focusable="false"
                 android:hint="消息..."
                 android:textSize="12sp" />
 
@@ -100,6 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="输入栏" />
+
     </com.abooc.emoji.widget.ChatWidget>
 
 </FrameLayout>

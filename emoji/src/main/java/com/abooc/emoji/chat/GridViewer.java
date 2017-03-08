@@ -4,4 +4,6 @@ import android.widget.AdapterView;
 
 public interface GridViewer {
     void setOnItemClickListener(AdapterView.OnItemClickListener l);
+
+    void setOnItemLongClickListener(AdapterView.OnItemLongClickListener l);
 }
