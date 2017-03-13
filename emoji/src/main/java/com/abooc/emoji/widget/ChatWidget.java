@@ -5,13 +5,11 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -20,6 +18,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 
+import com.abooc.emoji.Deleter;
 import com.abooc.emoji.EmojiBuilder;
 import com.abooc.emoji.EmojiCache;
 import com.abooc.emoji.Keyboard;
@@ -38,7 +37,7 @@ import static com.abooc.emoji.widget.ChatWidget.Tabs.EMOJICON;
  * Created by dayu on 2017/1/17.
  */
 
-public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, View.OnClickListener, GridView.OnItemClickListener, GridView.OnItemLongClickListener {
+public class ChatWidget extends FrameLayout implements View.OnClickListener, GridView.OnItemClickListener, GridView.OnItemLongClickListener {
 
     public interface OnShownListener {
 
@@ -57,17 +56,13 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
     //    Animation mAnimationIn;
     private Animation mAnimationOut;
 
-    private boolean mKeyboardShown;
-
     private boolean mCharMode = false;
 
     private static final int VIEW_STATUS_KEYBOARD = 1;
-    private static final int VIEW_STATUS_EMOJICONS = 2;
+    private static final int VIEW_STATUS_EMOJIONS = 2;
 
     private int mStatus = VIEW_STATUS_KEYBOARD;
 
-    // 区分收起键盘意图，切换表情时，收起键盘但不自动关闭；强制收起键盘操作时，自动关闭模块；
-    private boolean mCloseAction = true;
 
     private OnEmojiViewerListener mOnEmojiViewerListener = new OnEmojiViewerListener() {
         @Override
@@ -100,41 +95,6 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
         mCharMode = enable;
     }
 
-    void keyboard(final View rootView) {
-        //该Activity的最外层Layout
-
-        //给该layout设置监听，监听其布局发生变化事件
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            @Override
-            public void onGlobalLayout() {
-                //比较Activity根布局与当前布局的大小
-                int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
-                if (heightDiff > 200) {
-                    show();
-                } else {
-                    hide();
-                }
-            }
-
-            void show() {
-                if (!mKeyboardShown) {
-                    Debug.anchor("键盘已弹出");
-                    onKeyboardShown();
-                }
-                mCloseAction = true;
-                mKeyboardShown = true;
-            }
-
-            void hide() {
-                if (mKeyboardShown) {
-                    Debug.anchor("键盘已收起");
-                    onKeyboardHidden();
-                }
-                mKeyboardShown = false;
-            }
-        });
-    }
 
     public void setOnShowListener(OnShownListener listener) {
         iOnShownListener = listener;
@@ -175,13 +135,15 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
     }
 
+    KeyboardViewer mKeyboardViewer = new KeyboardViewer();
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
         Debug.anchor();
         mAnimationOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);
-        keyboard((View) this.getParent());
+        mKeyboardViewer.keyboard((View) this.getParent());
     }
 
     private void reAddView(View view) {
@@ -236,7 +198,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
             Emoji item = (Emoji) adapter.getItem(position);
 
             if (item == null) {
-                delete(mEditText);
+                Deleter.delete(mEditText);
             } else {
                 if (mCharMode) {
                     EmojiBuilder.writeEmoji(item.code, mEditText);
@@ -258,44 +220,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
         return true;
     }
 
-    /**
-     * 删除表情
-     */
-    public static void delete(EditText editText) {
-        int selection = editText.getSelectionStart();// 获取光标的位置
-        String body = editText.getText().toString();
-        if (selection > 0 && !TextUtils.isEmpty(body)) {
-            int start;
-            CharSequence charSequence = body.subSequence(selection - 1, selection);
-            if ("]".equals(charSequence)) {
-                String tempStr = body.substring(0, selection);
-                start = tempStr.lastIndexOf("[");// 获取最后一个表情的位置
-                start = (start == -1 ? selection - 1 : start); // start=-1，表示不存在'['配对符号，则执行单个字符删除，即（selection - 1）。
-            } else {
-                start = selection - 1;
-            }
-
-            editText.getText().delete(start, selection);
-        }
-
-    }
-
-
     View mView;
-
-    @Override
-    public void onKeyboardShown() {
-        hideEmojiView();
-    }
-
-    @Override
-    public void onKeyboardHidden() {
-        if (mCloseAction) {
-            dismiss();
-        } else {
-            showEmojiView();
-        }
-    }
 
     enum Tabs {
         //        ADD("添加表情", EmojiAddFragment.class),
@@ -359,7 +284,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
         Debug.anchor("关闭模块");
         mEditText.clearFocus();
         setVisibility(View.GONE);
-//        if (mStatus == VIEW_STATUS_EMOJICONS) {
+//        if (mStatus == VIEW_STATUS_EMOJIONS) {
 //            Debug.anchor("      恢复键盘状态，隐藏表情模块！");
 //            mStatus = VIEW_STATUS_KEYBOARD;
 //            mEmojiconsContainer.setVisibility(View.GONE);
@@ -372,7 +297,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
     public void showEmoji() {
         Debug.anchor("收起键盘");
-        mCloseAction = false;
+//        mCloseAction = false;
         Keyboard.hideKeyboard(mActivity);
         if (true) {
             showEmojiView();
@@ -381,7 +306,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
 
     public void showKeyboard() {
         mEditText.requestFocus();
-        Keyboard.showInputMethod(mActivity, mEditText);
+        Keyboard.showKeyboard(mActivity, mEditText);
         if (true) {
             hideEmojiView();
         }
@@ -390,7 +315,7 @@ public class ChatWidget extends FrameLayout implements OnKeyboardShownListener, 
     private Handler mHandler = new Handler();
 
     private void showEmojiView() {
-        mStatus = VIEW_STATUS_EMOJICONS;
+        mStatus = VIEW_STATUS_EMOJIONS;
         if (mEmojiconsContainer.getVisibility() != View.VISIBLE) {
             Debug.anchor("显示表情模块");
             mHandler.postDelayed(new Runnable() {

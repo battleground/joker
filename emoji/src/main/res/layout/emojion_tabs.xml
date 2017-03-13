@@ -13,12 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="160dp" />
 
-    <FrameLayout
-        android:layout_width="100dp"
-        android:layout_height="5dp"
+    <com.abooc.emoji.widget.PointIndicator
+        android:id="@+id/PointIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="4dp"
-        android:background="#EEE" />
+        android:orientation="horizontal"
+        android:layout_margin="2dp" />
 
     <LinearLayout
         android:layout_width="match_parent"

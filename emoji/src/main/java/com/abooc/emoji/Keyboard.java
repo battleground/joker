@@ -40,7 +40,7 @@ public class Keyboard {
         }
     }
 
-    public static boolean hideInputMethod(Context context, View view) {
+    public static boolean hideKeyboard(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             return imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -49,7 +49,7 @@ public class Keyboard {
         return false;
     }
 
-    public static boolean showInputMethod(Context context, View view) {
+    public static boolean showKeyboard(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             return imm.showSoftInput(view, 0);

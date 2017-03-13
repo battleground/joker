@@ -19,6 +19,7 @@ import android.widget.ImageView;
 
 import com.abooc.emoji.EmojiCache;
 import com.abooc.emoji.R;
+import com.abooc.emoji.widget.PointIndicator;
 import com.abooc.util.Debug;
 
 
@@ -51,6 +52,9 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setCurrentItem(0);
+
+        PointIndicator iPointIndicator = (PointIndicator) getActivity().findViewById(R.id.PointIndicator);
+        iPointIndicator.setViewPager(viewPager);
     }
 
     private OnItemClickListener mOnItemClickListener;
