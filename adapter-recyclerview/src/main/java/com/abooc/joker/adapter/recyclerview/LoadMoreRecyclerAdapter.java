@@ -154,6 +154,7 @@ public abstract class LoadMoreRecyclerAdapter<T> extends BaseRecyclerAdapter<T> 
 
     class FooterViewHolder extends ViewHolder {
 
+        public View rootView;
         public TextView message;
         public View progress;
 
@@ -163,6 +164,7 @@ public abstract class LoadMoreRecyclerAdapter<T> extends BaseRecyclerAdapter<T> 
 
         @Override
         public void onBindedView(View itemLayoutView) {
+            rootView = itemLayoutView;
             message = (TextView) itemLayoutView.findViewById(R.id.loading_text);
             progress = itemLayoutView.findViewById(R.id.loading);
         }
@@ -173,13 +175,10 @@ public abstract class LoadMoreRecyclerAdapter<T> extends BaseRecyclerAdapter<T> 
                 message.setVisibility(View.INVISIBLE);
             } else {
                 progress.setVisibility(View.INVISIBLE);
-                if (isFooterHide) {
-                    message.setVisibility(View.GONE);
-                } else {
-                    message.setVisibility(View.VISIBLE);
-                }
+                message.setVisibility(View.VISIBLE);
                 message.setText(mLoadMoreText);
             }
+            rootView.getLayoutParams().height = isFooterHide ? 0 : ViewGroup.LayoutParams.WRAP_CONTENT;
         }
     }
 
