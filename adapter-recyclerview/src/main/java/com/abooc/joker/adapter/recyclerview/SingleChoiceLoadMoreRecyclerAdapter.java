@@ -22,6 +22,10 @@ public abstract class SingleChoiceLoadMoreRecyclerAdapter<T> extends LoadMoreRec
         notifyDataSetChanged();
     }
 
+    public int getCheckedPosition() {
+        return mCheckedPosition;
+    }
+
     @Override
     public void onItemClick(RecyclerView recyclerView, View itemView, int position) {
         setCheckedPosition(position);
