@@ -26,6 +26,13 @@ public abstract class SingleChoiceRecyclerAdapter<T> extends BaseRecyclerAdapter
         return mCheckedPosition;
     }
 
+    public T getCheckedItem() {
+        if (mCheckedPosition >= 0 && mCheckedPosition < getItemCount()) {
+            return getItem(mCheckedPosition);
+        }
+        return null;
+    }
+
     @Override
     public void onItemClick(RecyclerView recyclerView, View itemView, int position) {
         setCheckedPosition(position);
