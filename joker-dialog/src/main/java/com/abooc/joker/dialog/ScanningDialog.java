@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -39,7 +40,7 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
     private OnSelectedDeviceListener mOnSelectedDeviceListener;
 
     public ScanningDialog(Context context) {
-        this(context, 0);
+        this(context, android.R.style.Theme_Holo_Dialog_NoActionBar);
     }
 
     public ScanningDialog(Context context, int themeResId) {
@@ -59,6 +60,12 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
         final Window window = getWindow();
         window.setGravity(Gravity.BOTTOM);
         window.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        WindowManager.LayoutParams lp = window.getAttributes();
+        window.getDecorView().setPadding(0, 0, 0, 0);
+
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
 
         findViewById(R.id.close).setOnClickListener(this);
 

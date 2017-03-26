@@ -16,7 +16,7 @@ public class ShakeDialog extends android.app.Dialog implements View.OnClickListe
     public static boolean hasShown;
 
     public ShakeDialog(Context context) {
-        this(context, 0);
+        this(context, android.R.style.Theme_Holo_Dialog_NoActionBar);
     }
 
     public ShakeDialog(Context context, int themeResId) {

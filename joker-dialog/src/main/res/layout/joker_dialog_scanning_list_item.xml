@@ -20,7 +20,8 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:text="当前频道名称"
-            android:textColor="#333333" />
+            android:textColor="#333333"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/join"
@@ -28,9 +29,13 @@
             android:layout_height="wrap_content"
             android:background="@drawable/ic_dialog_scanning_list_join"
             android:clickable="true"
-            android:padding="4dp"
             android:gravity="center"
+            android:paddingBottom="6dp"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:paddingTop="6dp"
             android:text="立即加入"
-            android:textColor="#fedc00" />
+            android:textColor="#fedc00"
+            android:textSize="9sp" />
     </LinearLayout>
 </FrameLayout>
