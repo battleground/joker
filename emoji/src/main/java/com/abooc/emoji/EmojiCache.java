@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import com.abooc.emoji.chat.Emoji;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -22,29 +21,24 @@ public class EmojiCache {
 
     private static Map<String, Bitmap> emotionsBitmapCache = new HashMap<>();
 
-    public static void buildCache(Resources res, String defPackage) {
-        HashMap<String, String> namesMap = buildNamesMap();
-        Emoji[] array = new Emoji[namesMap.size()];
-        Iterator<String> iterator = namesMap.keySet().iterator();
-        int i = 0;
-        while (iterator.hasNext()) {
-            String name = iterator.next();
-            String icon = namesMap.get(name);
-            array[i] = new Emoji(name, "[" + name + "]", icon);
-            i++;
+    public static void buildCache(Resources res, String defPackage, String[] order, HashMap<String, String> namesMap) {
+        int length = order.length;
+        Emoji[] emojiArray = new Emoji[length];
+        for (int i = 0; i < length; i++) {
+            String code = order[i];
+            String resId = namesMap.get(code);
+            if (resId == null || "".equals(resId)) {
+                emojiArray[i] = new Emoji("未知", code, null);
+            } else {
+                int identifier = res.getIdentifier(resId, "drawable", defPackage);
+                Bitmap bitmapSmile = BitmapFactory.decodeResource(res, identifier);
+                emojiArray[i] = new Emoji(code, code, bitmapSmile);
+
+                emotionsBitmapCache.put(code, bitmapSmile);
+            }
         }
 
-        emojiArrays = array;
-
-        Emoji[] emojis = emojiArrays;
-        int length = emojis.length;
-        for (i = 0; i < length; i++) {
-            Emoji emoji = emojis[i];
-            if (emoji == null) continue;
-            int identifier = res.getIdentifier(emoji.icon, "drawable", defPackage);
-            Bitmap bitmapSmile = BitmapFactory.decodeResource(res, identifier);
-            emotionsBitmapCache.put(emoji.code, bitmapSmile);
-        }
+        emojiArrays = emojiArray;
     }
 
     public static Bitmap find(String emojiCode) {
@@ -120,7 +114,7 @@ public class EmojiCache {
         int length = split.length;
         for (int i = 0; i < length; i++) {
             String[] nameMap = split[i].split("-");
-            emojisNameMap.put(nameMap[0].trim(), nameMap[1].trim());
+            emojisNameMap.put("[" + nameMap[0].trim() + "]", nameMap[1].trim());
         }
         return emojisNameMap;
     }

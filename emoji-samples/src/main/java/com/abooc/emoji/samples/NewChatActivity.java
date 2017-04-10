@@ -1,8 +1,6 @@
 package com.abooc.emoji.samples;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -21,80 +19,50 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.abooc.emoji.Deleter;
 import com.abooc.emoji.EmojiBuilder;
 import com.abooc.emoji.EmojiCache;
+import com.abooc.emoji.Keyboard;
 import com.abooc.emoji.samples.history.HistoryActivity;
-import com.abooc.emoji.widget.ChatWidget;
+import com.abooc.emoji.widget.KeyboardViewer;
+import com.abooc.emoji.widget.OnKeyboardShownListener;
 import com.abooc.plugin.about.AboutActivity;
 import com.abooc.util.Debug;
 
 import java.util.ArrayList;
 
-public class ChatActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class NewChatActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
 
     EditText inputBarHint;
-
-    ChatWidget iChatWidget;
-    InputBarView mInputBarView;
-
-    RemoveHandler mRemoveHandler = new RemoveHandler();
-
-    class RemoveHandler extends Handler {
-
-        @Override
-        public void handleMessage(Message msg) {
-            Deleter.delete(inputBarHint);
-
-            sendEmptyMessageDelayed(-1, 300);
-        }
-    }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.activity_new_chat);
 
         getSupportActionBar().setSubtitle(getClass().getSimpleName());
 
         addInputBar();
 
-        View longClickView = findViewById(R.id.LongClick);
-        longClickView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRemoveHandler.removeMessages(-1);
-            }
-        });
-        longClickView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                mRemoveHandler.sendEmptyMessageDelayed(-1, 1000);
-                return false;
-            }
-        });
-
-
-        iChatWidget = (ChatWidget) findViewById(R.id.ChatWidget);
-        iChatWidget.setActivity(this);
-        iChatWidget.attachTabContent(getSupportFragmentManager());
-        iChatWidget.setOnViewerListener(mInputBarView);
-        iChatWidget.dismiss();
-
         inputBarHint = (EditText) findViewById(R.id.inputBarHint);
         inputBarHint.setText(EmojiCache.testMessage);
         inputBarHint.setSelection(inputBarHint.getText().length() - 3);
 
-        findViewById(R.id.inputBar_virtual).setOnClickListener(this);
-
         attachListView();
 
         messageLists.add(EmojiCache.testMessage);
+        messageLists.add(EmojiCache.testMessage);
+        messageLists.add(EmojiCache.testMessage);
+        messageLists.add(EmojiCache.testMessage);
         mMessagesAdapter.notifyDataSetChanged();
+
+
+        mEmojiconsView = findViewById(R.id.emojicons);
+        mEmojiconsView.setVisibility(View.GONE);
     }
 
+    View mEmojiconsView;
     ArrayList<String> messageLists = new ArrayList<>();
     ArrayAdapter<String> mMessagesAdapter;
     ListView iListView;
@@ -124,22 +92,42 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         iListView.setAdapter(mMessagesAdapter);
     }
 
+    InputBarViewBuilder iInputBarViewBuilder = new InputBarViewBuilder();
+
     public void addInputBar() {
-        mInputBarView = (InputBarView) findViewById(R.id.InputBarView);
-        mInputBarView.setOnClickEvent(new View.OnClickListener() {
+        iInputBarViewBuilder.onFinishInflate(findViewById(R.id.inputBarView));
+        KeyboardViewer iKeyboardViewer = new KeyboardViewer();
+        iKeyboardViewer.keyboard(findViewById(R.id.ZoomView));
+        iKeyboardViewer.setOnKeyboardShownListener(new OnKeyboardShownListener() {
+            @Override
+            public void onKeyboardShown() {
+
+            }
+
+            @Override
+            public void onKeyboardHidden() {
+
+            }
+        });
+
+        iInputBarViewBuilder.setOnClickEvent(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.inputBar_show_emojicon:
-                        iChatWidget.showEmoji();
+                        Keyboard.hideKeyboard(NewChatActivity.this);
+                        mEmojiconsView.setVisibility(View.VISIBLE);
                         break;
                     case R.id.inputBar_show_keyboard:
-                        iChatWidget.showKeyboard();
+                        EditText editText = iInputBarViewBuilder.getEditText();
+                        editText.requestFocus();
+                        Keyboard.showKeyboard(NewChatActivity.this, editText);
+//                        mEmojiconsView.setVisibility(View.GONE);
                         break;
                 }
             }
         });
-        mInputBarView.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        iInputBarViewBuilder.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
@@ -181,7 +169,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        iChatWidget.show();
 //        iChatWidget.showKeyboard();
     }
 
@@ -193,22 +180,22 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     public void onSendEvent(View view) {
         inputBarHint.setText(null);
 
-        Editable text = mInputBarView.getText();
+        Editable text = iInputBarViewBuilder.getText();
         if (!TextUtils.isEmpty(text)) {
             inputBarHint.setHint(text);
 
             mMessagesAdapter.insert(text.toString(), mMessagesAdapter.getCount());
             iListView.smoothScrollToPosition(mMessagesAdapter.getCount());
 
-            mInputBarView.setText(null);
+            iInputBarViewBuilder.setText(null);
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (!iChatWidget.onBackPressed()) {
-            super.onBackPressed();
-        }
+//        if (!iChatWidget.onBackPressed()) {
+//            super.onBackPressed();
+//        }
     }
 }
 

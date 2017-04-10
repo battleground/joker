@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF"
+    android:isScrollContainer="false"
+    android:orientation="vertical">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#FFF"
+        android:isScrollContainer="false"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ZoomView"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_weight="1"
+            android:isScrollContainer="false"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/inputbar" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#EEE" />
+
+        <include layout="@layout/emojion_tabs" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

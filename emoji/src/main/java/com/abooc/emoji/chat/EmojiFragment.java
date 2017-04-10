@@ -1,7 +1,9 @@
 package com.abooc.emoji.chat;
 
 import android.content.Context;
-import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +22,6 @@ import android.widget.ImageView;
 import com.abooc.emoji.EmojiCache;
 import com.abooc.emoji.R;
 import com.abooc.emoji.widget.PointIndicator;
-import com.abooc.util.Debug;
 
 
 /**
@@ -80,6 +81,9 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        if (mOnItemLongClickListener != null) {
+            return mOnItemLongClickListener.onItemLongClick(parent, view, position, id);
+        }
         return false;
     }
 
@@ -105,10 +109,6 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
             mArray = array;
             mCount = array.length;
             mPage = getPage(mCount, pageSize);
-
-            Emoji emoji = array[0];
-            Debug.anchor(emoji.name + " -> " + emoji.icon);
-            Debug.anchor("总数：" + mCount + ", 页数：" + mPage);
         }
 
         public Emoji[] getGroup(int page) {
@@ -116,9 +116,12 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
             int start = (page * pageSize);
             int end = start + thisPageSize;
 
-            Emoji[] newArray = new Emoji[thisPageSize];
-            Debug.anchor("第" + page + "页数量：" + thisPageSize + ", start：" + start + "， end：" + end);
+            Emoji[] newArray = new Emoji[thisPageSize + 1];
             System.arraycopy(mArray, start, newArray, 0, thisPageSize);
+
+            Drawable drawable = getResources().getDrawable(R.drawable.emoji_backspace);
+            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+            newArray[thisPageSize] = new Emoji("删除键", "[-d]", bitmap);
             return newArray;
         }
 
@@ -160,26 +163,11 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
 
     static class EmojiAdapter extends ArrayAdapter<Emoji> {
 
-        Resources mResources;
-        String mPackageName;
-        int resId;
+        private int resId;
 
         public EmojiAdapter(Context context, int resource, Emoji[] objects) {
             super(context, resource, objects);
             resId = resource;
-            mResources = getContext().getResources();
-            mPackageName = getContext().getPackageName();
-        }
-
-        @Override
-        public int getCount() {
-            return super.getCount() + 1;
-        }
-
-        @Nullable
-        @Override
-        public Emoji getItem(int position) {
-            return position < super.getCount() ? super.getItem(position) : null;
         }
 
         @NonNull
@@ -192,13 +180,7 @@ public class EmojiFragment extends Fragment implements GridViewer, OnItemClickLi
             Emoji item = getItem(position);
 
             ImageView imageView = (ImageView) convertView;
-
-            if (item == null) {
-                imageView.setImageResource(R.drawable.emoji_backspace);
-            } else {
-                int identifier = mResources.getIdentifier(item.icon, "drawable", mPackageName);
-                imageView.setImageResource(identifier);
-            }
+            imageView.setImageBitmap(item.icon);
             return imageView;
         }
 

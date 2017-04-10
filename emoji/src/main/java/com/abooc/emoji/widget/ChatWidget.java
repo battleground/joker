@@ -27,7 +27,7 @@ import com.abooc.emoji.chat.Emoji;
 import com.abooc.emoji.chat.EmojiFragment;
 import com.abooc.emoji.chat.GridViewer;
 import com.abooc.joker.tab.TabManager;
-import com.abooc.util.Debug;
+import com.abooc.widget.Toast;
 
 import static com.abooc.emoji.widget.ChatWidget.Tabs.EMOJICON;
 
@@ -106,6 +106,7 @@ public class ChatWidget extends FrameLayout implements View.OnClickListener, Gri
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
 
         setOnClickListener(this);
 
@@ -141,7 +142,6 @@ public class ChatWidget extends FrameLayout implements View.OnClickListener, Gri
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        Debug.anchor();
         mAnimationOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_down);
         mKeyboardViewer.keyboard((View) this.getParent());
     }
@@ -197,7 +197,7 @@ public class ChatWidget extends FrameLayout implements View.OnClickListener, Gri
         if (content instanceof EmojiFragment) {
             Emoji item = (Emoji) adapter.getItem(position);
 
-            if (item == null) {
+            if (isDelete(item)) {
                 Deleter.delete(mEditText);
             } else {
                 if (mCharMode) {
@@ -210,13 +210,18 @@ public class ChatWidget extends FrameLayout implements View.OnClickListener, Gri
 
     }
 
+    private boolean isDelete(Emoji item) {
+        if (item != null && "[-d]".equals(item.code)) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         ArrayAdapter adapter = (ArrayAdapter) parent.getAdapter();
         Emoji item = (Emoji) adapter.getItem(position);
-        if (item == null) {
-
-        }
+        Toast.show(item.description);
         return true;
     }
 
@@ -267,7 +272,6 @@ public class ChatWidget extends FrameLayout implements View.OnClickListener, Gri
     }
 
     public void show() {
-        Debug.anchor("启动模块");
         setVisibility(View.VISIBLE);
         if (mStatus == VIEW_STATUS_KEYBOARD) {
             showKeyboard();
@@ -281,7 +285,6 @@ public class ChatWidget extends FrameLayout implements View.OnClickListener, Gri
     }
 
     public void dismiss() {
-        Debug.anchor("关闭模块");
         mEditText.clearFocus();
         setVisibility(View.GONE);
 //        if (mStatus == VIEW_STATUS_EMOJIONS) {
@@ -296,7 +299,6 @@ public class ChatWidget extends FrameLayout implements View.OnClickListener, Gri
     }
 
     public void showEmoji() {
-        Debug.anchor("收起键盘");
 //        mCloseAction = false;
         Keyboard.hideKeyboard(mActivity);
         if (true) {
@@ -317,7 +319,6 @@ public class ChatWidget extends FrameLayout implements View.OnClickListener, Gri
     private void showEmojiView() {
         mStatus = VIEW_STATUS_EMOJIONS;
         if (mEmojiconsContainer.getVisibility() != View.VISIBLE) {
-            Debug.anchor("显示表情模块");
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -331,7 +332,6 @@ public class ChatWidget extends FrameLayout implements View.OnClickListener, Gri
     private void hideEmojiView() {
         mStatus = VIEW_STATUS_KEYBOARD;
         if (mEmojiconsContainer.getVisibility() == View.VISIBLE) {
-            Debug.anchor("隐藏表情模块");
             mEmojiconsContainer.startAnimation(mAnimationOut);
 
             mHandler.postDelayed(new Runnable() {

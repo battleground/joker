@@ -1,12 +1,8 @@
 package com.abooc.emoji.samples;
 
-import android.content.Context;
 import android.text.Editable;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.abooc.emoji.widget.OnEmojiViewerListener;
 
@@ -14,7 +10,7 @@ import com.abooc.emoji.widget.OnEmojiViewerListener;
  * Created by dayu on 2017/1/12.
  */
 
-public class InputBarView extends LinearLayout implements OnEmojiViewerListener {
+public class InputBarViewBuilder implements OnEmojiViewerListener {
 
 
     private EditText inputBar;
@@ -23,36 +19,17 @@ public class InputBarView extends LinearLayout implements OnEmojiViewerListener 
 
     private View.OnClickListener mOnClickListener;
 
+    private View mInputBarView;
 
-    public InputBarView(Context context) {
-        this(context, null, 0);
-    }
-
-    public InputBarView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public InputBarView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-
-//        TypedArray a = context.obtainStyledAttributes(
-//                attrs, R.styleable.InputBarView, defStyleAttr, 0);
-//        a.recycle();
-    }
-
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        View inflate = LayoutInflater.from(getContext()).inflate(R.layout.inputbar, this, false);
-        addView(inflate);
+    public void onFinishInflate(View inputBarView) {
+        mInputBarView = inputBarView;
         inputBar = (EditText) findViewById(R.id.inputBar);
         inputBar_show_emojicon = findViewById(R.id.inputBar_show_emojicon);
         inputBar_show_keyboard = findViewById(R.id.inputBar_show_keyboard);
+    }
+
+    private View findViewById(int id) {
+        return mInputBarView.findViewById(id);
     }
 
 

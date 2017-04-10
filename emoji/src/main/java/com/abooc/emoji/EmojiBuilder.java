@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import android.widget.EditText;
 

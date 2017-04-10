@@ -13,11 +13,7 @@
             android:name=".EmojiActivity"
             android:label="表情"
             android:screenOrientation="portrait">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
         </activity>
         <activity
             android:name=".history.HistoryActivity"
@@ -30,6 +26,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+        </activity>
+        <activity
+            android:name=".NewChatActivity"
+            android:label="新聊天">
+        </activity>
+        <activity
+            android:name=".KeyboardTestActivity"
+            android:label="键盘测试"
+            android:windowSoftInputMode="stateVisible|adjustResize">
         </activity>
     </application>
 

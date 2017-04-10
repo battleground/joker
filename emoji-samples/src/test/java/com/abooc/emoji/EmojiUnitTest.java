@@ -1,5 +1,7 @@
 package com.abooc.emoji;
 
+import com.google.gson.Gson;
+
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -83,4 +85,19 @@ public class EmojiUnitTest {
     }
 
 
+    @Test
+    public void test_gson_array() throws Exception {
+
+        String jsonArray = "[\"[可爱]\",\"[大笑]\",\"[无知]\",\"[苦笑]\",\"[流鼻血]\",\"[色]\",\"[看好你]\",\"[吻]\",\"[白眼]\",\"[吻我别说话]\",\"[鄙视]\",\"[闭嘴]\",\"[吃惊]\",\"[大哭]\",\"[可怜]\",\"[拽]\",\"[捂脸]\",\"[坏笑]\",\"[流汗]\",\"[抠鼻]\",\"[双眼发亮]\",\"[衰人]\",\"[无语]\",\"[轻佻]\",\"[怒]\",\"[惊吓]\",\"[奸笑]\",\"[委屈]\",\"[丢鞋]\",\"[调皮]\",\"[挨打]\",\"[阿呆]\",\"[得意]\",\"[晕]\",\"[恐怖]\",\"[叹气]\",\"[睡觉]\",\"[亲亲]\",\"[破口大骂]\",\"[呕吐]\",\"[太阳]\",\"[奥特曼]\",\"[红包]\",\"[月亮]\",\"[芝士]\",\"[蛋糕]\",\"[吻]\"]";
+
+        Gson gson = new Gson();
+        String[] array = gson.fromJson(jsonArray, String[].class);
+
+        for (String name :
+                array) {
+            System.out.print(name);
+        }
+
+
+    }
 }

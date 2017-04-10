@@ -1,5 +1,7 @@
 package com.abooc.emoji.chat;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 /**
@@ -8,12 +10,13 @@ import java.io.Serializable;
 
 public class Emoji implements Serializable {
 
-    public String name;
+    @Deprecated
+    public String description;
     public String code;
-    public String icon;
+    public Bitmap icon;
 
-    public Emoji(String name, String code, String icon) {
-        this.name = name;
+    public Emoji(String description, String code, Bitmap icon) {
+        this.description = description;
         this.code = code;
         this.icon = icon;
     }

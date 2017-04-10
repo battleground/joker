@@ -29,6 +29,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile "com.android.support:appcompat-v7:${cfg.supportVersion}"
+    compile 'com.google.code.gson:gson:2.+'
 
     compile 'com.abooc.plugin:plugin-about:latest.integration'
 
