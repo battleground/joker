@@ -108,7 +108,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_1, null);
+                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_item, null);
                 }
 
 
@@ -116,7 +116,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                 CharSequence emojiCharSequence = EmojiBuilder.toEmojiCharAll(getContext(), message, EmojiCache.getCache());
 
-                TextView textView = (TextView) convertView;
+                TextView textView = (TextView) convertView.findViewById(R.id.text_msg);
                 textView.setText(emojiCharSequence);
                 return convertView;
             }

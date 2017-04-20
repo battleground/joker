@@ -56,7 +56,7 @@ public class EmojiBuilder {
     }
 
     public static ImageSpan toImageSpan(Context ctx, Bitmap bitmap){
-        return new ImageSpan(ctx, bitmap);
+        return new CenterImageSpan(ctx, bitmap);
 //        return new ImageSpan(ctx, bitmap, DynamicDrawableSpan.ALIGN_BASELINE);
     }
 

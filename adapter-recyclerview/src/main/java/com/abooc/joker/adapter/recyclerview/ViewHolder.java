@@ -61,7 +61,7 @@ public abstract class ViewHolder extends RecyclerView.ViewHolder implements View
         return mContext;
     }
 
-    public abstract void onBindedView(View itemLayoutView);
+    public abstract void onBindedView(View view);
 
     @Override
     public void onClick(View v) {
