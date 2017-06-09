@@ -1,4 +1,4 @@
-package com.bftv.tv_remoter_samples;
+package com.abooc.tvremoter;
 
 import android.support.annotation.NonNull;
 

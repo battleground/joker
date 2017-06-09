@@ -12,8 +12,10 @@ import com.abooc.airremoter.Sender;
 import com.abooc.joker.dialog.ScannerSamples;
 import com.abooc.joker.dialog.ScanningDialog;
 import com.abooc.upnp.DlnaManager;
+import com.abooc.upnp.extra.Filter;
 import com.abooc.upnp.model.DeviceDisplay;
-import com.abooc.widget.Toast;
+
+import org.fourthline.cling.model.meta.Device;
 
 /**
  * 遥控器
@@ -34,10 +36,6 @@ public class RemoteControlActivity extends AppCompatActivity implements Scanning
         setContentView(R.layout.activity_tv_control);
         attachActionBar();
 
-        // 新手指导
-//        if (!Settings.getInstance().isGuideRemoteShown()) {
-//            GuideRemoteActivity.launch(this);
-//        }
         attachRemoter();
 
     }
@@ -70,14 +68,20 @@ public class RemoteControlActivity extends AppCompatActivity implements Scanning
         super.onBackPressed();
     }
 
-    private ScanningDialog scanningDialog;
-
     public void onShowDevicesEvent(View view) {
         ScannerSamples.onSelectedDeviceListener = this;
         ScannerSamples.title = "选择要连接的设备";
         ScannerSamples.error = "未找到可用设备";
-        scanningDialog = ScannerSamples.show(this, null);
+        ScannerSamples.show(this, iBaoFengTVFilter);
     }
+
+    private Filter iBaoFengTVFilter = new Filter() {
+        @Override
+        public boolean check(Device device) {
+            return true;
+//            return BaofengSupport.isBaofengTV(device);
+        }
+    };
 
     @Override
     public void onSelectedDevice(DeviceDisplay deviceDisplay) {
@@ -85,19 +89,14 @@ public class RemoteControlActivity extends AppCompatActivity implements Scanning
     }
 
     private void beRemoter(DeviceDisplay display) {
-        if (BaofengSupport.isBaofengTV(display.getOriginDevice())) {
-            DlnaManager.getInstance().unbound();
-            DlnaManager.getInstance().bind(display.getOriginDevice(), null);
-            display.setChecked(true);
+        DlnaManager.getInstance().unbound();
+        DlnaManager.getInstance().bind(display.getOriginDevice(), null);
+        display.setChecked(true);
 
 
-            String host = display.getHost();
-            SenderImpl.buildSender(host);
-            attachRemoter();
-        } else {
-            Toast.show("当前操作仅支持暴风TV");
-        }
-        scanningDialog.dismiss();
+        String host = display.getHost();
+        SenderImpl.buildSender(host);
+        attachRemoter();
     }
 
     public void onSwitchEvent(View view) {

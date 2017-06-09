@@ -13,84 +13,44 @@ import com.abooc.upnp.model.DeviceDisplay;
  */
 
 public class ScannerSamples {
-
-    private static DialogInterface.OnShowListener mOnShowListener;
-    private static DialogInterface.OnDismissListener mOnDismissListener;
-
-    public static void addOnShowListener(DialogInterface.OnShowListener showListener, DialogInterface.OnDismissListener dismissListener) {
-        mOnShowListener = showListener;
-        mOnDismissListener = dismissListener;
-    }
-
     public static String title;
     public static String error;
+    public static ScanningDialog.OnSelectedDeviceListener onSelectedDeviceListener;
 
-    public static ScanningDialog show(Context context) {
-        return show(context, null);
+    private static boolean isShowing;
+
+    public static boolean isShowing() {
+        return isShowing;
     }
 
-    public static ScanningDialog show(Context context, Filter filter) {
+    public static void show(Context context) {
+        show(context, null);
+    }
+
+    public static void show(Context context, Filter filter) {
+        if (isShowing()) return;
+
+        isShowing = true;
         final ScanningDialog iScanningDialog = new ScanningDialog(context);
         final UPnPScan iUPnPScan = new UPnPScan(iScanningDialog);
         iUPnPScan.setFilter(filter);
-
-        iScanningDialog.setMessage(title);
+        iScanningDialog.setAlertTitle(title);
         iScanningDialog.setError(error);
-
+        iScanningDialog.setOnSelectedDeviceListener(onSelectedDeviceListener);
         iScanningDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
             public void onShow(DialogInterface dialog) {
-//                iScanningDialog.setOnSelectedDeviceListener(registerEvent(iScanningDialog));
-                iScanningDialog.setOnSelectedDeviceListener(onSelectedDeviceListener);
-
-                if (mOnShowListener != null) mOnShowListener.onShow(dialog);
-                iUPnPScan.start();
+                iUPnPScan.scan();
             }
         });
-
         iScanningDialog.show();
-
         iScanningDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
             public void onDismiss(DialogInterface dialog) {
-
-                if (mOnDismissListener != null) mOnDismissListener.onDismiss(dialog);
+                isShowing = false;
                 iUPnPScan.quit();
-
-                onSelectedDeviceListener = null;
-                mOnShowListener = null;
-                mOnDismissListener = null;
+                ScannerSamples.onSelectedDeviceListener = null;
             }
         });
-
-        return iScanningDialog;
-    }
-
-    public static ScanningDialog.OnSelectedDeviceListener onSelectedDeviceListener;
-
-    private static ScanningDialog.OnSelectedDeviceListener registerEvent(final ScanningDialog iScanningDialog) {
-        return new ScanningDialog.OnSelectedDeviceListener() {
-            @Override
-            public void onSelectedDevice(final DeviceDisplay device) {
-
-                boolean bind = DlnaManager.getInstance().bind(device.getOriginDevice(), null);
-                if (bind) {
-                    device.setChecked(true);
-
-                    iScanningDialog.notifyDataSetChanged();
-                }
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        iScanningDialog.dismiss();
-                        if (onSelectedDeviceListener != null) {
-                            onSelectedDeviceListener.onSelectedDevice(device);
-                        }
-                    }
-                }, 300);
-            }
-        };
     }
 
 }
+

@@ -5,20 +5,17 @@ import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.abooc.upnp.model.DeviceDisplay;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,16 +28,25 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
         void onSelectedDevice(DeviceDisplay device);
     }
 
+    private ProgressBar mProgressBar;
     private ImageView mIconView;
     private TextView mTitleText;
-    private View mGuideView;
+    private TextView mGuideView;
     private ListView mListView;
 
-    private Adapter mAdapter;
+    private ScanAdapter mScanAdapter;
     private OnSelectedDeviceListener mOnSelectedDeviceListener;
+
+    private boolean hideButton;
 
     public ScanningDialog(Context context) {
         this(context, android.R.style.Theme_Holo_Dialog_NoActionBar);
+    }
+
+    public ScanningDialog(Context context, boolean hideButton) {
+        super(context, android.R.style.Theme_Holo_Dialog_NoActionBar);
+        this.hideButton = hideButton;
+        init();
     }
 
     public ScanningDialog(Context context, int themeResId) {
@@ -67,27 +73,36 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         window.setAttributes(lp);
 
-        findViewById(R.id.close).setOnClickListener(this);
+        findViewById(R.id.dismiss).setOnClickListener(this);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.progress);
+        mIconView = (ImageView) findViewById(R.id.icon);
         mIconView = (ImageView) findViewById(R.id.icon);
         mTitleText = (TextView) findViewById(R.id.title);
-        mGuideView = findViewById(R.id.guide);
+        mGuideView = (TextView) findViewById(R.id.guide);
         mListView = (ListView) findViewById(R.id.listView);
 
 
-        mAdapter = new Adapter(getContext(), 0, new ArrayList<DeviceDisplay>());
-        mAdapter.setOnItemClickListener(this);
-        mListView.setAdapter(mAdapter);
+        mScanAdapter = new ScanAdapter(getContext(), hideButton);
+        mScanAdapter.setOnItemClickListener(this);
+        mListView.setAdapter(mScanAdapter);
     }
 
     public void setOnSelectedDeviceListener(OnSelectedDeviceListener onSelectedDeviceListener) {
         this.mOnSelectedDeviceListener = onSelectedDeviceListener;
     }
 
-    String iMessage;
+    String mAlertTitle;
 
-    public void setMessage(String message) {
-        this.iMessage = message;
+    public void setAlertTitle(String alertTitle) {
+        this.mAlertTitle = alertTitle;
+    }
+
+    String mGuideText;
+
+    public void setGuideText(String guideText) {
+        this.mGuideText = guideText;
+        mGuideView.setText(guideText);
     }
 
     String error;
@@ -101,9 +116,10 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
         Log.d("TAG", "position:" + position);
 
         if (mOnSelectedDeviceListener != null) {
-            DeviceDisplay device = mAdapter.getItem(position);
+            DeviceDisplay device = mScanAdapter.getItem(position);
             mOnSelectedDeviceListener.onSelectedDevice(device);
         }
+        dismiss();
     }
 
     @Override
@@ -115,6 +131,7 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
     public void onScanning() {
         mIconView.setImageResource(R.drawable.ic_dialog_scanning);
         mTitleText.setText(R.string.joker_dialog_scanning_scan);
+        mProgressBar.setVisibility(View.VISIBLE);
 
         mGuideView.setVisibility(View.VISIBLE);
         mListView.setVisibility(View.GONE);
@@ -122,6 +139,7 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
 
     @Override
     public void onError() {
+        mProgressBar.setVisibility(View.GONE);
         mIconView.setImageResource(R.drawable.ic_dialog_scanning_error);
         if (TextUtils.isEmpty(error)) {
             mTitleText.setText(R.string.joker_dialog_scanning_error);
@@ -135,26 +153,24 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
 
     @Override
     public void showListView() {
-        mIconView.setImageResource(R.drawable.ic_dialog_scanning_ok);
-        if (TextUtils.isEmpty(iMessage)) {
-            mTitleText.setText(R.string.joker_dialog_scanning_selection);
-        } else {
-            mTitleText.setText(iMessage);
-        }
-
         mGuideView.setVisibility(View.GONE);
         mListView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onShowList(List<DeviceDisplay> list) {
-        mAdapter.addAll(list);
-        mAdapter.setNotifyOnChange(true);
+        mScanAdapter.update(list);
     }
 
     @Override
-    public void notifyDataSetChanged() {
-        mAdapter.notifyDataSetChanged();
+    public void onFinished() {
+        mProgressBar.setVisibility(View.GONE);
+        mIconView.setImageResource(R.drawable.ic_dialog_scanning_ok);
+        if (TextUtils.isEmpty(mAlertTitle)) {
+            mTitleText.setText(R.string.joker_dialog_scanning_selection);
+        } else {
+            mTitleText.setText(mAlertTitle);
+        }
     }
 
     @Override
@@ -164,81 +180,27 @@ public class ScanningDialog extends android.app.Dialog implements AdapterView.On
 
     @Override
     public boolean isEmpty() {
-        return mAdapter == null || mAdapter.isEmpty();
+        return mScanAdapter == null || mScanAdapter.isEmpty();
     }
 
     @Override
     public void deviceAdded(DeviceDisplay device) {
-        mAdapter.add(device);
-        mAdapter.setNotifyOnChange(true);
-        mAdapter.sort(UPnPScan.mComparatorByIP);
+        mScanAdapter.add(device);
+        mScanAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void deviceRemoved(DeviceDisplay device) {
-        mAdapter.setNotifyOnChange(true);
-        mAdapter.remove(device);
-    }
+        mScanAdapter.remove(device);
 
-    private class Adapter extends ArrayAdapter<DeviceDisplay> implements View.OnClickListener {
-
-        AdapterView.OnItemClickListener onItemClickListener;
-
-        public Adapter(Context context, int resource, List<DeviceDisplay> devices) {
-            super(context, resource, devices);
-        }
-
-        public void setOnItemClickListener(AdapterView.OnItemClickListener listener) {
-            onItemClickListener = listener;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.joker_dialog_scanning_list_item, null);
-                holder = new ViewHolder(convertView, this);
-                convertView.setTag(holder);
-            }
-            holder = (ViewHolder) convertView.getTag();
-
-            DeviceDisplay item = getItem(position);
-
-            holder.setPosition(position);
-            holder.attachData(item);
-            return convertView;
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (onItemClickListener != null) {
-                onItemClickListener.onItemClick(null, v.getRootView(), (Integer) v.getTag(), 0);
-            }
-        }
-
-        class ViewHolder {
-
-            TextView iNameText;
-            int position;
-            TextView joinView;
-
-            ViewHolder(View convertView, View.OnClickListener listener) {
-                iNameText = (TextView) convertView.findViewById(R.id.name);
-                joinView = (TextView) convertView.findViewById(R.id.join);
-                joinView.setOnClickListener(listener);
-            }
-
-            void setPosition(int position) {
-                this.position = position;
-                joinView.setTag(position);
-            }
-
-            void attachData(DeviceDisplay device) {
-                String name = device.getDevice().getFriendlyName();
-                iNameText.setText(name);
-                joinView.setText(device.isChecked() ? "已连接" : "立即加入");
-            }
+        if (mScanAdapter.isEmpty()) {
+            onError();
         }
     }
 
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        mOnSelectedDeviceListener = null;
+    }
 }

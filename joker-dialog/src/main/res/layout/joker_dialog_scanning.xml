@@ -9,23 +9,37 @@
     android:paddingBottom="12dp">
 
     <ImageView
-        android:id="@+id/close"
+        android:id="@+id/dismiss"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:clickable="true"
-        android:paddingLeft="13.4dp"
+        android:paddingLeft="23.4dp"
         android:paddingRight="13.4dp"
         android:paddingTop="13.4dp"
+        android:paddingBottom="12dp"
         android:src="@drawable/ic_dialog_close_nor" />
 
-    <ImageView
-        android:id="@+id/icon"
+    <FrameLayout
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_margin="13.4dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_dialog_scanning" />
+        android:layout_marginTop="-12dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_dialog_scanning" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/progress_drawable"
+            android:indeterminateDuration="2000" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/title"
@@ -52,6 +66,7 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:listSelector="@android:color/transparent"
         android:paddingLeft="24dp"
         android:paddingRight="24dp" />
 

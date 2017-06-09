@@ -16,7 +16,6 @@ import com.abooc.upnp.RendererPlayer;
 import com.abooc.upnp.extra.Filter;
 import com.abooc.upnp.extra.SearchFilter;
 import com.abooc.upnp.model.DeviceDisplay;
-import com.abooc.util.Debug;
 
 import org.fourthline.cling.android.AndroidUpnpServiceImpl;
 import org.fourthline.cling.model.meta.Device;
@@ -25,16 +24,7 @@ import org.fourthline.cling.support.model.Res;
 import org.fourthline.cling.support.model.item.Photo;
 import org.seamless.util.MimeType;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 import static com.abooc.joker.dialog.ScannerSamples.onSelectedDeviceListener;
 
@@ -101,10 +91,17 @@ public class SamplesActivity extends AppCompatActivity implements
         });
     }
 
+    private Filter iBaoFengTVFilter = new Filter() {
+        @Override
+        public boolean check(Device device) {
+            return BaofengSupport.isBaofengTV(device);
+        }
+    };
+
     public void onShowScanningDialog(View view) {
         onSelectedDeviceListener = this;
         ScannerSamples.addOnShowListener(this, this);
-        ScannerSamples.show(this);
+        ScannerSamples.show(this, iBaoFengTVFilter);
     }
 
     public void onFlyImage(View view) {
@@ -164,13 +161,7 @@ public class SamplesActivity extends AppCompatActivity implements
 
             onSelectedDeviceListener = this;
             ScannerSamples.addOnShowListener(this, this);
-            ScannerSamples.show(this, new Filter() {
-                @Override
-                public boolean check(Device device) {
-                    return device.findService(iUDAServiceType) != null;
-//                    return device.findDevices(iUDAServiceType);
-                }
-            });
+            ScannerSamples.show(this, iBaoFengTVFilter);
         }
     }
 

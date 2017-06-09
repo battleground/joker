@@ -6,22 +6,23 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="?android:actionBarSize">
 
         <ImageView
             android:id="@+id/Back"
             android:layout_width="wrap_content"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="match_parent"
             android:clickable="true"
             android:gravity="center"
             android:onClick="onBackEvent"
             android:padding="14dp"
-            android:src="@drawable/ic_menu_back_light_nor" />
+            android:src="@drawable/ic_menu_back_light_nor"
+            android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/Title"
             android:layout_width="wrap_content"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:clickable="true"
@@ -38,7 +39,7 @@
         <ImageView
             android:id="@+id/Stitch"
             android:layout_width="wrap_content"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:clickable="true"
             android:gravity="center"

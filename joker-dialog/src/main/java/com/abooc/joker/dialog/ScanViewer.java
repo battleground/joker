@@ -14,7 +14,7 @@ public interface ScanViewer {
 
     void onError();
 
-    void notifyDataSetChanged();
+    void onFinished();
 
     void showListView();
 

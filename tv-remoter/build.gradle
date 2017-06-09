@@ -36,7 +36,7 @@ dependencies {
     compile 'com.abooc.debug:debug-core:latest.integration'
     compile 'com.abooc.airremoter:airRemoter:0.3.0213'
 
-    compile 'com.abooc.joker:scanning:0.4.6.21270302(BETA)'
-//    compile project(':joker-dialog')
+//    compile 'com.abooc.joker:scanning:0.5.2.03262102(BETA)'
+    compile project(':joker-dialog')
 
 }

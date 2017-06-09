@@ -1,4 +1,4 @@
-package com.bftv.tv_remoter_samples;
+package com.abooc.tvremoter;
 
 import com.abooc.airremoter.Sender;
 import com.baofeng.fengmi.remoter.SenderImpl;
