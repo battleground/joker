@@ -6,6 +6,7 @@ import com.abooc.upnp.Discovery;
 import com.abooc.upnp.DlnaManager;
 import com.abooc.widget.Toast;
 import com.baofeng.fengmi.remoter.RemoteControlActivity;
+import com.baofeng.fengmi.remoter.SenderImpl;
 
 import org.fourthline.cling.android.AndroidUpnpServiceImpl;
 
@@ -17,8 +18,9 @@ public class SamplesActivity extends RemoteControlActivity {
         DlnaManager.getInstance().setLoggerEnable(true);
         Discovery.get().registerWiFiReceiver(this);
         DlnaManager.getInstance().startService(this, AndroidUpnpServiceImpl.class);
-        super.onCreate(savedInstanceState);
+        SenderImpl.setBuilder(new OkBuilder());
 
+        super.onCreate(savedInstanceState);
     }
 
     @Override

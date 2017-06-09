@@ -36,22 +36,8 @@ public class RemoteControlActivity extends AppCompatActivity implements Scanning
         setContentView(R.layout.activity_tv_control);
         attachActionBar();
 
-        attachRemoter();
+        attachRemoter("127.0.0.1");
 
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        attachRemoter();
-    }
-
-    private void attachRemoter() {
-        Sender sender = SenderImpl.getSender();
-        KeyboardRemoter remoter = new KeyboardRemoter(sender);
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_tv_control);
-        RemoteControlFragment control = (RemoteControlFragment) fragment;
-        control.setRemoter(remoter);
     }
 
     private void attachActionBar() {
@@ -95,8 +81,15 @@ public class RemoteControlActivity extends AppCompatActivity implements Scanning
 
 
         String host = display.getHost();
-        SenderImpl.buildSender(host);
-        attachRemoter();
+        attachRemoter(host);
+    }
+
+    private void attachRemoter(String host) {
+        Sender sender = SenderImpl.buildSender(host);
+        KeyboardRemoter remoter = new KeyboardRemoter(sender);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_tv_control);
+        RemoteControlFragment control = (RemoteControlFragment) fragment;
+        control.setRemoter(remoter);
     }
 
     public void onSwitchEvent(View view) {
