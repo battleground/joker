@@ -8,8 +8,8 @@ android {
         applicationId "com.bftv.tv_remoter_samples"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.0609-1947"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

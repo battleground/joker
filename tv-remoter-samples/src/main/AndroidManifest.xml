@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".AppApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_tv_control_power_nor"
         android:label="@string/app_name"
@@ -27,6 +28,26 @@
 
         <service android:name="org.fourthline.cling.android.AndroidUpnpServiceImpl" />
 
+        <!-- 讯飞 -->
+        <meta-data
+            android:name="IFLYTEK_CHANNEL"
+            android:value="Channel" />
+        <!-- 讯飞 -->
+        <meta-data
+            android:name="IFLYTEK_APPKEY"
+            android:value="57ea7578" />
     </application>
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
 </manifest>

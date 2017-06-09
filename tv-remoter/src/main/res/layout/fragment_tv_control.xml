@@ -114,13 +114,14 @@
             android:scaleType="center"
             android:src="@drawable/tv_control_menu" />
 
-        <ImageView
+        <com.baofeng.fengmi.lib.voice.dialog.AudioRecorderButton
             android:id="@+id/biu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:scaleType="center"
-            android:src="@drawable/tv_control_biu" />
+            android:src="@drawable/tv_control_biu"
+            />
     </LinearLayout>
 
     <LinearLayout

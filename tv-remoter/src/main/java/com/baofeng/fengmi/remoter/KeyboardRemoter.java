@@ -45,11 +45,16 @@ public class KeyboardRemoter {
         mSender.doSend(buildJson(keyCode, keyEvent));
     }
 
+    public void sendVoice(int keyCode, String content) {
+        mSender.doSend(buildJson(keyCode, content, 1));
+    }
+
     public void send(int keyCode) {
         mSender.doSend(json(keyCode));
     }
 
-    public static String buildJson(int keyCode, int keyEvent) {
+    @Deprecated
+    public static String buildJson2(int keyCode, int keyEvent) {
         return "{\"code\":" + ACTION_REMOTER
                 + ", \"info\":{\"keycode\":" + keyCode + ", \"keyevent\":" + keyEvent + "}"
                 + "}";
@@ -58,6 +63,43 @@ public class KeyboardRemoter {
     private String json(int keyCode) {
         return "{\"code\":" + ACTION_REMOTER
                 + ", \"info\":{\"keycode\":" + keyCode + "}"
+                + "}";
+    }
+
+    public static String buildJson(int keyCode, int keyEvent) {
+        return "{" +
+                "\"code\":" + ACTION_REMOTER + ", " +
+                "\"appName\":" + "\"control\"" + ", " +
+                "\"timeStamp\":" + "\"" + System.currentTimeMillis() + "\"" + ", " +
+                "\"info\":" +
+                "       {\"keycode\":" + keyCode + ", " +
+                "       \"keyevent\":" + keyEvent +
+                "       }"
+                + ","
+                +
+                "\"data\":" +
+                "       {\"keycode\":" + keyCode + ", " +
+                "       \"keyevent\":" + keyEvent
+                + "     }"
+                + "}";
+    }
+
+    /**
+     * 发送语音
+     *
+     * @param keyCode
+     * @param content 语音文本
+     * @param version 中间层所需版本号
+     * @return
+     */
+    public static String buildJson(int keyCode, String content,int version) {
+        return "{" +
+                "\"appName\":" + "\"voice\"" + ", " +
+                "\"timeStamp\":" + "\"" + System.currentTimeMillis() + "\"" + ", " +
+                "\"version\":"+version+", " +
+                "\"data\":" +
+                "{\"msg\":\"" + content
+                + "\"}"
                 + "}";
     }
 }

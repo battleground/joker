@@ -38,5 +38,6 @@ dependencies {
 
 //    compile 'com.abooc.joker:scanning:0.5.2.03262102(BETA)'
     compile project(':joker-dialog')
+    compile project(':lib.speech')
 
 }

@@ -1,5 +1,7 @@
 package com.baofeng.fengmi.remoter;
 
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.abooc.util.Debug;
+import com.baofeng.fengmi.lib.voice.dialog.AudioRecorderButton;
 import com.baofeng.fengmi.remoter.KeyboardRemoter.KeyCode;
 
 /**
@@ -25,7 +29,7 @@ public class RemoteControlFragment extends Fragment implements
     private View mHome; //主页
     private View mBack; //返回
     private View mMenu; //菜单
-    private View mBiu; //Biu键
+    private AudioRecorderButton mBiu; //Biu键
     private View mVolumeUp; //音量加
     private View mVolumeDown; //音量键
 
@@ -33,6 +37,8 @@ public class RemoteControlFragment extends Fragment implements
     private TouchSweepView mTouchSweepEventView;
 
     private KeyboardRemoter mRemoter;
+    private SoundPool mSoundPool;
+    private int mSoundID;
 
     @Nullable
     @Override
@@ -57,6 +63,10 @@ public class RemoteControlFragment extends Fragment implements
         });
 
         init(view);
+
+//        mSoundPool = new SoundPool.Builder().build();
+        mSoundPool = new SoundPool(5, AudioManager.STREAM_RING, 0);
+        mSoundID = mSoundPool.load(getContext().getApplicationContext(), R.raw.fm_controller_button_pressed, 1);
     }
 
     private void init(View view) {
@@ -64,7 +74,7 @@ public class RemoteControlFragment extends Fragment implements
         mHome = view.findViewById(R.id.home);
         mBack = view.findViewById(R.id.back);
         mMenu = view.findViewById(R.id.menu);
-        mBiu = view.findViewById(R.id.biu);
+        mBiu = (AudioRecorderButton) view.findViewById(R.id.biu);
         mVolumeUp = view.findViewById(R.id.volume_up);
         mVolumeDown = view.findViewById(R.id.volume_down);
 
@@ -73,7 +83,6 @@ public class RemoteControlFragment extends Fragment implements
         mHome.setOnTouchListener(this);
         mBack.setOnTouchListener(this);
         mMenu.setOnTouchListener(this);
-        mBiu.setOnTouchListener(this);
         mVolumeUp.setOnTouchListener(this);
         mVolumeDown.setOnTouchListener(this);
 
@@ -82,9 +91,21 @@ public class RemoteControlFragment extends Fragment implements
         mHome.setOnLongClickListener(this);
         mBack.setOnLongClickListener(this);
         mMenu.setOnLongClickListener(this);
-        mBiu.setOnLongClickListener(this);
         mVolumeUp.setOnLongClickListener(this);
         mVolumeDown.setOnLongClickListener(this);
+
+        mBiu.setOnTouchListener(getOnBiuTouchListener());
+        mBiu.setOnClickListener(getOnBiuClickListener());
+        mBiu.setOnLongClickListener(this);
+        mBiu.setOnAudioFinishRecordListener(new AudioRecorderButton.OnAudioFinishRecordListener() {
+            @Override
+            public void onFinish(String result) {
+                if (result != null && result.length() > 0) {
+                    mRemoter.sendVoice(KeyCode.BIU, result);
+                    Debug.anchor("语音输出结果:" + result);
+                }
+            }
+        });
 
     }
 
@@ -146,11 +167,24 @@ public class RemoteControlFragment extends Fragment implements
         return 0;
     }
 
+    private void playSound() {
+        mSoundPool.play(
+                mSoundID,
+                1.0f,      //左耳道音量【0~1】
+                1.0f,      //右耳道音量【0~1】
+                0,         //播放优先级【0表示最低优先级】
+                1,         //循环模式【0表示循环一次，-1表示一直循环，其他表示数字+1表示当前数字对应的循环次数】
+                1          //播放速度【1是正常，范围从0~2】
+        );
+    }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
                 longPressing = false;
+                playSound();
+
                 int keyCode = getKeyCodeByView(v);
                 mRemoter.send(keyCode, MotionEvent.ACTION_DOWN);
                 break;
@@ -182,10 +216,51 @@ public class RemoteControlFragment extends Fragment implements
     @Override
     public boolean onLongClick(View v) {
         longPressing = true;
+        if (v.getId() == R.id.biu) {
+            onBiuLongClick();
+            return true;
+        }
         int keyCode = getKeyCodeByView(v);
         mRemoter.send(keyCode, MotionEvent.ACTION_DOWN);
         GoGo.sendEmptyMessage(keyCode);
         return true;
     }
 
+    /**
+     * BIU键长按事件
+     */
+    void onBiuLongClick() {
+        mBiu.start();  //TODO 去掉语音
+    }
+
+    private View.OnTouchListener getOnBiuTouchListener() {
+        return new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (longPressing && MotionEvent.ACTION_UP == event.getAction()) {
+                    longPressing = false;
+                    mBiu.release(); //TODO 去掉语音
+                }
+                return false;
+            }
+        };
+
+    }
+
+    private View.OnClickListener getOnBiuClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playSound();
+                mRemoter.send(KeyCode.BIU, MotionEvent.ACTION_DOWN);
+            }
+        };
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mBiu.destroy();
+        mSoundPool.release();
+    }
 }
