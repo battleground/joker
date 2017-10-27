@@ -9,8 +9,8 @@ import android.view.View;
 
 public abstract class BaseViewHolder<T> extends ViewHolder {
 
-    public BaseViewHolder(View itemLayoutView, OnRecyclerItemClickListener listener) {
-        super(itemLayoutView, listener);
+    public BaseViewHolder(View view, OnRecyclerItemClickListener listener) {
+        super(view, listener);
     }
 
     public BaseViewHolder(View itemLayoutView, OnRecyclerItemClickListener listener, OnRecyclerItemChildClickListener childListener) {

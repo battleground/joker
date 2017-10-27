@@ -43,18 +43,18 @@ public abstract class ViewHolder extends RecyclerView.ViewHolder implements View
     public OnRecyclerItemClickListener mListener;
     public OnRecyclerItemChildClickListener mChildClickListener;
 
-    public ViewHolder(View itemLayoutView, OnRecyclerItemClickListener listener) {
-        this(itemLayoutView, listener, null);
+    public ViewHolder(View view, OnRecyclerItemClickListener listener) {
+        this(view, listener, null);
     }
 
-    public ViewHolder(View itemLayoutView, OnRecyclerItemClickListener listener, OnRecyclerItemChildClickListener childListener) {
-        super(itemLayoutView);
+    public ViewHolder(View view, OnRecyclerItemClickListener listener, OnRecyclerItemChildClickListener childListener) {
+        super(view);
         mListener = listener;
         mChildClickListener = childListener;
-        mContext = itemLayoutView.getContext();
+        mContext = view.getContext();
         if (listener != null)
-            itemLayoutView.setOnClickListener(this);
-        onBindedView(itemLayoutView);
+            view.setOnClickListener(this);
+        onBindedView(view);
     }
 
     public Context getContext() {
