@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 def cfg = rootProject.ext.configuration
+def lib = rootProject.ext.libraries
 
 android {
     compileSdkVersion cfg.compileSdkVersion
@@ -28,4 +29,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':joker-tab')
 //    compile 'com.abooc.joker:joker-tab:latest.integration'
+    compile lib['appcompat-v7']
 }
