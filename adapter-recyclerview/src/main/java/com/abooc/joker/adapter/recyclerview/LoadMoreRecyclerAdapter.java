@@ -94,7 +94,7 @@ public abstract class LoadMoreRecyclerAdapter<T> extends BaseRecyclerAdapter<T> 
 
     @Override
     public int getItemCount() {
-        return getCount() + 1;
+        return super.getItemCount() + 1;
     }
 
     @Override
