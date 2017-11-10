@@ -13,8 +13,8 @@ public abstract class BaseViewHolder<T> extends ViewHolder {
         super(view, listener);
     }
 
-    public BaseViewHolder(View itemLayoutView, OnRecyclerItemClickListener listener, OnRecyclerItemChildClickListener childListener) {
-        super(itemLayoutView, listener, childListener);
+    public BaseViewHolder(View view, OnRecyclerItemClickListener listener, OnRecyclerItemChildClickListener childListener) {
+        super(view, listener, childListener);
     }
 
     public abstract void bindData(T t);

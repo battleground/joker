@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * @author zhangjunpu
- *  15/7/27
+ *         15/7/27
  */
 public abstract class BaseRecyclerAdapter<T> extends RecyclerViewAdapter<T> {
 
@@ -27,6 +27,9 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerViewAdapter<T> {
         this.mChildListener = listener;
     }
 
+    public int getCount() {
+        return super.getItemCount();
+    }
 
     public void add(T t) {
         getCollection().add(t);

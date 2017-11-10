@@ -97,10 +97,6 @@ public abstract class LoadMoreRecyclerAdapter<T> extends BaseRecyclerAdapter<T> 
         return getCount() + 1;
     }
 
-    public int getCount() {
-        return super.getItemCount();
-    }
-
     @Override
     public int getItemViewType(int position) {
         if (isFooter(position)) {
