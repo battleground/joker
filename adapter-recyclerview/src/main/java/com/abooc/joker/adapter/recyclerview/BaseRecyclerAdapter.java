@@ -11,20 +11,20 @@ import java.util.List;
  */
 public abstract class BaseRecyclerAdapter<T> extends RecyclerViewAdapter<T> {
 
-    protected Context mContext;
-    public ViewHolder.OnRecyclerItemClickListener mListener;
-    public ViewHolder.OnRecyclerItemChildClickListener mChildListener;
+    protected Context context;
+    public ViewHolder.OnRecyclerItemClickListener listener;
+    public ViewHolder.OnRecyclerItemChildClickListener childListener;
 
     public BaseRecyclerAdapter(Context context) {
-        this.mContext = context;
+        this.context = context;
     }
 
     public void setOnRecyclerItemClickListener(ViewHolder.OnRecyclerItemClickListener listener) {
-        this.mListener = listener;
+        this.listener = listener;
     }
 
     public void setOnRecyclerItemChildClickListener(ViewHolder.OnRecyclerItemChildClickListener listener) {
-        this.mChildListener = listener;
+        this.childListener = listener;
     }
 
     public int getCount() {

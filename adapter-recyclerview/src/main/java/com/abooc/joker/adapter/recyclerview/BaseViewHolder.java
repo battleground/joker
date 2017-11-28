@@ -17,5 +17,10 @@ public abstract class BaseViewHolder<T> extends ViewHolder {
         super(view, listener, childListener);
     }
 
-    public abstract void bindData(T t);
+    @Override
+    public void onBindView(View view) {
+    }
+
+    public void bindData(T t) {
+    }
 }

@@ -52,7 +52,7 @@ public abstract class LoadMoreRecyclerAdapter<T> extends BaseRecyclerAdapter<T> 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_FOOTER) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.loadmore_view, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.loadmore_view, parent, false);
             return new FooterViewHolder(view, this);
         }
         return onCreateHolder(parent, viewType);
@@ -159,7 +159,7 @@ public abstract class LoadMoreRecyclerAdapter<T> extends BaseRecyclerAdapter<T> 
         }
 
         @Override
-        public void onBindedView(View itemLayoutView) {
+        public void onBindView(View itemLayoutView) {
             rootView = itemLayoutView;
             message = (TextView) itemLayoutView.findViewById(R.id.loading_text);
             progress = itemLayoutView.findViewById(R.id.loading);

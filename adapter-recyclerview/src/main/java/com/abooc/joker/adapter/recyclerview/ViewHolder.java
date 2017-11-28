@@ -54,14 +54,14 @@ public abstract class ViewHolder extends RecyclerView.ViewHolder implements View
         mContext = view.getContext();
         if (listener != null)
             view.setOnClickListener(this);
-        onBindedView(view);
+        onBindView(view);
     }
 
     public Context getContext() {
         return mContext;
     }
 
-    public abstract void onBindedView(View view);
+    public abstract void onBindView(View view);
 
     @Override
     public void onClick(View v) {

@@ -83,8 +83,8 @@ public abstract class MultipleChoiceLoadMoreRecyclerAdapter<T> extends LoadMoreR
     public void onItemClick(RecyclerView recyclerView, View itemView, int position) {
         setCheckedPosition(getItem(position));
 
-        if (mListener != null) {
-            mListener.onItemClick(recyclerView, itemView, position);
+        if (listener != null) {
+            listener.onItemClick(recyclerView, itemView, position);
         }
     }
 

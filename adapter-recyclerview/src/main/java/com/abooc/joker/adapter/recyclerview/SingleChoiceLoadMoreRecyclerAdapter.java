@@ -37,8 +37,8 @@ public abstract class SingleChoiceLoadMoreRecyclerAdapter<T> extends LoadMoreRec
     public void onItemClick(RecyclerView recyclerView, View itemView, int position) {
         setCheckedPosition(position);
 
-        if (mListener != null) {
-            mListener.onItemClick(recyclerView, itemView, position);
+        if (listener != null) {
+            listener.onItemClick(recyclerView, itemView, position);
         }
     }
 

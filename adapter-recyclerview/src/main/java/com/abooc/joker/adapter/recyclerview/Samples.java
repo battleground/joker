@@ -70,7 +70,7 @@ class Samples {
         }
 
         @Override
-        public void onBindedView(View itemLayoutView) {
+        public void onBindView(View itemLayoutView) {
 
         }
     }
