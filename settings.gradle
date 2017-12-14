@@ -1,6 +1,6 @@
 //include ':joker-dialog', ':joker-dialog-samples'
 //include ':samples'
-//include ':joker-resources'
+include ':joker-resources'
 //include ':messageview'
 //include ':joker'
 //include ':adapter-segmentadapter'
