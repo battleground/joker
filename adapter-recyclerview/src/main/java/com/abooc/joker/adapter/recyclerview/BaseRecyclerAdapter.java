@@ -3,6 +3,10 @@ package com.abooc.joker.adapter.recyclerview;
 
 import android.content.Context;
 
+import com.abooc.joker.adapter.recyclerview.ViewHolder.OnRecyclerItemChildClickListener;
+import com.abooc.joker.adapter.recyclerview.ViewHolder.OnRecyclerItemClickListener;
+import com.abooc.joker.adapter.recyclerview.ViewHolder.OnRecyclerItemLongClickListener;
+
 import java.util.List;
 
 /**
@@ -12,19 +16,24 @@ import java.util.List;
 public abstract class BaseRecyclerAdapter<T> extends RecyclerViewAdapter<T> {
 
     protected Context context;
-    public ViewHolder.OnRecyclerItemClickListener listener;
-    public ViewHolder.OnRecyclerItemChildClickListener childListener;
+    public OnRecyclerItemClickListener listener;
+    public OnRecyclerItemChildClickListener childListener;
+    public OnRecyclerItemLongClickListener longClickListener;
 
     public BaseRecyclerAdapter(Context context) {
         this.context = context;
     }
 
-    public void setOnRecyclerItemClickListener(ViewHolder.OnRecyclerItemClickListener listener) {
+    public void setOnRecyclerItemClickListener(OnRecyclerItemClickListener listener) {
         this.listener = listener;
     }
 
-    public void setOnRecyclerItemChildClickListener(ViewHolder.OnRecyclerItemChildClickListener listener) {
+    public void setOnRecyclerItemChildClickListener(OnRecyclerItemChildClickListener listener) {
         this.childListener = listener;
+    }
+
+    public void setOnRecyclerItemLongClickListener(OnRecyclerItemLongClickListener listener) {
+        this.longClickListener = listener;
     }
 
     public int getCount() {
